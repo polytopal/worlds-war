@@ -1,0 +1,18 @@
+package toto
+
+import io.sarl.core.Logging
+import io.sarl.core.Initialize
+import io.sarl.core.Destroy
+ 
+
+agent HelloWorldAgent {
+  uses Logging
+  
+  on Initialize {
+    println("Hello world !")
+  }
+  
+  on Destroy {
+    println("Good bye cruel world !")
+  }
+}
