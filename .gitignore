@@ -16,11 +16,17 @@ hs_err_pid*
 
 #CUSTOM SETTINGS
 
-# Eclipse settings
+# Eclipse
 .settings
+.project
+.classpath
+.metadata
 
-# Target folder
+
+# Maven target folder
 target
 
 # Generated sources
 **/generated-sources/*
+
+
