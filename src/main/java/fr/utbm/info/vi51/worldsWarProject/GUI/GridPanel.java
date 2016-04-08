@@ -11,12 +11,12 @@ import javax.swing.JPanel;
 /**
  * @author Leo
  * 
- *         Panel Swing affichant la grille de l'environnement
+ *         Swing panel that show the environment grid
  */
 public class GridPanel extends JPanel {
 	private static final long serialVersionUID = -8443885607526578507L;
 
-	// TODO LR - to delete - sellement pour les tests de grille
+	// TODO LR - to delete - seullement pour les tests de grille
 	private static int W = 100;
 	private static int H = 100;
 	private static int CELL_SIZE = 2;
@@ -26,7 +26,8 @@ public class GridPanel extends JPanel {
 
 	/**
 	 * @param SimulatorController
-	 *            L'agent SARL qui gère l'environnement
+	 * 
+	 *            The SARL agent that control the simulation
 	 */
 	public GridPanel(Object SimulatorController) {
 
@@ -52,16 +53,16 @@ public class GridPanel extends JPanel {
 				list.add(cellPanel);// ajoute à la liste
 				this.add(cellPanel);// ajoute au layout
 			}
-			panelTable.add(list);
+			this.panelTable.add(list);
 		}
 
 		final Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
 				while (true) {
-					GridPanel.this.updateGrid();
+					updateGrid();
 					try {
-						Thread.sleep(100);
+						Thread.sleep(200);
 					} catch (final InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -75,18 +76,18 @@ public class GridPanel extends JPanel {
 	}
 
 	private void updateGrid() {
-		System.out.println("update");
+		System.out.println("update"); //$NON-NLS-1$
 		for (int y = 0; y < H; y++) {
 			for (int x = 0; x < W; x++) {
-				final CellPanel cellPanel = panelTable.get(y).get(x);
-				if ((x + y + counter) % 2 == 0) {
+				final CellPanel cellPanel = this.panelTable.get(y).get(x);
+				if ((x + y + this.counter) % 2 == 0) {
 					cellPanel.setBackground(Color.BLUE);
 				} else {
 					cellPanel.setBackground(Color.GREEN);
 				}
 			}
 		}
-		counter++;
+		this.counter++;
 		this.repaint();
 	}
 

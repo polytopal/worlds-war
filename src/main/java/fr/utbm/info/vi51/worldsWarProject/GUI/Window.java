@@ -4,14 +4,16 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 /**
- * @author Leo Fenetre principale de l'application
+ * @author Leo
+ * 
+ *         Application main window
  */
 public class Window extends JFrame {
 	private static final long serialVersionUID = 3509021382819712013L;
 
 	/**
 	 * @param args
-	 *            Methode main temporaire
+	 *            Temporary main method
 	 */
 	public static void main(String[] args) {
 		final Window window = new Window(null);
@@ -20,7 +22,8 @@ public class Window extends JFrame {
 
 	/**
 	 * @param SimulatorController
-	 *            l'agent SARL qui controlle la simulation
+	 * 
+	 *            The SARL agent that control the simulation
 	 */
 	public Window(final Object SimulatorController) {
 

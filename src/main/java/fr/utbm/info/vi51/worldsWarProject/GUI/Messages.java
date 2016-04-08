@@ -5,9 +5,9 @@ import java.util.ResourceBundle;
 
 /**
  * @author Leo
- *
- *         Classe permettant l'internationnalisation (I18N) des messages de
- *         l'interface graphique
+ * 
+ *         Class that allow the internationnalisation (I18N) of all the GUI
+ *         messages
  */
 public class Messages {
 	private static final String BUNDLE_NAME = "fr.utbm.info.vi51.worldsWarProject.GUI.messages"; //$NON-NLS-1$
@@ -19,8 +19,8 @@ public class Messages {
 
 	/**
 	 * @param key
-	 *            la clé de la chaine
-	 * @return la chaine demandé
+	 *            the unique id of the string
+	 * @return the asked string
 	 */
 	public static String getString(String key) {
 		try {

@@ -11,47 +11,55 @@ import javax.swing.KeyStroke;
 /**
  * @author Leo
  *
- *         Le gestionnaire des actions de l'interface graphique C'est un
- *         singleton, il se contente de créer les actions au démarrage puis de
- *         les donner a qui les demandes
+ *         The GUI action manager is a Singleton. It create all the actions
+ *         available from the GUI at the start of the program.
  */
 public class GuiActionsManager {
 
 	private static GuiActionsManager INSTANCE = new GuiActionsManager();
 
 	private final Action newSimulationAction;
+	private final Action stopSimulationAction;
 
 	private GuiActionsManager() {
 		this.newSimulationAction = new NewSimulationAction();
+		this.stopSimulationAction = new StopSimulationAction();
 	}
 
 	/**
-	 * @return l'instance unique du manager
+	 * @return the unique instance of the manager
 	 */
 	public static GuiActionsManager getInstance() {
 		return INSTANCE;
 	}
 
 	/**
-	 * @return l'action de lancer une nouvelle simulation
+	 * @return the action to start a new simulation
 	 */
 	public Action getNewSimulationAction() {
 		return this.newSimulationAction;
 	}
 
 	/**
+	 * @return the action to stop the current simulation
+	 */
+	public Action getStopSimulationAction() {
+		return this.stopSimulationAction;
+	}
+
+	/**
 	 * @author Leo
 	 * 
-	 *         Action permettant de lancer une nouvelle simulation
+	 *         This action allow to start a new simulation
 	 */
 	private class NewSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 4958436812700297538L;
 
 		/**
-		 * Constructeur de l'action permettant de lancer une nouvelle simulation
+		 * New Simulation Action constructor
 		 */
 		public NewSimulationAction() {
-			super(Messages.getString("MenuBar0")); //$NON-NLS-1$
+			super(Messages.getString("MenuBar.1")); //$NON-NLS-1$
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK));
 		}
 
@@ -61,4 +69,28 @@ public class GuiActionsManager {
 			System.out.println("lancement nouvelle simulation"); //$NON-NLS-1$
 		}
 	}
+
+	/**
+	 * @author Leo
+	 * 
+	 *         This action allow to stop the current simulation
+	 */
+	private class StopSimulationAction extends AbstractAction {
+		private static final long serialVersionUID = 2286692516797367038L;
+
+		/**
+		 * Stop Simulation Action constructor
+		 */
+		public StopSimulationAction() {
+			super(Messages.getString("MenuBar.2")); //$NON-NLS-1$
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO LR - implementer arret simulation
+			System.out.println("arret simulation"); //$NON-NLS-1$
+		}
+	}
+
 }
