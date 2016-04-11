@@ -21,9 +21,14 @@ public class GuiActionsManager {
 	private final Action newSimulationAction;
 	private final Action stopSimulationAction;
 
+	// private final Action zoomAction;
+	// private final Action dezoomAction;
+
 	private GuiActionsManager() {
 		this.newSimulationAction = new NewSimulationAction();
 		this.stopSimulationAction = new StopSimulationAction();
+		// this.zoomAction = new ZoomAction();
+		// this.dezoomAction = new DeZoomAction();
 	}
 
 	/**
@@ -46,6 +51,20 @@ public class GuiActionsManager {
 	public Action getStopSimulationAction() {
 		return this.stopSimulationAction;
 	}
+
+	// /**
+	// * @return the action to zoom on the simulation grid
+	// */
+	// public Action getZoomAction() {
+	// return this.zoomAction;
+	// }
+	//
+	// /**
+	// * @return the action to dezoom on the simulation grid
+	// */
+	// public Action getDeZoomAction() {
+	// return this.dezoomAction;
+	// }
 
 	/**
 	 * @author Leo
@@ -92,5 +111,53 @@ public class GuiActionsManager {
 			System.out.println("arret simulation"); //$NON-NLS-1$
 		}
 	}
+
+	/**
+	 * @author Leo
+	 * 
+	 *         This action allow to zoom on the simulation grid
+	 */
+	// private class ZoomAction extends AbstractAction {
+	// private static final long serialVersionUID = -5437005864722461320L;
+	//
+	// /**
+	// * Stop Simulation Action constructor
+	// */
+	// public ZoomAction() {
+	// super(Messages.getString(Messages.getString("MenuBar.3"))); //$NON-NLS-1$
+	// putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_PLUS,
+	// Event.CTRL_MASK));
+	// }
+	//
+	// @Override
+	// public void actionPerformed(ActionEvent e) {
+	// // TODO LR - implementer arret simulation
+	// System.out.println("zoom"); //$NON-NLS-1$
+	// }
+	// }
+
+	/**
+	 * @author Leo
+	 * 
+	 *         This action allow to dezoom on the simulation grid
+	 */
+	// private class DeZoomAction extends AbstractAction {
+	// private static final long serialVersionUID = -5437005864722461320L;
+	//
+	// /**
+	// * Stop Simulation Action constructor
+	// */
+	// public DeZoomAction() {
+	// super(Messages.getString(Messages.getString("MenuBar.4"))); //$NON-NLS-1$
+	// putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,
+	// Event.CTRL_MASK));
+	// }
+	//
+	// @Override
+	// public void actionPerformed(ActionEvent e) {
+	// // TODO LR - implementer arret simulation
+	// System.out.println("dezoom"); //$NON-NLS-1$
+	// }
+	// }
 
 }

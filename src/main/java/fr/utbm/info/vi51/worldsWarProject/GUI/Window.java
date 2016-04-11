@@ -32,12 +32,12 @@ public class Window extends JFrame {
 
 		this.setJMenuBar(new MenuBar());
 
-		this.getContentPane().add(new GridPanel(SimulatorController));
+		this.getContentPane().add(new GridPanel(SimulatorController, this));
 
-		// this.setPreferredSize(new Dimension(400, 400));
 		this.setLocationRelativeTo(null);
 
 		this.pack();
+
 	}
 
 }

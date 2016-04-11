@@ -27,5 +27,6 @@ public class MenuBar extends JMenuBar {
 
 		final JMenuItem stopSimulationItem = new JMenuItem(guiActionManager.getStopSimulationAction());
 		simulationMenu.add(stopSimulationItem);
+
 	}
 }
