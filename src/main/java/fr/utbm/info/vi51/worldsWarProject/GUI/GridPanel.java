@@ -36,6 +36,8 @@ public class GridPanel extends JPanel {
 
 	private int cellSize = 8;
 
+	private final JScrollPane scrollPane;
+
 	private final List<List<CellType>> panelTable;
 
 	/**
@@ -57,22 +59,24 @@ public class GridPanel extends JPanel {
 
 			@Override
 			public void paintComponent(Graphics g) {
-				this.setPreferredSize(new Dimension(cellSize * W, cellSize * H));
+				this.setPreferredSize(new Dimension(GridPanel.this.cellSize * W, GridPanel.this.cellSize * H));
 
 				g.setColor(Color.WHITE); // background color
-				g.fillRect(0, 0, this.getWidth(), this.getHeight());// show
-																	// background
+				// show background
+				g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
 				for (int y = 0; y < H; y++) {
 					for (int x = 0; x < W; x++) {
-						g.setColor(panelTable.get(y).get(x).getColor());
-						g.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+						g.setColor(GridPanel.this.panelTable.get(y).get(x).getColor());
+						g.fillRect(x * GridPanel.this.cellSize, y * GridPanel.this.cellSize, GridPanel.this.cellSize,
+								GridPanel.this.cellSize);
 					}
 				}
 
 			}
 		};
 
+		// random grid generation
 		this.panelTable = new ArrayList<>(H);
 		for (int y = 0; y < H; y++) {
 			final ArrayList<CellType> list = new ArrayList<>(W);
@@ -85,37 +89,30 @@ public class GridPanel extends JPanel {
 				} else if (random < 0.21) {
 					list.add(CellType.ANT_HILL);
 				} else {
-					list.add(CellType.VOID);// ajoute à la liste
+					list.add(CellType.VOID);
 				}
 			}
 			this.panelTable.add(list);
 		}
 
-		matrixPanel.setPreferredSize(new Dimension(400, 400));
-
-		final JScrollPane scrollPane = new JScrollPane(matrixPanel);
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		this.scrollPane = new JScrollPane(matrixPanel);
+		this.scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		this.scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 		this.setLayout(new BorderLayout());
 
-		this.add(scrollPane, BorderLayout.CENTER);
+		this.add(this.scrollPane, BorderLayout.CENTER);
 
 		this.setPreferredSize(new Dimension(400, 400));
 
 		final MouseWheelListener mouseWheelListener = new MouseWheelListener() {
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
-				if (e.getPreciseWheelRotation() > 0) {// dezoom
-					if (GridPanel.this.cellSize > CELL_SIZE_MIN) {
-						GridPanel.this.cellSize--;
-					}
-				} else {// zoom
-					if (GridPanel.this.cellSize < CELL_SIZE_MAX) {
-						GridPanel.this.cellSize++;
-					}
+				if (e.getPreciseWheelRotation() > 0) {
+					zoomOut();
+				} else {
+					zoomIn();
 				}
-				GridPanel.this.repaint();
 			}
 		};
 		matrixPanel.addMouseWheelListener(mouseWheelListener);
@@ -123,24 +120,77 @@ public class GridPanel extends JPanel {
 		final KeyListener keyListener = new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				final Point currentPos = scrollPane.getViewport().getViewPosition();
-				if (e.getExtendedKeyCode() == KeyEvent.VK_LEFT && currentPos.getX() > CAMERA_MOVE_SPEED) {
-					currentPos.setLocation(currentPos.getX() - CAMERA_MOVE_SPEED, currentPos.getY());
-					scrollPane.getViewport().setViewPosition(currentPos);
-				} else if (e.getExtendedKeyCode() == KeyEvent.VK_UP && currentPos.getY() > CAMERA_MOVE_SPEED) {
-					currentPos.setLocation(currentPos.getX(), currentPos.getY() - CAMERA_MOVE_SPEED);
-					scrollPane.getViewport().setViewPosition(currentPos);
-				} else if (e.getExtendedKeyCode() == KeyEvent.VK_RIGHT) {
-					currentPos.setLocation(currentPos.getX() + CAMERA_MOVE_SPEED, currentPos.getY());
-					scrollPane.getViewport().setViewPosition(currentPos);
-				} else if (e.getExtendedKeyCode() == KeyEvent.VK_DOWN) {
-					currentPos.setLocation(currentPos.getX(), currentPos.getY() + CAMERA_MOVE_SPEED);
-					scrollPane.getViewport().setViewPosition(currentPos);
+
+				switch (e.getExtendedKeyCode()) {
+				case KeyEvent.VK_LEFT:
+					moveLeft();
+					break;
+				case KeyEvent.VK_UP:
+					moveUp();
+					break;
+				case KeyEvent.VK_RIGHT:
+					moveRight();
+					break;
+				case KeyEvent.VK_DOWN:
+					moveDown();
+					break;
+				case 107:
+					zoomIn();
+					break;
+				case 109:
+					zoomOut();
+					break;
+				default:
+					break;
 				}
+
 			}
 		};
 		window.addKeyListener(keyListener);
 
+	}
+
+	private void zoomIn() {
+		if (GridPanel.this.cellSize < CELL_SIZE_MAX) {
+			GridPanel.this.cellSize++;
+			GridPanel.this.repaint();
+		}
+	}
+
+	private void zoomOut() {
+		if (GridPanel.this.cellSize > CELL_SIZE_MIN) {
+			GridPanel.this.cellSize--;
+			GridPanel.this.repaint();
+		}
+	}
+
+	private void moveLeft() {
+		final Point currentPos = this.scrollPane.getViewport().getViewPosition();
+		if (currentPos.getX() > CAMERA_MOVE_SPEED) {
+			currentPos.setLocation(currentPos.getX() - CAMERA_MOVE_SPEED, currentPos.getY());
+			this.scrollPane.getViewport().setViewPosition(currentPos);
+		}
+	}
+
+	private void moveUp() {
+		final Point currentPos = this.scrollPane.getViewport().getViewPosition();
+		if (currentPos.getY() > CAMERA_MOVE_SPEED) {
+			currentPos.setLocation(currentPos.getX(), currentPos.getY() - CAMERA_MOVE_SPEED);
+			GridPanel.this.scrollPane.getViewport().setViewPosition(currentPos);
+		}
+	}
+
+	private void moveRight() {
+		final Point currentPos = this.scrollPane.getViewport().getViewPosition();
+		currentPos.setLocation(currentPos.getX() + CAMERA_MOVE_SPEED, currentPos.getY());
+		GridPanel.this.scrollPane.getViewport().setViewPosition(currentPos);
+	}
+
+	private void moveDown() {
+		final Point currentPos = this.scrollPane.getViewport().getViewPosition();
+
+		currentPos.setLocation(currentPos.getX(), currentPos.getY() + CAMERA_MOVE_SPEED);
+		GridPanel.this.scrollPane.getViewport().setViewPosition(currentPos);
 	}
 
 }
