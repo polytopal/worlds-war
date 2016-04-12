@@ -1,4 +1,4 @@
-package fr.utbm.info.vi51.worldsWarProject.GUI;
+package fr.utbm.info.vi51.worldswar.gui;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;

@@ -1,4 +1,4 @@
-package fr.utbm.info.vi51.worldsWarProject.GUI;
+package fr.utbm.info.vi51.worldswar.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
