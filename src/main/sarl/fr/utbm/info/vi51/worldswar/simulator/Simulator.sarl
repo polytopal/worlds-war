@@ -1,0 +1,82 @@
+package fr.utbm.info.vi51.worldswar.simulator
+
+import fr.utbm.info.vi51.worldswar.controller.Controller
+import fr.utbm.info.vi51.worldswar.controller.ControllerCommandEvent
+import fr.utbm.info.vi51.worldswar.controller.ControllerCommandType
+import fr.utbm.info.vi51.worldswar.controller.SimulationSpeedCommand
+import fr.utbm.info.vi51.worldswar.environment.Environment
+import fr.utbm.info.vi51.worldswar.environment.EnvironmentReady
+import fr.utbm.info.vi51.worldswar.gui.FakeGUI
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Initialize
+import io.sarl.core.Logging
+import io.sarl.core.Schedules
+
+/**
+ * Main agent of the software.
+ * Manages the flow of the simulation
+ */
+agent Simulator {
+	uses Logging, Schedules, DefaultContextInteractions
+	
+	/** Delay in ms, when a new environment is generated, before the simulation begins */
+	final val STARTUP_DELAY = 2000
+	
+	var controller : Controller
+	var gui : FakeGUI
+	
+	/** Simulation speed, as chosen by the user */
+	var simulationSpeed = SimulationSpeed.NORMAL
+	
+	/** Indicates whether the step timer has passed, hence a new step should be fired */
+	var stepToFire = false
+	/** Indicates whether the environment is ready to compute a new step */
+	var environmentReady = false
+	
+	
+	on Initialize {
+		controller = new Controller(defaultSpace)
+		gui = new FakeGUI(controller)
+		spawn(typeof(Environment))
+
+		in(STARTUP_DELAY) [ startSimulation ]
+	}
+	
+	private def startSimulation {
+		environmentReady = true
+		stepToFire = true
+		fireSimulationStep
+	}
+	
+	on EnvironmentReady {
+		environmentReady = true
+		fireSimulationStep
+	}
+	
+	private def stepReady {
+		stepToFire = true
+		fireSimulationStep
+	}
+	
+	/** Checks that both the step timer and the environment allow a new step to be fired, 
+	 * and fire this new step if that's the case.
+	 */
+	private def fireSimulationStep {
+		if(stepToFire && environmentReady) {
+			environmentReady = false
+			stepToFire = false
+			emit(new SimulationStep)
+			in(simulationSpeed.milliseconds) [ stepReady ]
+		}
+	}
+	
+	/**
+	 * Handles the controller's commands
+	 */
+	on ControllerCommandEvent {
+		if(occurrence.command.type == ControllerCommandType.SIMULATION_SPEED) {
+			var command = occurrence.command as SimulationSpeedCommand
+			this.simulationSpeed = command.speed
+		}
+	}
+}

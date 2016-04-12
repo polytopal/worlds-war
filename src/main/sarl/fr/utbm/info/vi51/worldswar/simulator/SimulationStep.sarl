@@ -1,0 +1,8 @@
+package fr.utbm.info.vi51.worldswar.simulator
+
+/**
+ * Event fired by the {@link Simulator} on each simulation step.
+ */
+event SimulationStep {
+	
+}

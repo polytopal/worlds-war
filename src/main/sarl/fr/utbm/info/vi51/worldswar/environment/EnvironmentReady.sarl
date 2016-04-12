@@ -1,0 +1,8 @@
+package fr.utbm.info.vi51.worldswar.environment
+
+/**
+ * Event fired by the {@link Environment} when it's ready to compute a new simulation step.
+ */
+event EnvironmentReady {
+	
+}
