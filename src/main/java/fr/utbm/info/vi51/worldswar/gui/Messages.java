@@ -10,7 +10,7 @@ import java.util.ResourceBundle;
  *         messages
  */
 public class Messages {
-	private static final String BUNDLE_NAME = "fr.utbm.info.vi51.worldsWarProject.GUI.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "fr.utbm.info.vi51.worldsWar.gui.messages"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 

@@ -27,7 +27,7 @@ public class Window extends JFrame {
 	 */
 	public Window(final Object SimulatorController) {
 
-		this.setTitle(Messages.getString("Window0")); //$NON-NLS-1$
+		this.setTitle(Messages.getString("Window.0")); //$NON-NLS-1$
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		this.setJMenuBar(new MenuBar());
