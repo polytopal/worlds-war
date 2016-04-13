@@ -1,8 +1,8 @@
 package fr.utbm.info.vi51.worldswar.controller;
 
-import org.omg.CORBA.Environment;
-
+import fr.utbm.info.vi51.worldswar.environment.Environment;
 import fr.utbm.info.vi51.worldswar.simulator.SimulationSpeed;
+import fr.utbm.info.vi51.worldswar.simulator.Simulator;
 import io.sarl.lang.core.EventSpace;
 import io.sarl.util.Scopes;
 

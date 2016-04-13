@@ -24,13 +24,13 @@ public enum SimulationSpeed {
 	 * @return the key representing the value in the properties
 	 */
 	public String getPropertyKey() {
-		return propertyKey;
+		return this.propertyKey;
 	}
 
 	/**
 	 * @return the minimum delay in ms between each simulation step
 	 */
 	public int getMilliseconds() {
-		return milliseconds;
+		return this.milliseconds;
 	}
 }

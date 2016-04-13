@@ -20,18 +20,18 @@ agent Simulator {
 	uses Logging, Schedules, DefaultContextInteractions
 	
 	/** Delay in ms, when a new environment is generated, before the simulation begins */
-	final val STARTUP_DELAY = 2000
+	private final val STARTUP_DELAY = 2000
 	
-	var controller : Controller
-	var gui : FakeGUI
+	private var controller : Controller
+	private var gui : FakeGUI
 	
 	/** Simulation speed, as chosen by the user */
-	var simulationSpeed = SimulationSpeed.NORMAL
+	private var simulationSpeed = SimulationSpeed.NORMAL
 	
 	/** Indicates whether the step timer has passed, hence a new step should be fired */
-	var stepToFire = false
+	private var stepToFire = false
 	/** Indicates whether the environment is ready to compute a new step */
-	var environmentReady = false
+	private var environmentReady = false
 	
 	
 	on Initialize {

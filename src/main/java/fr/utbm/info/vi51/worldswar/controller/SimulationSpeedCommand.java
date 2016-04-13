@@ -18,7 +18,7 @@ public class SimulationSpeedCommand extends ControllerCommand {
 	}
 
 	public SimulationSpeed getSpeed() {
-		return speed;
+		return this.speed;
 	}
 
 }

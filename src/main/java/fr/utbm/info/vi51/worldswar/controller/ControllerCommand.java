@@ -23,6 +23,6 @@ public class ControllerCommand {
 	 * @return the {@link ControllerCommandType type} of the command
 	 */
 	public ControllerCommandType getType() {
-		return type;
+		return this.type;
 	}
 }
