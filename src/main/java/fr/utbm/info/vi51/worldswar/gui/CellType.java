@@ -9,9 +9,9 @@ import java.awt.Color;
  */
 public enum CellType {
 	/**
-	 * A void cell, doesn't contains anything
+	 * A empty cell, doesn't contains anything
 	 */
-	VOID {
+	EMPTY {
 		@Override
 		public Color getColor() {
 			return Color.WHITE;

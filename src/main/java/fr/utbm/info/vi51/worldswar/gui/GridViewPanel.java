@@ -21,9 +21,10 @@ import javax.swing.ScrollPaneConstants;
 /**
  * @author Leo
  * 
- *         Swing panel that show the environment grid
+ *         Swing panel that show the environment grid. It doesn't show the all
+ *         grid but it contains a viewport that show a part of this grid.
  */
-public class GridPanel extends JPanel {
+public class GridViewPanel extends JPanel {
 	private static final long serialVersionUID = -8443885607526578507L;
 
 	private static final int CAMERA_MOVE_SPEED = 10;
@@ -49,7 +50,7 @@ public class GridPanel extends JPanel {
 	 * 
 	 *            The application window, used for the key listener
 	 */
-	public GridPanel(Object SimulatorController, JFrame window) {
+	public GridViewPanel(JFrame window) {
 
 		// TODO LR - cet algo ne ce trouvera pas ici, on pourra reconstruire la
 		// grille de la GUI si on reconstruit un nouvel environnement
@@ -59,7 +60,7 @@ public class GridPanel extends JPanel {
 
 			@Override
 			public void paintComponent(Graphics g) {
-				this.setPreferredSize(new Dimension(GridPanel.this.cellSize * W, GridPanel.this.cellSize * H));
+				this.setPreferredSize(new Dimension(GridViewPanel.this.cellSize * W, GridViewPanel.this.cellSize * H));
 
 				g.setColor(Color.WHITE); // background color
 				// show background
@@ -67,9 +68,9 @@ public class GridPanel extends JPanel {
 
 				for (int y = 0; y < H; y++) {
 					for (int x = 0; x < W; x++) {
-						g.setColor(GridPanel.this.panelTable.get(y).get(x).getColor());
-						g.fillRect(x * GridPanel.this.cellSize, y * GridPanel.this.cellSize, GridPanel.this.cellSize,
-								GridPanel.this.cellSize);
+						g.setColor(GridViewPanel.this.panelTable.get(y).get(x).getColor());
+						g.fillRect(x * GridViewPanel.this.cellSize, y * GridViewPanel.this.cellSize,
+								GridViewPanel.this.cellSize, GridViewPanel.this.cellSize);
 					}
 				}
 
@@ -89,7 +90,7 @@ public class GridPanel extends JPanel {
 				} else if (random < 0.21) {
 					list.add(CellType.ANT_HILL);
 				} else {
-					list.add(CellType.VOID);
+					list.add(CellType.EMPTY);
 				}
 			}
 			this.panelTable.add(list);
@@ -122,22 +123,22 @@ public class GridPanel extends JPanel {
 			public void keyPressed(KeyEvent e) {
 
 				switch (e.getExtendedKeyCode()) {
-				case KeyEvent.VK_LEFT:
-					moveLeft();
+				case KeyEvent.VK_LEFT: // left arrow
+					moveCameraLeft();
 					break;
-				case KeyEvent.VK_UP:
-					moveUp();
+				case KeyEvent.VK_UP:// up arrow
+					moveCameraUp();
 					break;
-				case KeyEvent.VK_RIGHT:
-					moveRight();
+				case KeyEvent.VK_RIGHT:// right arrow
+					moveCameraRight();
 					break;
-				case KeyEvent.VK_DOWN:
-					moveDown();
+				case KeyEvent.VK_DOWN:// down arrow
+					moveCameraDown();
 					break;
-				case 107:
+				case KeyEvent.VK_ADD:// + button
 					zoomIn();
 					break;
-				case 109:
+				case KeyEvent.VK_SUBTRACT:// - button
 					zoomOut();
 					break;
 				default:
@@ -151,20 +152,20 @@ public class GridPanel extends JPanel {
 	}
 
 	private void zoomIn() {
-		if (GridPanel.this.cellSize < CELL_SIZE_MAX) {
-			GridPanel.this.cellSize++;
-			GridPanel.this.repaint();
+		if (GridViewPanel.this.cellSize < CELL_SIZE_MAX) {
+			GridViewPanel.this.cellSize++;
+			GridViewPanel.this.repaint();
 		}
 	}
 
 	private void zoomOut() {
-		if (GridPanel.this.cellSize > CELL_SIZE_MIN) {
-			GridPanel.this.cellSize--;
-			GridPanel.this.repaint();
+		if (GridViewPanel.this.cellSize > CELL_SIZE_MIN) {
+			GridViewPanel.this.cellSize--;
+			GridViewPanel.this.repaint();
 		}
 	}
 
-	private void moveLeft() {
+	private void moveCameraLeft() {
 		final Point currentPos = this.scrollPane.getViewport().getViewPosition();
 		if (currentPos.getX() > CAMERA_MOVE_SPEED) {
 			currentPos.setLocation(currentPos.getX() - CAMERA_MOVE_SPEED, currentPos.getY());
@@ -172,25 +173,24 @@ public class GridPanel extends JPanel {
 		}
 	}
 
-	private void moveUp() {
+	private void moveCameraUp() {
 		final Point currentPos = this.scrollPane.getViewport().getViewPosition();
 		if (currentPos.getY() > CAMERA_MOVE_SPEED) {
 			currentPos.setLocation(currentPos.getX(), currentPos.getY() - CAMERA_MOVE_SPEED);
-			GridPanel.this.scrollPane.getViewport().setViewPosition(currentPos);
+			GridViewPanel.this.scrollPane.getViewport().setViewPosition(currentPos);
 		}
 	}
 
-	private void moveRight() {
+	private void moveCameraRight() {
 		final Point currentPos = this.scrollPane.getViewport().getViewPosition();
 		currentPos.setLocation(currentPos.getX() + CAMERA_MOVE_SPEED, currentPos.getY());
-		GridPanel.this.scrollPane.getViewport().setViewPosition(currentPos);
+		GridViewPanel.this.scrollPane.getViewport().setViewPosition(currentPos);
 	}
 
-	private void moveDown() {
+	private void moveCameraDown() {
 		final Point currentPos = this.scrollPane.getViewport().getViewPosition();
-
 		currentPos.setLocation(currentPos.getX(), currentPos.getY() + CAMERA_MOVE_SPEED);
-		GridPanel.this.scrollPane.getViewport().setViewPosition(currentPos);
+		GridViewPanel.this.scrollPane.getViewport().setViewPosition(currentPos);
 	}
 
 }

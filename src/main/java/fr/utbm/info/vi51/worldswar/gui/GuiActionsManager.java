@@ -59,7 +59,7 @@ public class GuiActionsManager {
 		 * New Simulation Action constructor
 		 */
 		public NewSimulationAction() {
-			super(Messages.getString("MenuBar.1")); //$NON-NLS-1$
+			super(Messages.getString("MenuBar.newSimulation")); //$NON-NLS-1$
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK));
 		}
 
@@ -82,7 +82,7 @@ public class GuiActionsManager {
 		 * Stop Simulation Action constructor
 		 */
 		public StopSimulationAction() {
-			super(Messages.getString("MenuBar.2")); //$NON-NLS-1$
+			super(Messages.getString("MenuBar.stopSimulation")); //$NON-NLS-1$
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
 		}
 

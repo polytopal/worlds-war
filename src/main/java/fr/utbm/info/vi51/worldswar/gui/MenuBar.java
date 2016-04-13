@@ -19,7 +19,7 @@ public class MenuBar extends JMenuBar {
 
 		final GuiActionsManager guiActionManager = GuiActionsManager.getInstance();
 
-		final JMenu simulationMenu = new JMenu(Messages.getString("MenuBar.0")); //$NON-NLS-1$
+		final JMenu simulationMenu = new JMenu(Messages.getString("MenuBar.simulation")); //$NON-NLS-1$
 		this.add(simulationMenu);
 
 		final JMenuItem newSimulationItem = new JMenuItem(guiActionManager.getNewSimulationAction());

@@ -21,18 +21,20 @@ public class Window extends JFrame {
 	}
 
 	/**
-	 * @param SimulatorController
+	 * @param controller
 	 * 
-	 *            The SARL agent that control the simulation
+	 *            a Java class that can emit SARL evenments to the simulation
 	 */
-	public Window(final Object SimulatorController) {
+	public Window(final Object controller) {
 
-		this.setTitle(Messages.getString("Window.0")); //$NON-NLS-1$
+		// TODO lr - traiter le controller
+
+		this.setTitle(Messages.getString("Window.title")); //$NON-NLS-1$
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		this.setJMenuBar(new MenuBar());
 
-		this.getContentPane().add(new GridPanel(SimulatorController, this));
+		this.getContentPane().add(new GridViewPanel(this));
 
 		this.setLocationRelativeTo(null);
 

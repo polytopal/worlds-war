@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 /**
  * @author Leo
  * 
- *         Class that allow the internationnalisation (I18N) of all the GUI
+ *         Class that allow the internationalization (I18N) of all the GUI
  *         messages
  */
 public class Messages {
