@@ -11,6 +11,8 @@ import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
 import io.sarl.core.Logging
 import io.sarl.core.Schedules
+import java.util.List
+import java.util.LinkedList
 
 /**
  * Main agent of the software.
@@ -25,6 +27,8 @@ agent Simulator {
 	private var controller : Controller
 	private var gui : FakeGUI
 	
+	private var listeners : List<SimulatorListener>
+	
 	/** Simulation speed, as chosen by the user */
 	private var simulationSpeed = SimulationSpeed.NORMAL
 	
@@ -38,6 +42,9 @@ agent Simulator {
 		controller = new Controller(defaultSpace)
 		gui = new FakeGUI(controller)
 		spawn(typeof(Environment))
+		
+		listeners = new LinkedList
+		listeners.add(gui)
 
 		in(STARTUP_DELAY) [ startSimulation ]
 	}
@@ -66,6 +73,9 @@ agent Simulator {
 			environmentReady = false
 			stepToFire = false
 			emit(new SimulationStep)
+			for(l as SimulatorListener : listeners) {
+				l.simulationStepFired
+			}
 			in(simulationSpeed.milliseconds) [ stepReady ]
 		}
 	}

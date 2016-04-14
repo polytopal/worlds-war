@@ -10,7 +10,7 @@ public enum SimulationSpeed {
 	/**
 	 * No delay between steps means the simulation will run as fast as possible
 	 */
-	MAX("max", 0);
+	MAX("max", 1);
 
 	private SimulationSpeed(String key, int ms) {
 		this.propertyKey = key;
