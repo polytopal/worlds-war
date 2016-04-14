@@ -2,7 +2,6 @@ package fr.utbm.info.vi51.worldswar.simulator
 
 import fr.utbm.info.vi51.worldswar.controller.Controller
 import fr.utbm.info.vi51.worldswar.controller.ControllerCommandEvent
-import fr.utbm.info.vi51.worldswar.controller.ControllerCommandType
 import fr.utbm.info.vi51.worldswar.controller.SimulationSpeedCommand
 import fr.utbm.info.vi51.worldswar.environment.Environment
 import fr.utbm.info.vi51.worldswar.environment.EnvironmentReady
@@ -84,7 +83,7 @@ agent Simulator {
 	 * Handles the controller's commands
 	 */
 	on ControllerCommandEvent {
-		if(occurrence.command.type == ControllerCommandType.SIMULATION_SPEED) {
+		if(occurrence.command instanceof SimulationSpeedCommand) {
 			var command = occurrence.command as SimulationSpeedCommand
 			this.simulationSpeed = command.speed
 		}

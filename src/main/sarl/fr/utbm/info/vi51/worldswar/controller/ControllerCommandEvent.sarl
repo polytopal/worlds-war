@@ -6,9 +6,9 @@ package fr.utbm.info.vi51.worldswar.controller
  * 
  */
 event ControllerCommandEvent {
-	var command : ControllerCommand
+	var command : Object
 	
-	new(command : ControllerCommand) {
+	new(command : Object) {
 		this.command = command
 	}
 }
