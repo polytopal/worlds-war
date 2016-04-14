@@ -1,8 +1,8 @@
 package fr.utbm.info.vi51.worldswar.environment
 
-import fr.utbm.info.vi51.worldswar.simulator.SimulationStep
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Logging
+import fr.utbm.info.vi51.worldswar.simulator.SimulationStepEvent
 
 /**
  * While it does not appear obvious, this agent manages the environment.
@@ -11,10 +11,10 @@ agent Environment {
 	uses Logging, DefaultContextInteractions
 	
 	
-	on SimulationStep {
+	on SimulationStepEvent {
 		println("Simulation step")
 		
-		emit(new EnvironmentReady)
+		emit(new EnvironmentReadyEvent)
 	}
 	
 }

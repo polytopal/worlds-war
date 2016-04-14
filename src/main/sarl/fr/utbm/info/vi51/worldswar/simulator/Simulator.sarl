@@ -4,7 +4,6 @@ import fr.utbm.info.vi51.worldswar.controller.Controller
 import fr.utbm.info.vi51.worldswar.controller.ControllerCommandEvent
 import fr.utbm.info.vi51.worldswar.controller.SimulationSpeedCommand
 import fr.utbm.info.vi51.worldswar.environment.Environment
-import fr.utbm.info.vi51.worldswar.environment.EnvironmentReady
 import fr.utbm.info.vi51.worldswar.gui.FakeGUI
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
@@ -12,6 +11,7 @@ import io.sarl.core.Logging
 import io.sarl.core.Schedules
 import java.util.List
 import java.util.LinkedList
+import fr.utbm.info.vi51.worldswar.environment.EnvironmentReadyEvent
 
 /**
  * Main agent of the software.
@@ -54,7 +54,7 @@ agent Simulator {
 		fireSimulationStep
 	}
 	
-	on EnvironmentReady {
+	on EnvironmentReadyEvent {
 		environmentReady = true
 		fireSimulationStep
 	}
@@ -71,7 +71,7 @@ agent Simulator {
 		if(stepToFire && environmentReady) {
 			environmentReady = false
 			stepToFire = false
-			emit(new SimulationStep)
+			emit(new SimulationStepEvent)
 			for(l as SimulatorListener : listeners) {
 				l.simulationStepFired
 			}
