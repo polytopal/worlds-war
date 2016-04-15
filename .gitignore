@@ -30,3 +30,7 @@ target
 **/generated-sources/*
 
 
+# Output
+bin
+
+
