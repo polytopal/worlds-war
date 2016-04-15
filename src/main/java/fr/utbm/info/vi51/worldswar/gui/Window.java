@@ -37,16 +37,16 @@ public class Window extends JFrame implements SimulatorListener {
 	 */
 	public Window(final Controller controller) {
 
-		// TODO lr - traiter le controller
+		// Controller initialization
 		
 		this.controller = controller;
 		this.controller.setSimulationSpeed(SimulationSpeed.MAX);
 		this.stepsPerSecond = 0;
 		this.lastStepStart = System.currentTimeMillis();
 		
-		//
+		// Window initialization
 
-		this.setTitle(Messages.getString("Window.title")); //$NON-NLS-1$
+		this.setTitle(Messages.getString("simulationStepFiredMsg")); //$NON-NLS-1$
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		this.setJMenuBar(new MenuBar());
@@ -65,7 +65,7 @@ public class Window extends JFrame implements SimulatorListener {
 		long stepDuration = currentTime - this.lastStepStart;
 		this.lastStepStart = currentTime;
 		this.stepsPerSecond = 1000.f / stepDuration;
-		System.out.println("Steps per second : " + this.stepsPerSecond);
+		System.out.println(Messages.getString("Window.stepFiredMsg") + this.stepsPerSecond); //$NON-NLS-1$
 	}
 
 }
