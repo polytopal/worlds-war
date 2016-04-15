@@ -12,6 +12,7 @@ import io.sarl.core.Schedules
 import java.util.List
 import java.util.LinkedList
 import fr.utbm.info.vi51.worldswar.environment.EnvironmentReadyEvent
+import fr.utbm.info.vi51.worldswar.gui.Window
 
 /**
  * Main agent of the software.
@@ -24,7 +25,7 @@ agent Simulator {
 	private final val STARTUP_DELAY = 2000
 	
 	private var controller : Controller
-	private var gui : FakeGUI
+	private var gui : Window
 	
 	private var listeners : List<SimulatorListener>
 	
@@ -39,7 +40,7 @@ agent Simulator {
 	
 	on Initialize {
 		controller = new Controller(defaultSpace)
-		gui = new FakeGUI(controller)
+		gui = new Window(controller)
 		spawn(typeof(Environment))
 		
 		listeners = new LinkedList
