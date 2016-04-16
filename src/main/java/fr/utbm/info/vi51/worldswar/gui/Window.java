@@ -40,13 +40,12 @@ public class Window extends JFrame implements SimulatorListener {
 		// Controller initialization
 		
 		this.controller = controller;
-		this.controller.setSimulationSpeed(SimulationSpeed.MAX);
 		this.stepsPerSecond = 0;
 		this.lastStepStart = System.currentTimeMillis();
 		
 		// Window initialization
 
-		this.setTitle(Messages.getString("simulationStepFiredMsg")); //$NON-NLS-1$
+		this.setTitle(Messages.getString("Window.title")); //$NON-NLS-1$
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		this.setJMenuBar(new MenuBar());
