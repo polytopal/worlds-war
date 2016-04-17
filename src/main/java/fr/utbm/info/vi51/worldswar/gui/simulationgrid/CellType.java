@@ -1,4 +1,4 @@
-package fr.utbm.info.vi51.worldswar.gui;
+package fr.utbm.info.vi51.worldswar.gui.simulationgrid;
 
 import java.awt.Color;
 

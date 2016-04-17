@@ -2,9 +2,8 @@ package fr.utbm.info.vi51.worldswar.simulator
 
 import fr.utbm.info.vi51.worldswar.controller.Controller
 import fr.utbm.info.vi51.worldswar.controller.ControllerCommandEvent
-import fr.utbm.info.vi51.worldswar.controller.SimulationSpeedCommand
+import fr.utbm.info.vi51.worldswar.controller.commands.SimulationSpeedCommand
 import fr.utbm.info.vi51.worldswar.environment.Environment
-import fr.utbm.info.vi51.worldswar.gui.FakeGUI
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
 import io.sarl.core.Logging
