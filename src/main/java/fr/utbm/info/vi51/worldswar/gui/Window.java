@@ -4,7 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import fr.utbm.info.vi51.worldswar.controller.Controller;
-import fr.utbm.info.vi51.worldswar.simulator.SimulationSpeed;
+import fr.utbm.info.vi51.worldswar.gui.messages.Messages;
+import fr.utbm.info.vi51.worldswar.gui.simulationgrid.GridViewPanel;
 import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
 
 /**
@@ -14,12 +15,21 @@ import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
  */
 public class Window extends JFrame implements SimulatorListener {
 	private static final long serialVersionUID = 3509021382819712013L;
+<<<<<<< HEAD
 	
 	private GuiActionsManager guiActionsManager;
 	
 	private float stepsPerSecond;
 	private long lastStepStart;
 	
+=======
+
+	private final Controller controller;
+
+	private float stepsPerSecond;
+	private long lastStepStart;
+
+>>>>>>> 249c5b199d6ff2d49dce818b2a035e04c26ca549
 	/**
 	 * @param controller
 	 * 
@@ -28,12 +38,20 @@ public class Window extends JFrame implements SimulatorListener {
 	public Window(final Controller controller) {
 
 		// Controller initialization
+<<<<<<< HEAD
 		
 		this.stepsPerSecond = 0;
 		this.lastStepStart = System.currentTimeMillis();
 		
 		this.guiActionsManager = new GuiActionsManager(controller);
 		
+=======
+
+		this.controller = controller;
+		this.stepsPerSecond = 0;
+		this.lastStepStart = System.currentTimeMillis();
+
+>>>>>>> 249c5b199d6ff2d49dce818b2a035e04c26ca549
 		// Window initialization
 
 		this.setTitle(Messages.getString("Window.title")); //$NON-NLS-1$
@@ -49,14 +67,16 @@ public class Window extends JFrame implements SimulatorListener {
 		this.setVisible(true);
 		System.out.println("GUI created"); //$NON-NLS-1$
 	}
-	
+
 	@Override
 	public void simulationStepFired() {
-		long currentTime = System.currentTimeMillis();
-		long stepDuration = currentTime - this.lastStepStart;
+		final long currentTime = System.currentTimeMillis();
+		final long stepDuration = currentTime - this.lastStepStart;
 		this.lastStepStart = currentTime;
 		this.stepsPerSecond = 1000.f / stepDuration;
-		System.out.println(Messages.getString("Window.stepFiredMsg") + this.stepsPerSecond); //$NON-NLS-1$
+
+		final String title = String.format("%s - %f FPS", Messages.getString("Window.title"), this.stepsPerSecond);//$NON-NLS-1$//$NON-NLS-2$
+		this.setTitle(title);
 	}
 
 }

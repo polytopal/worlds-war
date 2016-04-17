@@ -8,7 +8,11 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
+<<<<<<< HEAD
 import fr.utbm.info.vi51.worldswar.controller.Controller;
+=======
+import fr.utbm.info.vi51.worldswar.gui.messages.Messages;
+>>>>>>> 249c5b199d6ff2d49dce818b2a035e04c26ca549
 
 /**
  * @author Leo
