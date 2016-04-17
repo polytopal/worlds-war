@@ -1,0 +1,92 @@
+package fr.utbm.info.vi51.worldswar.simulator
+
+import fr.utbm.info.vi51.worldswar.controller.Controller
+import fr.utbm.info.vi51.worldswar.controller.ControllerCommandEvent
+import fr.utbm.info.vi51.worldswar.controller.SimulationSpeedCommand
+import fr.utbm.info.vi51.worldswar.environment.Environment
+import fr.utbm.info.vi51.worldswar.gui.FakeGUI
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Initialize
+import io.sarl.core.Logging
+import io.sarl.core.Schedules
+import java.util.List
+import java.util.LinkedList
+import fr.utbm.info.vi51.worldswar.environment.EnvironmentReadyEvent
+import fr.utbm.info.vi51.worldswar.gui.Window
+
+/**
+ * Main agent of the software.
+ * Manages the flow of the simulation
+ */
+agent Simulator {
+	uses Logging, Schedules, DefaultContextInteractions
+	
+	/** Delay in ms, when a new environment is generated, before the simulation begins */
+	private final val STARTUP_DELAY = 2000
+	
+	private var controller : Controller
+	private var gui : Window
+	
+	private var listeners : List<SimulatorListener>
+	
+	/** Simulation speed, as chosen by the user */
+	private var simulationSpeed = SimulationSpeed.NORMAL
+	
+	/** Indicates whether the step timer has passed, hence a new step should be fired */
+	private var stepToFire = false
+	/** Indicates whether the environment is ready to compute a new step */
+	private var environmentReady = false
+	
+	
+	on Initialize {
+		controller = new Controller(defaultSpace)
+		gui = new Window(controller)
+		spawn(typeof(Environment))
+		
+		listeners = new LinkedList
+		listeners.add(gui)
+
+		in(STARTUP_DELAY) [ startSimulation ]
+	}
+	
+	private def startSimulation {
+		environmentReady = true
+		stepToFire = true
+		fireSimulationStep
+	}
+	
+	on EnvironmentReadyEvent {
+		environmentReady = true
+		fireSimulationStep
+	}
+	
+	private def stepReady {
+		stepToFire = true
+		fireSimulationStep
+	}
+	
+	/** Checks that both the step timer and the environment allow a new step to be fired, 
+	 * and fire this new step if that's the case.
+	 */
+	private def fireSimulationStep {
+		if(stepToFire && environmentReady) {
+			environmentReady = false
+			stepToFire = false
+			emit(new SimulationStepEvent)
+			for(l as SimulatorListener : listeners) {
+				l.simulationStepFired
+			}
+			in(simulationSpeed.milliseconds) [ stepReady ]
+		}
+	}
+	
+	/**
+	 * Handles the controller's commands
+	 */
+	on ControllerCommandEvent {
+		if(occurrence.command instanceof SimulationSpeedCommand) {
+			var command = occurrence.command as SimulationSpeedCommand
+			this.simulationSpeed = command.speed
+		}
+	}
+}

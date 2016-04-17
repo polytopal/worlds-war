@@ -1,0 +1,14 @@
+package fr.utbm.info.vi51.worldswar.controller
+
+/**
+ * 
+ * Event emitted by the {@link Controller} containing a user input to process
+ * 
+ */
+event ControllerCommandEvent {
+	var command : Object
+	
+	new(command : Object) {
+		this.command = command
+	}
+}
