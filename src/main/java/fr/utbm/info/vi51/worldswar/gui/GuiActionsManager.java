@@ -8,8 +8,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import fr.utbm.info.vi51.worldswar.gui.messages.Messages;
-
 /**
  * @author Leo
  *

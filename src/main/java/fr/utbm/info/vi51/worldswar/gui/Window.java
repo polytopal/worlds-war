@@ -4,8 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import fr.utbm.info.vi51.worldswar.controller.Controller;
-import fr.utbm.info.vi51.worldswar.gui.messages.Messages;
-import fr.utbm.info.vi51.worldswar.gui.simulationgrid.GridViewPanel;
+import fr.utbm.info.vi51.worldswar.simulator.SimulationSpeed;
 import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
 
 /**
@@ -15,12 +14,22 @@ import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
  */
 public class Window extends JFrame implements SimulatorListener {
 	private static final long serialVersionUID = 3509021382819712013L;
-
-	private final Controller controller;
-
+	
+	private Controller controller;
+	
 	private float stepsPerSecond;
 	private long lastStepStart;
 
+	/**
+	 * @param args
+	 *            Temporary main method
+	 */
+	public static void main(String[] args) {
+		final Window window = new Window(null);
+		window.setVisible(true);
+	}
+
+	
 	/**
 	 * @param controller
 	 * 
@@ -29,11 +38,11 @@ public class Window extends JFrame implements SimulatorListener {
 	public Window(final Controller controller) {
 
 		// Controller initialization
-
+		
 		this.controller = controller;
 		this.stepsPerSecond = 0;
 		this.lastStepStart = System.currentTimeMillis();
-
+		
 		// Window initialization
 
 		this.setTitle(Messages.getString("Window.title")); //$NON-NLS-1$
@@ -48,16 +57,14 @@ public class Window extends JFrame implements SimulatorListener {
 		this.pack();
 		this.setVisible(true);
 	}
-
+	
 	@Override
 	public void simulationStepFired() {
-		final long currentTime = System.currentTimeMillis();
-		final long stepDuration = currentTime - this.lastStepStart;
+		long currentTime = System.currentTimeMillis();
+		long stepDuration = currentTime - this.lastStepStart;
 		this.lastStepStart = currentTime;
 		this.stepsPerSecond = 1000.f / stepDuration;
-
-		final String title = String.format("%s - %f FPS", Messages.getString("Window.title"), this.stepsPerSecond);//$NON-NLS-1$//$NON-NLS-2$
-		this.setTitle(title);
+		System.out.println(Messages.getString("Window.stepFiredMsg") + this.stepsPerSecond); //$NON-NLS-1$
 	}
 
 }

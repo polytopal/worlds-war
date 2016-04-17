@@ -1,4 +1,4 @@
-package fr.utbm.info.vi51.worldswar.controller.commands;
+package fr.utbm.info.vi51.worldswar.controller;
 
 import fr.utbm.info.vi51.worldswar.simulator.SimulationSpeed;
 
