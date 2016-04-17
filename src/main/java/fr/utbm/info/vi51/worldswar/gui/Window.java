@@ -4,8 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import fr.utbm.info.vi51.worldswar.controller.Controller;
-import fr.utbm.info.vi51.worldswar.gui.messages.Messages;
-import fr.utbm.info.vi51.worldswar.gui.simulationgrid.GridViewPanel;
+import fr.utbm.info.vi51.worldswar.simulator.SimulationSpeed;
 import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
 
 /**
@@ -15,6 +14,7 @@ import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
  */
 public class Window extends JFrame implements SimulatorListener {
 	private static final long serialVersionUID = 3509021382819712013L;
+<<<<<<< HEAD
 <<<<<<< HEAD
 	
 	private GuiActionsManager guiActionsManager;
@@ -26,10 +26,25 @@ public class Window extends JFrame implements SimulatorListener {
 
 	private final Controller controller;
 
+=======
+	
+	private Controller controller;
+	
+>>>>>>> 3b4934e2f7ec323200354155d423a594256842a2
 	private float stepsPerSecond;
 	private long lastStepStart;
 
 >>>>>>> 249c5b199d6ff2d49dce818b2a035e04c26ca549
+	/**
+	 * @param args
+	 *            Temporary main method
+	 */
+	public static void main(String[] args) {
+		final Window window = new Window(null);
+		window.setVisible(true);
+	}
+
+	
 	/**
 	 * @param controller
 	 * 
@@ -38,6 +53,7 @@ public class Window extends JFrame implements SimulatorListener {
 	public Window(final Controller controller) {
 
 		// Controller initialization
+<<<<<<< HEAD
 <<<<<<< HEAD
 		
 		this.stepsPerSecond = 0;
@@ -52,6 +68,13 @@ public class Window extends JFrame implements SimulatorListener {
 		this.lastStepStart = System.currentTimeMillis();
 
 >>>>>>> 249c5b199d6ff2d49dce818b2a035e04c26ca549
+=======
+		
+		this.controller = controller;
+		this.stepsPerSecond = 0;
+		this.lastStepStart = System.currentTimeMillis();
+		
+>>>>>>> 3b4934e2f7ec323200354155d423a594256842a2
 		// Window initialization
 
 		this.setTitle(Messages.getString("Window.title")); //$NON-NLS-1$
@@ -67,16 +90,14 @@ public class Window extends JFrame implements SimulatorListener {
 		this.setVisible(true);
 		System.out.println("GUI created"); //$NON-NLS-1$
 	}
-
+	
 	@Override
 	public void simulationStepFired() {
-		final long currentTime = System.currentTimeMillis();
-		final long stepDuration = currentTime - this.lastStepStart;
+		long currentTime = System.currentTimeMillis();
+		long stepDuration = currentTime - this.lastStepStart;
 		this.lastStepStart = currentTime;
 		this.stepsPerSecond = 1000.f / stepDuration;
-
-		final String title = String.format("%s - %f FPS", Messages.getString("Window.title"), this.stepsPerSecond);//$NON-NLS-1$//$NON-NLS-2$
-		this.setTitle(title);
+		System.out.println(Messages.getString("Window.stepFiredMsg") + this.stepsPerSecond); //$NON-NLS-1$
 	}
 
 }

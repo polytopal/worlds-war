@@ -9,11 +9,14 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import fr.utbm.info.vi51.worldswar.controller.Controller;
 =======
 import fr.utbm.info.vi51.worldswar.gui.messages.Messages;
 >>>>>>> 249c5b199d6ff2d49dce818b2a035e04c26ca549
 
+=======
+>>>>>>> 3b4934e2f7ec323200354155d423a594256842a2
 /**
  * @author Leo
  *

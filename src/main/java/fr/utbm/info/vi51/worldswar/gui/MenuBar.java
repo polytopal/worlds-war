@@ -4,8 +4,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import fr.utbm.info.vi51.worldswar.gui.messages.Messages;
-
 /**
  * @author Leo
  * 
