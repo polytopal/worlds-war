@@ -15,20 +15,10 @@ import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
 public class Window extends JFrame implements SimulatorListener {
 	private static final long serialVersionUID = 3509021382819712013L;
 	
-	private Controller controller;
+	private GuiActionsManager guiActionsManager;
 	
 	private float stepsPerSecond;
 	private long lastStepStart;
-
-	/**
-	 * @param args
-	 *            Temporary main method
-	 */
-	public static void main(String[] args) {
-		final Window window = new Window(null);
-		window.setVisible(true);
-	}
-
 	
 	/**
 	 * @param controller
@@ -39,16 +29,17 @@ public class Window extends JFrame implements SimulatorListener {
 
 		// Controller initialization
 		
-		this.controller = controller;
 		this.stepsPerSecond = 0;
 		this.lastStepStart = System.currentTimeMillis();
+		
+		this.guiActionsManager = new GuiActionsManager(controller);
 		
 		// Window initialization
 
 		this.setTitle(Messages.getString("Window.title")); //$NON-NLS-1$
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-		this.setJMenuBar(new MenuBar());
+		this.setJMenuBar(new MenuBar(this.guiActionsManager));
 
 		this.getContentPane().add(new GridViewPanel(this));
 
@@ -56,6 +47,7 @@ public class Window extends JFrame implements SimulatorListener {
 
 		this.pack();
 		this.setVisible(true);
+		System.out.println("GUI created"); //$NON-NLS-1$
 	}
 	
 	@Override

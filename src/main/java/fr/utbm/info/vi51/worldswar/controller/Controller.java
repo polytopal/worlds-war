@@ -2,7 +2,6 @@ package fr.utbm.info.vi51.worldswar.controller;
 
 import fr.utbm.info.vi51.worldswar.environment.Environment;
 import fr.utbm.info.vi51.worldswar.simulator.SimulationSpeed;
-import fr.utbm.info.vi51.worldswar.simulator.Simulator;
 import io.sarl.lang.core.EventSpace;
 import io.sarl.util.Scopes;
 
@@ -33,6 +32,14 @@ public class Controller {
 	 */
 	public void setSimulationSpeed(SimulationSpeed speed) {
 		emitEvent(new ControllerCommandEvent(new SimulationSpeedCommand(speed)));
+	}
+	
+	public void newSimulation() {
+		emitEvent(new ControllerCommandEvent(new NewSimulationCommand()));
+	}
+	
+	public void stopSimulation() {
+		emitEvent(new ControllerCommandEvent(new StopSimulationCommand()));
 	}
 
 	private void emitEvent(ControllerCommandEvent event) {

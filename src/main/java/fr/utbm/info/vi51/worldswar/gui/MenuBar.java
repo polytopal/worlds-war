@@ -11,21 +11,18 @@ import javax.swing.JMenuItem;
  */
 public class MenuBar extends JMenuBar {
 	private static final long serialVersionUID = -4720732790008718078L;
-
 	/**
 	 * The constructor of the menu bar
 	 */
-	public MenuBar() {
-
-		final GuiActionsManager guiActionManager = GuiActionsManager.getInstance();
+	public MenuBar(GuiActionsManager guiActionsManager) {
 
 		final JMenu simulationMenu = new JMenu(Messages.getString("MenuBar.simulation")); //$NON-NLS-1$
 		this.add(simulationMenu);
 
-		final JMenuItem newSimulationItem = new JMenuItem(guiActionManager.getNewSimulationAction());
+		final JMenuItem newSimulationItem = new JMenuItem(guiActionsManager.getNewSimulationAction());
 		simulationMenu.add(newSimulationItem);
 
-		final JMenuItem stopSimulationItem = new JMenuItem(guiActionManager.getStopSimulationAction());
+		final JMenuItem stopSimulationItem = new JMenuItem(guiActionsManager.getStopSimulationAction());
 		simulationMenu.add(stopSimulationItem);
 
 	}

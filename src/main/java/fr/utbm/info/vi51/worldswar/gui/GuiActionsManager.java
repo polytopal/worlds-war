@@ -8,6 +8,8 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
+import fr.utbm.info.vi51.worldswar.controller.Controller;
+
 /**
  * @author Leo
  *
@@ -16,22 +18,17 @@ import javax.swing.KeyStroke;
  */
 public class GuiActionsManager {
 
-	private static GuiActionsManager INSTANCE = new GuiActionsManager();
-
 	private final Action newSimulationAction;
 	private final Action stopSimulationAction;
 
-	private GuiActionsManager() {
-		this.newSimulationAction = new NewSimulationAction();
-		this.stopSimulationAction = new StopSimulationAction();
+	GuiActionsManager(Controller controller) {
+		this.newSimulationAction = new NewSimulationAction(controller);
+		this.stopSimulationAction = new StopSimulationAction(controller);
 	}
 
 	/**
 	 * @return the unique instance of the manager
 	 */
-	public static GuiActionsManager getInstance() {
-		return INSTANCE;
-	}
 
 	/**
 	 * @return the action to start a new simulation
@@ -54,19 +51,21 @@ public class GuiActionsManager {
 	 */
 	private class NewSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 4958436812700297538L;
-
+		private Controller controller;
 		/**
 		 * New Simulation Action constructor
 		 */
-		public NewSimulationAction() {
+		public NewSimulationAction(Controller controller) {
 			super(Messages.getString("MenuBar.newSimulation")); //$NON-NLS-1$
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK));
+			this.controller = controller;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO LR - implementer lancement nouvelle simulation
 			System.out.println("lancement nouvelle simulation"); //$NON-NLS-1$
+			this.controller.newSimulation();
 		}
 	}
 
@@ -77,19 +76,21 @@ public class GuiActionsManager {
 	 */
 	private class StopSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
-
+		private Controller controller;
 		/**
 		 * Stop Simulation Action constructor
 		 */
-		public StopSimulationAction() {
+		public StopSimulationAction(Controller controller) {
 			super(Messages.getString("MenuBar.stopSimulation")); //$NON-NLS-1$
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
+			this.controller = controller;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO LR - implementer arret simulation
 			System.out.println("arret simulation"); //$NON-NLS-1$
+			this.controller.stopSimulation();
 		}
 	}
 

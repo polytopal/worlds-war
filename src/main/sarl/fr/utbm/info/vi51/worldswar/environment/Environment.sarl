@@ -1,20 +1,32 @@
 package fr.utbm.info.vi51.worldswar.environment
 
+import fr.utbm.info.vi51.worldswar.simulator.SimulationStepEvent
+import fr.utbm.info.vi51.worldswar.simulator.StopSimulationEvent
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Logging
-import fr.utbm.info.vi51.worldswar.simulator.SimulationStepEvent
+import io.sarl.core.Destroy
+import io.sarl.core.Lifecycle
 
 /**
  * While it does not appear obvious, this agent manages the environment.
  * */
 agent Environment {
-	uses Logging, DefaultContextInteractions
+	uses Logging, DefaultContextInteractions, Lifecycle
 	
 	
 	on SimulationStepEvent {
 		println("Simulation step")
 		
 		emit(new EnvironmentReadyEvent)
+	}
+	
+	on StopSimulationEvent {
+		// In the future, maybe it should wait for all the spawned agents to terminate
+		killMe
+	}
+	
+	on Destroy {
+		emit(new EnvironmentTerminatedEvent)
 	}
 	
 }
