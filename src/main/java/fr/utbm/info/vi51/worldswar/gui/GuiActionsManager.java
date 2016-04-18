@@ -21,7 +21,7 @@ public class GuiActionsManager {
 	private final Action newSimulationAction;
 	private final Action stopSimulationAction;
 
-	GuiActionsManager(Controller controller) {
+	GuiActionsManager(final Controller controller) {
 		this.newSimulationAction = new NewSimulationAction(controller);
 		this.stopSimulationAction = new StopSimulationAction(controller);
 	}
@@ -55,7 +55,7 @@ public class GuiActionsManager {
 		/**
 		 * New Simulation Action constructor
 		 */
-		public NewSimulationAction(Controller controller) {
+		public NewSimulationAction(final Controller controller) {
 			super(Messages.getString("MenuBar.newSimulation")); //$NON-NLS-1$
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK));
 			this.controller = controller;
@@ -63,7 +63,6 @@ public class GuiActionsManager {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO LR - implementer lancement nouvelle simulation
 			System.out.println("lancement nouvelle simulation"); //$NON-NLS-1$
 			this.controller.newSimulation();
 		}
@@ -80,7 +79,7 @@ public class GuiActionsManager {
 		/**
 		 * Stop Simulation Action constructor
 		 */
-		public StopSimulationAction(Controller controller) {
+		public StopSimulationAction(final Controller controller) {
 			super(Messages.getString("MenuBar.stopSimulation")); //$NON-NLS-1$
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
 			this.controller = controller;
@@ -88,7 +87,6 @@ public class GuiActionsManager {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO LR - implementer arret simulation
 			System.out.println("arret simulation"); //$NON-NLS-1$
 			this.controller.stopSimulation();
 		}
