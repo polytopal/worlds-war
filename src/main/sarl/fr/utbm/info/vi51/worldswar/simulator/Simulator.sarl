@@ -64,6 +64,10 @@ agent Simulator {
 			environmentReady = true
 			stepToFire = true
 			fireSimulationStep
+			
+			for(l as SimulatorListener : listeners) {
+				l.simulationStarted
+			}
 		}
 		
 	}
@@ -118,5 +122,8 @@ agent Simulator {
 	
 	on EnvironmentTerminatedEvent {
 		simulationRunning = false
+		for(l as SimulatorListener : listeners) {
+				l.simulationTerminated
+		}
 	}
 }

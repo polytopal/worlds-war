@@ -9,4 +9,6 @@ public interface SimulatorListener {
 	 * Invoked when a simulation step has been fired
 	 */
 	public void simulationStepFired();
+	public void simulationTerminated();
+	public void simulationStarted();
 }

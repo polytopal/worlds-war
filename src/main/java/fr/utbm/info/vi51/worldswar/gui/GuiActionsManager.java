@@ -63,7 +63,6 @@ public class GuiActionsManager {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("lancement nouvelle simulation"); //$NON-NLS-1$
 			this.controller.newSimulation();
 		}
 	}
@@ -87,7 +86,6 @@ public class GuiActionsManager {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("arret simulation"); //$NON-NLS-1$
 			this.controller.stopSimulation();
 		}
 	}

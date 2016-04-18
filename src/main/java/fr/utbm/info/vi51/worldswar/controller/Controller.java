@@ -36,10 +36,12 @@ public class Controller {
 	
 	public void newSimulation() {
 		emitEvent(new ControllerCommandEvent(new NewSimulationCommand()));
+		System.out.println("lancement nouvelle simulation"); //$NON-NLS-1$
 	}
 	
 	public void stopSimulation() {
 		emitEvent(new ControllerCommandEvent(new StopSimulationCommand()));
+		System.out.println("arret simulation"); //$NON-NLS-1$
 	}
 
 	private void emitEvent(ControllerCommandEvent event) {

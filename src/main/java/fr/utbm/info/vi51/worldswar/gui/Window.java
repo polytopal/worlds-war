@@ -1,5 +1,10 @@
 package fr.utbm.info.vi51.worldswar.gui;
 
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
@@ -17,8 +22,12 @@ public class Window extends JFrame implements SimulatorListener {
 	
 	private GuiActionsManager guiActionsManager;
 	
+	private InfoPanel infoPanel;
+	
 	private float stepsPerSecond;
 	private long lastStepStart;
+	private boolean simulationRunning;
+	private int stepNumber;
 	
 	/**
 	 * @param controller
@@ -33,15 +42,25 @@ public class Window extends JFrame implements SimulatorListener {
 		this.lastStepStart = System.currentTimeMillis();
 		
 		this.guiActionsManager = new GuiActionsManager(controller);
-		
+		this.stepNumber = 0;
+		this.simulationRunning = false;
 		// Window initialization
-
 		this.setTitle(Messages.getString("Window.title")); //$NON-NLS-1$
-		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent evt) {
+					controller.stopSimulation();
+			}
+		});
+		
+		this.getContentPane().setLayout(new BorderLayout());
 		this.setJMenuBar(new MenuBar(this.guiActionsManager));
-
-		this.getContentPane().add(new GridViewPanel(this));
+	
+		this.getContentPane().add(new GridViewPanel(this), BorderLayout.CENTER);
+		
+		this.infoPanel = new InfoPanel();
+		this.getContentPane().add(this.infoPanel, BorderLayout.SOUTH);
 
 		this.setLocationRelativeTo(null);
 
@@ -57,6 +76,27 @@ public class Window extends JFrame implements SimulatorListener {
 		this.lastStepStart = currentTime;
 		this.stepsPerSecond = 1000.f / stepDuration;
 		System.out.println(Messages.getString("Window.stepFiredMsg") + this.stepsPerSecond); //$NON-NLS-1$
+		
+		this.infoPanel.setLabelSimulationState(this.simulationRunning);
+		this.infoPanel.setSPSLabel(Float.toString(this.stepsPerSecond));
+		this.infoPanel.setLabelStepNumber(this.stepNumber);
+		
+		
+		this.stepNumber++;
+
+	}
+	
+	@Override
+	public void simulationTerminated() {
+		this.simulationRunning = false;
+		this.infoPanel.setLabelSimulationState(this.simulationRunning);
+	}
+
+	@Override
+	public void simulationStarted() {
+		this.simulationRunning = true;
+		this.infoPanel.setLabelSimulationState(this.simulationRunning);
+		this.stepNumber = 0;
 	}
 
 }
