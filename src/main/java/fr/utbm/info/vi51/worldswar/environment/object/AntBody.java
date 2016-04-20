@@ -9,13 +9,27 @@ import fr.utbm.info.vi51.worldswar.environment.Colony;
  */
 public class AntBody extends AgentBody {
 
+	/**
+	 * Number of food units the ant is physically able to carry
+	 */
 	private int capacity;
+
+	/**
+	 * Number of food units currently carried by the ant
+	 */
 	private int foodCarried;
+
+	/**
+	 * Current health points
+	 */
 	private int health;
 
 	private boolean burrowed;
 
-	private int timeToLive;
+	/**
+	 * Number of remaining steps before the ant dies of old age
+	 */
+	private int remainingLifeTime;
 
 	private Caste caste;
 
@@ -30,16 +44,16 @@ public class AntBody extends AgentBody {
 	/**
 	 * @return the timeToLive
 	 */
-	public int getTimeToLive() {
-		return this.timeToLive;
+	public int getRemainingLifeTime() {
+		return this.remainingLifeTime;
 	}
 
 	/**
-	 * @param timeToLive
-	 *            the timeToLive to set
+	 * @param remainingLifeTime
+	 *            the remainingLifeTime to set
 	 */
-	public void setTimeToLive(int timeToLive) {
-		this.timeToLive = timeToLive;
+	public void setRemainingLifeTime(int remainingLifeTime) {
+		this.remainingLifeTime = remainingLifeTime;
 	}
 
 	/**
