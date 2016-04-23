@@ -1,7 +1,5 @@
 package fr.utbm.info.vi51.worldswar.environment.perceivable;
 
-import java.awt.Point;
-
 import fr.utbm.info.vi51.worldswar.environment.object.EnvironmentObject;
 
 /**
@@ -15,10 +13,6 @@ public abstract class Perceivable {
 
 	public Perceivable(EnvironmentObject object) {
 		this.object = object;
-	}
-
-	public Point getPosition() {
-		return this.object.getPosition();
 	}
 
 	public boolean isTraversable() {
