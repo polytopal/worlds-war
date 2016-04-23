@@ -34,10 +34,10 @@ public class Grid<T> {
 	public Grid(int xMin, int xMax, int yMin, int yMax) {
 
 		if (xMin >= xMax) {
-			throw new IllegalArgumentException("xMax have to be greater than xMin"); //$NON-NLS-1$
+			throw new IllegalArgumentException("xMax has to be greater than xMin"); //$NON-NLS-1$
 		}
 		if (yMin >= yMax) {
-			throw new IllegalArgumentException("yMax have to be greater than yMin"); //$NON-NLS-1$
+			throw new IllegalArgumentException("yMax has to be greater than yMin"); //$NON-NLS-1$
 		}
 
 		this.width = xMax - xMin + 1;
@@ -91,14 +91,14 @@ public class Grid<T> {
 	 * @return the maximum index of the matrix on the axis x
 	 */
 	public int getXMax() {
-		return getXMin() + this.width - 1;
+		return this.getXMin() + this.width - 1;
 	}
 
 	/**
 	 * @return the maximum index of the matrix on the axis y
 	 */
 	public int getYMax() {
-		return getYMin() + this.height - 1;
+		return this.getYMin() + this.height - 1;
 	}
 
 	/**
