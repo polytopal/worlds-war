@@ -8,7 +8,7 @@ import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill;
  */
 public class PerceivableAntHill extends Perceivable {
 
-	private AntHill antHill;
+	private final AntHill antHill;
 
 	public PerceivableAntHill(AntHill antHill) {
 		super(antHill);

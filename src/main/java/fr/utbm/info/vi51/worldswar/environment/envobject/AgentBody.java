@@ -9,5 +9,9 @@ import io.sarl.lang.core.Agent;
  */
 public abstract class AgentBody extends DynamicObject {
 
+	/**
+	 * The {@link Environment} stores here the {@link Influence} he received for
+	 * the current step
+	 */
 	private Influence influence;
 }

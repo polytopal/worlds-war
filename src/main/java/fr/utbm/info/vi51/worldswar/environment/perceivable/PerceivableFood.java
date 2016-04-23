@@ -6,7 +6,8 @@ import fr.utbm.info.vi51.worldswar.environment.envobject.Food;
  * {@link Perceivable} representation of a {@link Food}
  */
 public class PerceivableFood extends Perceivable {
-	private Food food;
+
+	private final Food food;
 
 	public PerceivableFood(Food food) {
 		super(food);

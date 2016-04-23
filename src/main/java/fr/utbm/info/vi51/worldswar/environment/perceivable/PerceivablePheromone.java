@@ -9,7 +9,7 @@ import fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone;
  */
 public class PerceivablePheromone extends Perceivable {
 
-	private Pheromone pheromone;
+	private final Pheromone pheromone;
 
 	public PerceivablePheromone(Pheromone pheromone) {
 		super(pheromone);

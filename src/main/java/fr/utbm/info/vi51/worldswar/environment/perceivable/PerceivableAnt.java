@@ -10,10 +10,11 @@ import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody;
  */
 public class PerceivableAnt extends Perceivable {
 
-	private AntBody ant;
+	private final AntBody ant;
 
 	public PerceivableAnt(AntBody ant) {
 		super(ant);
+		this.ant = ant;
 	}
 
 	/**

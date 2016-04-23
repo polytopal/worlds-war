@@ -11,7 +11,7 @@ public abstract class Perceivable {
 
 	private final EnvironmentObject envObject;
 
-	public Perceivable(EnvironmentObject envObject) {
+	protected Perceivable(EnvironmentObject envObject) {
 		this.envObject = envObject;
 	}
 

@@ -12,7 +12,7 @@ public class AntBody extends AgentBody {
 	/**
 	 * Number of food units the ant is physically able to carry
 	 */
-	private int capacity;
+	private final int capacity;
 
 	/**
 	 * Number of food units currently carried by the ant
@@ -35,6 +35,15 @@ public class AntBody extends AgentBody {
 
 	private Colony colony;
 
+	public AntBody(Colony colony, Caste caste) {
+		super();
+		this.colony = colony;
+		this.caste = caste;
+
+		// TODO placeholder constructor, stats need to be calculated
+		this.capacity = 42;
+	}
+
 	/** {@inheritDoc} **/
 	@Override
 	public boolean isTraversable() {
@@ -49,11 +58,10 @@ public class AntBody extends AgentBody {
 	}
 
 	/**
-	 * @param remainingLifeTime
-	 *            the remainingLifeTime to set
+	 * Decrements the remaining life time of the ant by 1 step.
 	 */
-	public void setRemainingLifeTime(int remainingLifeTime) {
-		this.remainingLifeTime = remainingLifeTime;
+	public void decrementRemainingLifeTime() {
+		this.remainingLifeTime--;
 	}
 
 	/**
@@ -61,6 +69,14 @@ public class AntBody extends AgentBody {
 	 */
 	public int getFoodCarried() {
 		return this.foodCarried;
+	}
+
+	/**
+	 * @param foodCarried
+	 *            the foodCarried to set
+	 */
+	public void setFoodCarried(int foodCarried) {
+		this.foodCarried = foodCarried;
 	}
 
 	/**
