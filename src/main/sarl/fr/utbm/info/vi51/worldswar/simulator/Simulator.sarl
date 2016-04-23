@@ -4,7 +4,6 @@ import fr.utbm.info.vi51.worldswar.controller.Controller
 import fr.utbm.info.vi51.worldswar.controller.ControllerCommandEvent
 import fr.utbm.info.vi51.worldswar.controller.SimulationSpeedCommand
 import fr.utbm.info.vi51.worldswar.environment.Environment
-import fr.utbm.info.vi51.worldswar.gui.FakeGUI
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
 import io.sarl.core.Logging
@@ -12,6 +11,10 @@ import io.sarl.core.Schedules
 import java.util.List
 import java.util.LinkedList
 import fr.utbm.info.vi51.worldswar.environment.EnvironmentReadyEvent
+import fr.utbm.info.vi51.worldswar.gui.Window
+import fr.utbm.info.vi51.worldswar.controller.NewSimulationCommand
+import fr.utbm.info.vi51.worldswar.controller.StopSimulationCommand
+import fr.utbm.info.vi51.worldswar.environment.EnvironmentTerminatedEvent
 
 /**
  * Main agent of the software.
@@ -24,10 +27,10 @@ agent Simulator {
 	private final val STARTUP_DELAY = 2000
 	
 	private var controller : Controller
-	private var gui : FakeGUI
+	private var gui : Window
 	
 	private var listeners : List<SimulatorListener>
-	
+
 	/** Simulation speed, as chosen by the user */
 	private var simulationSpeed = SimulationSpeed.NORMAL
 	
@@ -35,25 +38,41 @@ agent Simulator {
 	private var stepToFire = false
 	/** Indicates whether the environment is ready to compute a new step */
 	private var environmentReady = false
+	/** Indicates if the simulation is currently running */
+	private var simulationRunning = false
+	/** Indicates if the simulation is currently stopping */
 	
+	private var newSimulationPending = false
 	
 	on Initialize {
 		controller = new Controller(defaultSpace)
-		gui = new FakeGUI(controller)
-		spawn(typeof(Environment))
+		gui = new Window(controller)
 		
 		listeners = new LinkedList
 		listeners.add(gui)
-
-		in(STARTUP_DELAY) [ startSimulation ]
+		
 	}
 	
-	private def startSimulation {
-		environmentReady = true
-		stepToFire = true
-		fireSimulationStep
+	private def newSimulation {
+		if(simulationRunning) {
+			stopSimulation
+			newSimulationPending = true
+		} else {
+			simulationRunning = true
+			newSimulationPending = false
+			spawn(typeof(Environment))
+			environmentReady = true
+			stepToFire = true
+			fireSimulationStep
+		}
+		
 	}
 	
+	private def stopSimulation {
+		environmentReady = false
+		stepToFire = false
+		emit(new StopSimulationEvent)
+	}
 	on EnvironmentReadyEvent {
 		environmentReady = true
 		fireSimulationStep
@@ -68,7 +87,7 @@ agent Simulator {
 	 * and fire this new step if that's the case.
 	 */
 	private def fireSimulationStep {
-		if(stepToFire && environmentReady) {
+		if(stepToFire && environmentReady && simulationRunning) {
 			environmentReady = false
 			stepToFire = false
 			emit(new SimulationStepEvent)
@@ -76,6 +95,10 @@ agent Simulator {
 				l.simulationStepFired
 			}
 			in(simulationSpeed.milliseconds) [ stepReady ]
+		} else if (!simulationRunning) {
+			if (newSimulationPending) {
+				newSimulation
+			}
 		}
 	}
 	
@@ -86,6 +109,14 @@ agent Simulator {
 		if(occurrence.command instanceof SimulationSpeedCommand) {
 			var command = occurrence.command as SimulationSpeedCommand
 			this.simulationSpeed = command.speed
+		} else if (occurrence.command instanceof NewSimulationCommand) {
+			newSimulation
+		} else if (occurrence.command instanceof StopSimulationCommand) {
+			stopSimulation
 		}
+	}
+	
+	on EnvironmentTerminatedEvent {
+		simulationRunning = false
 	}
 }

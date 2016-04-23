@@ -1,16 +1,19 @@
 package fr.utbm.info.vi51.worldswar.environment
 
 import fr.utbm.info.vi51.worldswar.simulator.SimulationStepEvent
+import fr.utbm.info.vi51.worldswar.simulator.StopSimulationEvent
 import fr.utbm.info.vi51.worldswar.utils.Grid
 import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Destroy
 import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
 
 /**
  * While it does not appear obvious, this agent manages the environment.
  * */
 agent Environment {
-	uses Logging, DefaultContextInteractions
+	uses Logging, DefaultContextInteractions, Lifecycle
 	
 	var grid : Grid<Cell>
 	
@@ -28,6 +31,15 @@ agent Environment {
 		println("Simulation step")
 		
 		emit(new EnvironmentReadyEvent)
+	}
+	
+	on StopSimulationEvent {
+		//TODO In the future, it should wait for all the spawned agents to terminate
+		killMe
+	}
+	
+	on Destroy {
+		emit(new EnvironmentTerminatedEvent)
 	}
 	
 }

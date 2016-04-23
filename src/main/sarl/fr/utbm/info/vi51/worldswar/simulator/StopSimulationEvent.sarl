@@ -1,0 +1,9 @@
+package fr.utbm.info.vi51.worldswar.simulator
+
+/**
+ * Event fired by the Simulator when it receives StopSimulationCommand.
+ * In particular, it orders the environment to suicide.
+ */
+event StopSimulationEvent {
+	
+}
