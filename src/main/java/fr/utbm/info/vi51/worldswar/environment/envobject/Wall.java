@@ -1,4 +1,4 @@
-package fr.utbm.info.vi51.worldswar.environment.object;
+package fr.utbm.info.vi51.worldswar.environment.envobject;
 
 /**
  * Represents a {@link StaticObject} that cannot be passed through

@@ -1,6 +1,6 @@
 package fr.utbm.info.vi51.worldswar.environment.perceivable;
 
-import fr.utbm.info.vi51.worldswar.environment.object.EnvironmentObject;
+import fr.utbm.info.vi51.worldswar.environment.envobject.EnvironmentObject;
 
 /**
  * Immutable class that permits giving agents a perception of an
@@ -9,14 +9,14 @@ import fr.utbm.info.vi51.worldswar.environment.object.EnvironmentObject;
  */
 public abstract class Perceivable {
 
-	private EnvironmentObject object;
+	private final EnvironmentObject envObject;
 
-	public Perceivable(EnvironmentObject object) {
-		this.object = object;
+	public Perceivable(EnvironmentObject envObject) {
+		this.envObject = envObject;
 	}
 
 	public boolean isTraversable() {
-		return this.object.isTraversable();
+		return this.envObject.isTraversable();
 	}
 
 }

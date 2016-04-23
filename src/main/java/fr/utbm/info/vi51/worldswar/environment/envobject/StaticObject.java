@@ -1,4 +1,4 @@
-package fr.utbm.info.vi51.worldswar.environment.object;
+package fr.utbm.info.vi51.worldswar.environment.envobject;
 
 /**
  * {@link EnvironmentObject} that will never be displaced on the map

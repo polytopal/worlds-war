@@ -1,4 +1,4 @@
-package fr.utbm.info.vi51.worldswar.environment.object;
+package fr.utbm.info.vi51.worldswar.environment.envobject;
 
 import fr.utbm.info.vi51.worldswar.environment.influence.Influence;
 import io.sarl.lang.core.Agent;

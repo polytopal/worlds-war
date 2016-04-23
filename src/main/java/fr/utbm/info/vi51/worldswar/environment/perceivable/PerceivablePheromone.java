@@ -2,7 +2,7 @@ package fr.utbm.info.vi51.worldswar.environment.perceivable;
 
 import fr.utbm.info.vi51.worldswar.environment.Colony;
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
-import fr.utbm.info.vi51.worldswar.environment.object.Pheromone;
+import fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone;
 
 /**
  * {@link Perceivable} representation of a {@link Pheromone}
@@ -18,7 +18,7 @@ public class PerceivablePheromone extends Perceivable {
 
 	/**
 	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.environment.object.Pheromone#getQty()
+	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone#getQty()
 	 */
 	public float getQty() {
 		return this.pheromone.getQty();
@@ -26,7 +26,7 @@ public class PerceivablePheromone extends Perceivable {
 
 	/**
 	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.environment.object.Pheromone#getType()
+	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone#getType()
 	 */
 	public PheromoneType getType() {
 		return this.pheromone.getType();
@@ -34,7 +34,7 @@ public class PerceivablePheromone extends Perceivable {
 
 	/**
 	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.environment.object.Pheromone#getColony()
+	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone#getColony()
 	 */
 	public Colony getColony() {
 		return this.pheromone.getColony();

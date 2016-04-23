@@ -1,7 +1,7 @@
 package fr.utbm.info.vi51.worldswar.environment.perceivable;
 
 import fr.utbm.info.vi51.worldswar.environment.Colony;
-import fr.utbm.info.vi51.worldswar.environment.object.AntHill;
+import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill;
 
 /**
  * {@link Perceivable} representation of an {@link AntHill}
@@ -17,7 +17,7 @@ public class PerceivableAntHill extends Perceivable {
 
 	/**
 	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.environment.object.AntHill#getColony()
+	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.AntHill#getColony()
 	 */
 	public Colony getColony() {
 		return this.antHill.getColony();
@@ -25,7 +25,7 @@ public class PerceivableAntHill extends Perceivable {
 
 	/**
 	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.environment.object.AntHill#getAvailableFood()
+	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.AntHill#getAvailableFood()
 	 */
 	public int getAvailableFood() {
 		return this.antHill.getAvailableFood();
@@ -33,7 +33,7 @@ public class PerceivableAntHill extends Perceivable {
 
 	/**
 	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.environment.object.AntHill#isFoodEmpty()
+	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.AntHill#isFoodEmpty()
 	 */
 	public boolean isFoodEmpty() {
 		return this.antHill.isFoodEmpty();

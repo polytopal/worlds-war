@@ -1,6 +1,6 @@
 package fr.utbm.info.vi51.worldswar.environment.perceivable;
 
-import fr.utbm.info.vi51.worldswar.environment.object.Food;
+import fr.utbm.info.vi51.worldswar.environment.envobject.Food;
 
 /**
  * {@link Perceivable} representation of a {@link Food}
@@ -15,7 +15,7 @@ public class PerceivableFood extends Perceivable {
 
 	/**
 	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.environment.object.Food#getAvailable()
+	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.Food#getAvailable()
 	 */
 	public int getAvailable() {
 		return this.food.getAvailable();
@@ -23,7 +23,7 @@ public class PerceivableFood extends Perceivable {
 
 	/**
 	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.environment.object.Food#isEmpty()
+	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.Food#isEmpty()
 	 */
 	public boolean isEmpty() {
 		return this.food.isEmpty();

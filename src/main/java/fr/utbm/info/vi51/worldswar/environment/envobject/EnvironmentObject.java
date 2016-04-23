@@ -1,4 +1,4 @@
-package fr.utbm.info.vi51.worldswar.environment.object;
+package fr.utbm.info.vi51.worldswar.environment.envobject;
 
 /**
  * A physical object of the {@link Environment}
