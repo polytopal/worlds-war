@@ -1,7 +1,6 @@
 package fr.utbm.info.vi51.worldswar.gui;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -9,7 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import fr.utbm.info.vi51.worldswar.controller.Controller;
-import fr.utbm.info.vi51.worldswar.simulator.SimulationSpeed;
 import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
 
 /**
@@ -19,7 +17,7 @@ import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
  */
 public class Window extends JFrame implements SimulatorListener {
 	private static final long serialVersionUID = 3509021382819712013L;
-	
+
 	private GuiActionsManager guiActionsManager;
 	
 	private InfoPanel infoPanel;
@@ -37,13 +35,15 @@ public class Window extends JFrame implements SimulatorListener {
 	public Window(final Controller controller) {
 
 		// Controller initialization
-		
+
 		this.stepsPerSecond = 0;
 		this.lastStepStart = System.currentTimeMillis();
-		
+
 		this.guiActionsManager = new GuiActionsManager(controller);
+		
 		this.stepNumber = 0;
 		this.simulationRunning = false;
+		
 		// Window initialization
 		this.setTitle(Messages.getString("Window.title")); //$NON-NLS-1$
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -68,7 +68,7 @@ public class Window extends JFrame implements SimulatorListener {
 		this.setVisible(true);
 		System.out.println("GUI created"); //$NON-NLS-1$
 	}
-	
+
 	@Override
 	public void simulationStepFired() {
 		long currentTime = System.currentTimeMillis();
