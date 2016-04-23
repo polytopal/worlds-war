@@ -78,7 +78,7 @@ public class Window extends JFrame implements SimulatorListener {
 		System.out.println(Messages.getString("Window.stepFiredMsg") + this.stepsPerSecond); //$NON-NLS-1$
 		
 		this.infoPanel.setLabelSimulationState(this.simulationRunning);
-		this.infoPanel.setSPSLabel(Float.toString(this.stepsPerSecond));
+		this.infoPanel.setSPSLabel(this.stepsPerSecond);
 		this.infoPanel.setLabelStepNumber(this.stepNumber);
 		
 		

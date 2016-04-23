@@ -1,5 +1,7 @@
 package fr.utbm.info.vi51.worldswar.gui;
 
+import java.text.DecimalFormat;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -11,6 +13,8 @@ public class InfoPanel extends JPanel{
 	private JLabel labelSPS;
 	private JLabel labelStepNumber;
 
+	DecimalFormat df = new DecimalFormat("#,###,##0.00");
+	
 	public InfoPanel() {
 		this.labelSimulationState = new JLabel(" simulation stopped |"); //$NON-NLS-1$
 		this.add(this.labelSimulationState);
@@ -22,8 +26,8 @@ public class InfoPanel extends JPanel{
 		this.add(this.labelStepNumber);
 	}
 	
-	public void setSPSLabel(String nbSPS) {
-		this.labelSPS.setText(nbSPS+" steps per second |"); //$NON-NLS-1$
+	public void setSPSLabel(float nbSPS) {
+		this.labelSPS.setText(df.format(nbSPS)+" steps per second |"); //$NON-NLS-1$
 	}
 	
 	public void setLabelSimulationState(boolean simulationRunning) {
