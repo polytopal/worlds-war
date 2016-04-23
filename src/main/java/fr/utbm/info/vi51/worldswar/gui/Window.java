@@ -77,9 +77,9 @@ public class Window extends JFrame implements SimulatorListener {
 		this.stepsPerSecond = 1000.f / stepDuration;
 		System.out.println(Messages.getString("Window.stepFiredMsg") + this.stepsPerSecond); //$NON-NLS-1$
 		
-		this.infoPanel.setLabelSimulationState(this.simulationRunning);
-		this.infoPanel.setSPSLabel(this.stepsPerSecond);
-		this.infoPanel.setLabelStepNumber(this.stepNumber);
+		this.infoPanel.setSimulationStateLabel(this.simulationRunning);
+		this.infoPanel.setStepPerSecondLabel(this.stepsPerSecond);
+		this.infoPanel.setStepNumberLabel(this.stepNumber);
 		
 		
 		this.stepNumber++;
@@ -89,13 +89,13 @@ public class Window extends JFrame implements SimulatorListener {
 	@Override
 	public void simulationTerminated() {
 		this.simulationRunning = false;
-		this.infoPanel.setLabelSimulationState(this.simulationRunning);
+		this.infoPanel.setSimulationStateLabel(this.simulationRunning);
 	}
 
 	@Override
 	public void simulationStarted() {
 		this.simulationRunning = true;
-		this.infoPanel.setLabelSimulationState(this.simulationRunning);
+		this.infoPanel.setSimulationStateLabel(this.simulationRunning);
 		this.stepNumber = 0;
 	}
 
