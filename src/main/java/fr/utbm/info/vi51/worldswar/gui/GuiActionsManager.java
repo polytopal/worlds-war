@@ -27,10 +27,6 @@ public class GuiActionsManager {
 	}
 
 	/**
-	 * @return the unique instance of the manager
-	 */
-
-	/**
 	 * @return the action to start a new simulation
 	 */
 	public Action getNewSimulationAction() {
