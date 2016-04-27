@@ -84,8 +84,7 @@ agent Environment {
 				var EnvObjectList = grid.get(x, y).getEnvObjects
 				
 				// foreach Environment object in the cell
-				for(var i:int=0 ; i<EnvObjectList.size ; i++){
-					var envObj = EnvObjectList.get(i)
+				for(envObj : EnvObjectList){
 					var perceivable : Perceivable
 					
 					// we change each envObject in Perceivable
