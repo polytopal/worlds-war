@@ -51,7 +51,7 @@ agent Environment {
 		
 		var perceptionGrid = computePerceptionGrid
 		
-		// TODO - send the all grid to the listeners (the gui)
+		// TODO - send the complete grid to the listeners (the gui)
 		
 		// TODO - compute and send the perception to each agent from the perception grid
 		
@@ -81,10 +81,10 @@ agent Environment {
 				var perceptionList : List<Perceivable> = new ArrayList<Perceivable>
 				perceptionGrid.set(x,y, perceptionList)
 				
-				var EnvObjectList = grid.get(x, y).getEnvObjects
+				var envObjectList = grid.get(x, y).getEnvObjects
 				
 				// foreach Environment object in the cell
-				for(envObj : EnvObjectList){
+				for(envObj : envObjectList){
 					var perceivable : Perceivable
 					
 					// we change each envObject in Perceivable
