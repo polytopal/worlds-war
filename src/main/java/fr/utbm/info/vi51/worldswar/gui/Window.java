@@ -46,7 +46,7 @@ public class Window extends JFrame implements SimulatorListener {
 		
 		// Window initialization
 		this.setTitle(Messages.getString("Window.title")); //$NON-NLS-1$
-		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent evt) {
