@@ -1,0 +1,20 @@
+package fr.utbm.info.vi51.worldswar.^agent
+
+import fr.utbm.info.vi51.worldswar.^agent.^event.DeadAgentEvent
+import fr.utbm.info.vi51.worldswar.simulator.StopSimulationEvent
+import io.sarl.core.Lifecycle
+
+/**
+ * Abstract agent inherited by every other ants agents
+ */
+abstract agent AntAgent {
+	uses Lifecycle
+	
+	on StopSimulationEvent {
+		killMe
+	}
+	
+	on DeadAgentEvent {
+		killMe
+	}
+}

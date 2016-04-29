@@ -31,15 +31,15 @@ public class Controller {
 	 * @param speed
 	 */
 	public void setSimulationSpeed(SimulationSpeed speed) {
-		emitEvent(new ControllerCommandEvent(new SimulationSpeedCommand(speed)));
+		this.emitEvent(new ControllerCommandEvent(new SimulationSpeedCommand(speed)));
 	}
-	
+
 	public void newSimulation() {
-		emitEvent(new ControllerCommandEvent(new NewSimulationCommand()));
+		this.emitEvent(new ControllerCommandEvent(new NewSimulationCommand()));
 	}
-	
+
 	public void stopSimulation() {
-		emitEvent(new ControllerCommandEvent(new StopSimulationCommand()));
+		this.emitEvent(new ControllerCommandEvent(new StopSimulationCommand()));
 	}
 
 	private void emitEvent(ControllerCommandEvent event) {

@@ -6,7 +6,7 @@ import fr.utbm.info.vi51.worldswar.environment.Direction;
  * Move in the specified {@link Direction}. {@see Influence}
  *
  */
-public class MoveInfluence {
+public class MoveInfluence implements Influence {
 
 	private Direction direction;
 

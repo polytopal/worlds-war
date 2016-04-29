@@ -1,5 +1,12 @@
 package fr.utbm.info.vi51.worldswar.environment
 
+import fr.utbm.info.vi51.worldswar.^agent.AntAgent
+import fr.utbm.info.vi51.worldswar.^agent.GathererAgent
+import fr.utbm.info.vi51.worldswar.^agent.^event.DeadAgentEvent
+import fr.utbm.info.vi51.worldswar.^agent.^event.InfluenceEvent
+import fr.utbm.info.vi51.worldswar.^agent.^event.PerceptionEvent
+import fr.utbm.info.vi51.worldswar.environment.envobject.AgentBody
+import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody
 import fr.utbm.info.vi51.worldswar.simulator.SimulationStepEvent
 import fr.utbm.info.vi51.worldswar.simulator.StopSimulationEvent
 import fr.utbm.info.vi51.worldswar.utils.Grid
@@ -8,6 +15,10 @@ import io.sarl.core.Destroy
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
+import io.sarl.util.Scopes
+import java.awt.Point
+import java.util.HashMap
+import java.util.UUID
 
 /**
  * While it does not appear obvious, this agent manages the environment.
@@ -15,7 +26,13 @@ import io.sarl.core.Logging
 agent Environment {
 	uses Logging, DefaultContextInteractions, Lifecycle
 	
+	
+	val AGENTS_MAP_INITIAL_SIZE : int = 5000
+	
 	var grid : Grid<Cell>
+	
+	var agentBodies : HashMap<UUID, AgentBody>
+	var influencesReceived : int
 	
 	on Initialize {
 		// TODO replace values with actual width and height of the environment
@@ -25,12 +42,19 @@ agent Environment {
 				grid.set(x,y, new Cell)
 			}
 		}
-	}
-	
-	on SimulationStepEvent {
-		println("Simulation step")
 		
-		emit(new EnvironmentReadyEvent)
+		info("Creating map...")
+		this.agentBodies = new HashMap(AGENTS_MAP_INITIAL_SIZE)
+		info("Map created")
+		
+		
+		//TODO for testing purpose, should be removed when we have ants spawners
+		for(var i=0; i<500; i++) {
+			spawnAnt(new Colony(Breed.DARK_ANTS_OF_THE_NORTH), Caste.GATHERER, new Point((Math.random()*500f) as int,(Math.random()*500f) as int))
+		}
+		info("Ants spawned")
+		
+		emit(new EnvironmentReadyEvent) 
 	}
 	
 	on StopSimulationEvent {
@@ -40,6 +64,97 @@ agent Environment {
 	
 	on Destroy {
 		emit(new EnvironmentTerminatedEvent)
+	}
+	
+	
+	on SimulationStepEvent {
+		println("Simulation step")
+		
+		influencesReceived = 0
+		sendPerceptionsToAgents
+	}
+	
+	/**
+	 * Invoked when all influences have been received.
+	 * Performs the changes to the envObjects for this step.
+	 * Once this is done, the environment is ready for a new step.
+	 */
+	
+	private def applyStep {
+		applyInfluences
+		
+		//TODO apply other world rules, like pheromones dissipation, ants spawns and ants dying of old age
+		
+		emit(new EnvironmentReadyEvent)
+	}
+	
+	/**
+	 * Applies the ant influence stored in their bodies, then clear them.
+	 */
+	private def applyInfluences {
+		
+		//TODO implement
+		
+		
+		// Clear all the stored influences because we don't want them anymore
+		for(body : agentBodies.values()) {
+			body.influence = null
+		}
+	}
+	
+	/**
+	 * Receive an influence : store it in the proper agentBody and increase the count of influences received for the current step
+	 */
+	on InfluenceEvent {
+		var body = agentBodies.get(occurrence.uuid);
+		
+		if(body.influence !== null) {
+			error("Agent #" + occurrence.uuid + " has sent multiple influences in the same step")
+		}
+		else {
+			body.influence = occurrence.influence
+			influencesReceived++
+			
+			if(influencesReceived == agentBodies.size) {
+				applyStep
+			}
+		}
+	}
+	
+	private def sendPerceptionsToAgents {
+		
+		//If there is no agent, there is no perception to send, and no influence to wait.
+		//We can directly apply the step
+		if(agentBodies.isEmpty) {
+			applyStep
+			return
+		}
+		
+		for(agentBody : agentBodies.values()) {
+			emit(new PerceptionEvent(this.defaultAddress), 
+				Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
+			)
+		}
+	}
+	
+	private def spawnAnt(colony : Colony, caste : Caste, position : Point) {
+		
+		//TODO determine the class depending on the caste of the ant to spawn
+		var agentClass : Class<? extends AntAgent> = typeof(GathererAgent)
+		
+		var antUuid : UUID = spawn(agentClass)
+		var body : AntBody = new AntBody(position, antUuid, colony, caste)
+		
+		//Add the new body in the proper cell of the grid, and in the agentBodies table
+		this.grid.get(position).addEnvObject(body)
+		this.agentBodies.put(antUuid, body)
+	}
+	
+	private def killAnt(uuid : UUID) {
+		var body = agentBodies.get(uuid)
+		this.grid.get(body.position).removeEnvObject(body)
+		this.agentBodies.remove(uuid)
+		emit(new DeadAgentEvent, Scopes.addresses(defaultSpace.getAddress(body.uuid)))
 	}
 	
 }

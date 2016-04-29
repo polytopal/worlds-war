@@ -1,0 +1,27 @@
+/**
+ * 
+ */
+package fr.utbm.info.vi51.worldswar.^agent.^event
+
+import fr.utbm.info.vi51.worldswar.^agent.AntAgent
+import fr.utbm.info.vi51.worldswar.environment.Environment
+import fr.utbm.info.vi51.worldswar.environment.influence.Influence
+import java.util.UUID
+
+/**
+ * Emitted each step by every {@link AntAgent} to the {@link Environment}.
+ * Contains the decision of the agent about his action for the current step.
+ */
+event InfluenceEvent {
+	val uuid : UUID
+	val influence : Influence
+	
+	/**
+	 * @param uuid : uuid of the emitter
+	 * @param influence
+	 */
+	new(uuid : UUID, influence : Influence) {
+		this.uuid = uuid
+		this.influence = influence
+	}
+}

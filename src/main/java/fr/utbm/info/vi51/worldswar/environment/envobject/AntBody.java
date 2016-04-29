@@ -1,5 +1,8 @@
 package fr.utbm.info.vi51.worldswar.environment.envobject;
 
+import java.awt.Point;
+import java.util.UUID;
+
 import fr.utbm.info.vi51.worldswar.environment.Caste;
 import fr.utbm.info.vi51.worldswar.environment.Colony;
 
@@ -35,8 +38,18 @@ public class AntBody extends AgentBody {
 
 	private Colony colony;
 
-	public AntBody(Colony colony, Caste caste) {
-		super();
+	/**
+	 * @param position
+	 *            the global position of the body on the grid
+	 * @param uuid
+	 *            the UUID of the agent that owns the body
+	 * @param colony
+	 *            the colony of the ant
+	 * @param caste
+	 *            the caste of the ant
+	 */
+	public AntBody(Point position, UUID uuid, Colony colony, Caste caste) {
+		super(position, uuid);
 		this.colony = colony;
 		this.caste = caste;
 

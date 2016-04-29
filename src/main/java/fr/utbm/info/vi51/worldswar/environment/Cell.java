@@ -19,4 +19,12 @@ public class Cell {
 	public List<EnvironmentObject> getEnvObjects() {
 		return this.envObjects;
 	}
+
+	public void addEnvObject(EnvironmentObject envObj) {
+		this.envObjects.add(envObj);
+	}
+
+	public boolean removeEnvObject(EnvironmentObject envObj) {
+		return this.envObjects.remove(envObj);
+	}
 }

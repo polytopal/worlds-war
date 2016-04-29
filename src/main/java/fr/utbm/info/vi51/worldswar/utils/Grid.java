@@ -1,5 +1,6 @@
 package fr.utbm.info.vi51.worldswar.utils;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,6 +109,14 @@ public class Grid<T> {
 	 */
 	public T get(int x, int y) {
 		return this.grid.get(y + this.yOffset).get(x + this.xOffset);
+	}
+
+	/**
+	 * @param position
+	 * @return the value at the given position
+	 */
+	public T get(Point position) {
+		return this.get(position.x, position.y);
 	}
 
 	/**
