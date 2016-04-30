@@ -5,5 +5,5 @@ package fr.utbm.info.vi51.worldswar.controller;
  * 
  */
 public class StopSimulationCommand {
-	// nothing? to be determined
+	// nothing to put here
 }

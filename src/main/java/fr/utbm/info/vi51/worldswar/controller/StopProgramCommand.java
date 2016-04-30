@@ -5,6 +5,6 @@ package fr.utbm.info.vi51.worldswar.controller;
  * 
  */
 public class StopProgramCommand {
-	// nothing? to be determined
+	// nothing to put here
 }
 
