@@ -50,7 +50,7 @@ public class Window extends JFrame implements SimulatorListener {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent evt) {
-					controller.stopSimulation();
+					controller.stopProgram();
 			}
 		});
 		

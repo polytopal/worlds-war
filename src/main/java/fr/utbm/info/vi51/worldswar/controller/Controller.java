@@ -43,6 +43,11 @@ public class Controller {
 		emitEvent(new ControllerCommandEvent(new StopSimulationCommand()));
 		System.out.println("arret simulation"); //$NON-NLS-1$
 	}
+	
+	public void stopProgram() {
+		emitEvent(new ControllerCommandEvent(new StopProgramCommand()));
+		System.out.println("arret programme"); //$NON-NLS-1$
+	}
 
 	private void emitEvent(ControllerCommandEvent event) {
 		this.space.emit(event, Scopes.allParticipants());

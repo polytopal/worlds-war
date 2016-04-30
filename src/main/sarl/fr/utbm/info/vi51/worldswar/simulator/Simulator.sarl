@@ -15,13 +15,15 @@ import fr.utbm.info.vi51.worldswar.gui.Window
 import fr.utbm.info.vi51.worldswar.controller.NewSimulationCommand
 import fr.utbm.info.vi51.worldswar.controller.StopSimulationCommand
 import fr.utbm.info.vi51.worldswar.environment.EnvironmentTerminatedEvent
+import io.sarl.core.Lifecycle
+import fr.utbm.info.vi51.worldswar.controller.StopProgramCommand
 
 /**
  * Main agent of the software.
  * Manages the flow of the simulation
  */
 agent Simulator {
-	uses Logging, Schedules, DefaultContextInteractions
+	uses Logging, Schedules, DefaultContextInteractions, Lifecycle
 	
 	/** Delay in ms, when a new environment is generated, before the simulation begins */
 	private final val STARTUP_DELAY = 2000
@@ -44,6 +46,8 @@ agent Simulator {
 	private var simulationRunning = false
 	/** Indicates if a new simulation is pending */
 	private var newSimulationPending = false
+	/** Indicates if the simulator should kill himself when the environment terminates */
+	private var stopProgramPending = false
 	
 	on Initialize {
 		controller = new Controller(defaultSpace)
@@ -131,6 +135,9 @@ agent Simulator {
 			newSimulation
 		} else if (occurrence.command instanceof StopSimulationCommand) {
 			stopSimulation
+		} else if (occurrence.command instanceof StopProgramCommand) {
+			stopProgramPending = true
+			stopSimulation
 		}
 	}
 	
@@ -140,9 +147,14 @@ agent Simulator {
 	 * signaled, in particular so that the GUI is aware of the state of the simulation.
 	 */
 	on EnvironmentTerminatedEvent {
-		simulationRunning = false
-		for(l as SimulatorListener : listeners) {
-				l.simulationTerminated
+		if (stopProgramPending) {
+			killMe()
+		} else {
+			simulationRunning = false
+			for(l as SimulatorListener : listeners) {
+					l.simulationTerminated
+			}
 		}
+		
 	}
 }
