@@ -49,10 +49,10 @@ agent Environment {
 		
 		
 		//TODO for testing purpose, should be removed when we have ants spawners
-		for(var i=0; i<500; i++) {
-			spawnAnt(new Colony(Breed.DARK_ANTS_OF_THE_NORTH), Caste.GATHERER, new Point((Math.random()*500f) as int,(Math.random()*500f) as int))
-		}
-		info("Ants spawned")
+//		for(var i=0; i<500; i++) {
+//			spawnAnt(new Colony(Breed.DARK_ANTS_OF_THE_NORTH), Caste.GATHERER, new Point((Math.random()*500f) as int,(Math.random()*500f) as int))
+//		}
+//		info("Ants spawned")
 		
 		emit(new EnvironmentReadyEvent) 
 	}

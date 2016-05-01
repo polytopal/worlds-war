@@ -19,7 +19,6 @@ agent GathererAgent extends AntAgent {
 	
 	on PerceptionEvent {
 		//TODO implement a brain here
-		info("Agent on duty")
 		emit(new InfluenceEvent(this.getID(), new MoveInfluence(Direction.EAST)),
 			Scopes.addresses(occurrence.callbackAddress))
 	}
