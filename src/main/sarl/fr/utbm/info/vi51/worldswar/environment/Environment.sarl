@@ -150,7 +150,7 @@ agent Environment {
 		this.agentBodies.put(antUuid, body)
 	}
 	
-	private def killAnt(uuid : UUID) {
+	private def killAgent(uuid : UUID) {
 		var body = agentBodies.get(uuid)
 		this.grid.get(body.position).removeEnvObject(body)
 		this.agentBodies.remove(uuid)
