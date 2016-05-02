@@ -2,7 +2,9 @@ package fr.utbm.info.vi51.worldswar.utils;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * @author Leo
@@ -12,7 +14,7 @@ import java.util.List;
  *            This Class is a generic that contains a matrix of objects of type
  *            T.
  */
-public class Grid<T> {
+public class Grid<T> implements Iterable<T> {
 
 	private final List<List<T>> grid;
 
@@ -141,4 +143,43 @@ public class Grid<T> {
 		return stringBuilder.toString();
 	}
 
+	@Override
+	public Iterator<T> iterator() {
+		return new GridIterator<>(this);
+	}
+
+	private static class GridIterator<T> implements Iterator<T> {
+
+		private Grid<T> grid;
+		private int x, y;
+
+		public GridIterator(Grid<T> grid) {
+			this.x = grid.getXMin();
+			this.y = grid.getYMin();
+			this.grid = grid;
+		}
+
+		/** {@inheritDoc} **/
+		@Override
+		public boolean hasNext() {
+			return (this.y < this.grid.getYMax() || this.x < this.grid.getXMax());
+		}
+
+		/** {@inheritDoc} **/
+		@Override
+		public T next() {
+			if (!this.hasNext()) {
+				throw new NoSuchElementException();
+			}
+
+			if (this.x < this.grid.getXMax()) {
+				this.x++;
+			} else {
+				this.y++;
+				this.x = this.grid.getXMin();
+			}
+
+			return this.grid.get(this.x, this.y);
+		}
+	}
 }
