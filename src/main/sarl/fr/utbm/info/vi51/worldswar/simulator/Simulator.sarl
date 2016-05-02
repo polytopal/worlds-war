@@ -74,14 +74,10 @@ agent Simulator {
 			spawn(typeof(Environment))
 			environmentReady = false
 			stepToFire = true
-<<<<<<< HEAD
-=======
-			fireSimulationStep
 			
 			for(l as SimulatorListener : listeners) {
 				l.simulationStarted
 			}
->>>>>>> master
 		}
 		
 	}
