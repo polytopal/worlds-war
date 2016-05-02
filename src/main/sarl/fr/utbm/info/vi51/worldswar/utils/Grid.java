@@ -154,7 +154,9 @@ public class Grid<T> implements Iterable<T> {
 		private int x, y;
 
 		public GridIterator(Grid<T> grid) {
-			this.x = grid.getXMin();
+			// This will be incremented by the first call to "next()" to point
+			// position (xMin, yMin)
+			this.x = grid.getXMin() - 1;
 			this.y = grid.getYMin();
 			this.grid = grid;
 		}

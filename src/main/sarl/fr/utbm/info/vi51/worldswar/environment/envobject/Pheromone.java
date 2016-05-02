@@ -11,6 +11,16 @@ import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
  */
 public class Pheromone extends StaticObject {
 
+	/**
+	 * Flat amount of qty lost each step
+	 */
+	public static final float FLAT_DISSIPATION = 0.02f;
+
+	/**
+	 * Ratio of the qty lost each step
+	 */
+	public static final float SCALING_DISSIPATION = 0.02f;
+
 	private float qty;
 	private PheromoneType type;
 	private Colony colony;
@@ -32,8 +42,16 @@ public class Pheromone extends StaticObject {
 		this.qty = qty;
 	}
 
-	// TODO add methods to simulate the dissipation of pheromones (by reducing
-	// the qty on each step)
+	/**
+	 * Lowers the quantity of this pheromone to simulate its dissipation over
+	 * time
+	 */
+	public void dissipate() {
+		this.qty -= FLAT_DISSIPATION + SCALING_DISSIPATION * this.qty;
+		if (this.qty < 0) {
+			this.qty = 0;
+		}
+	}
 
 	@Override
 	public boolean isTraversable() {

@@ -106,7 +106,8 @@ agent Environment {
 	private def applyStep {
 		applyInfluences
 		
-		//TODO apply other world rules, like pheromones dissipation, ants spawns and ants dying of old age
+		EnvironmentUtils.applyPheromoneDissipation(grid)
+		//TODO apply other world rules, ants spawns and ants dying of old age
 		
 		emit(new EnvironmentReadyEvent)
 	}
