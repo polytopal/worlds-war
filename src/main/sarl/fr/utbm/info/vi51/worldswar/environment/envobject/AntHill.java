@@ -3,7 +3,7 @@ package fr.utbm.info.vi51.worldswar.environment.envobject;
 import java.awt.Point;
 
 import fr.utbm.info.vi51.worldswar.environment.Colony;
-import fr.utbm.info.vi51.worldswar.environment.Stock;
+import fr.utbm.info.vi51.worldswar.utils.Stock;
 
 /**
  * Represents an anthill on the map
@@ -63,7 +63,7 @@ public class AntHill extends StaticObject {
 	/**
 	 * @param qty
 	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.environment.Stock#pick(int)
+	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#pick(int)
 	 */
 	public int pickFood(int qty) {
 		return this.foodStock.pick(qty);
@@ -71,7 +71,7 @@ public class AntHill extends StaticObject {
 
 	/**
 	 * @param qty
-	 * @see fr.utbm.info.vi51.worldswar.environment.Stock#drop(int)
+	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#drop(int)
 	 */
 	public void dropFood(int qty) {
 		this.foodStock.drop(qty);
@@ -79,7 +79,7 @@ public class AntHill extends StaticObject {
 
 	/**
 	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.environment.Stock#getAvailable()
+	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#getAvailable()
 	 */
 	public int getAvailableFood() {
 		return this.foodStock.getAvailable();
@@ -87,7 +87,7 @@ public class AntHill extends StaticObject {
 
 	/**
 	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.environment.Stock#isEmpty()
+	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#isEmpty()
 	 */
 	public boolean isFoodEmpty() {
 		return this.foodStock.isEmpty();

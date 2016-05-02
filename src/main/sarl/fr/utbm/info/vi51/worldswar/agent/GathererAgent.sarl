@@ -5,7 +5,7 @@ package fr.utbm.info.vi51.worldswar.^agent
 
 import fr.utbm.info.vi51.worldswar.^agent.^event.InfluenceEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.PerceptionEvent
-import fr.utbm.info.vi51.worldswar.environment.Direction
+import fr.utbm.info.vi51.worldswar.utils.Direction
 import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Logging

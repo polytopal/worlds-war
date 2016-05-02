@@ -1,4 +1,4 @@
-package fr.utbm.info.vi51.worldswar.environment;
+package fr.utbm.info.vi51.worldswar.utils;
 
 /**
  * Utility class that provides methods for managing a stock of resources (eg.

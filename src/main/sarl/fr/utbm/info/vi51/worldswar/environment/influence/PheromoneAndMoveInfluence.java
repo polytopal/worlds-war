@@ -1,7 +1,7 @@
 package fr.utbm.info.vi51.worldswar.environment.influence;
 
-import fr.utbm.info.vi51.worldswar.environment.Direction;
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
+import fr.utbm.info.vi51.worldswar.utils.Direction;
 
 /**
  * Places pheromone on the current location, then move in the specified

@@ -1,4 +1,4 @@
-package fr.utbm.info.vi51.worldswar.environment;
+package fr.utbm.info.vi51.worldswar.utils;
 
 /**
  * Cardinal directions, with getters on the X and Y components of the

@@ -2,7 +2,7 @@ package fr.utbm.info.vi51.worldswar.environment.envobject;
 
 import java.awt.Point;
 
-import fr.utbm.info.vi51.worldswar.environment.Stock;
+import fr.utbm.info.vi51.worldswar.utils.Stock;
 
 /**
  * Represents food on the map
@@ -32,7 +32,7 @@ public class Food extends StaticObject {
 	/**
 	 * @param qty
 	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.environment.Stock#pick(int)
+	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#pick(int)
 	 */
 	public int pick(int qty) {
 		return this.stock.pick(qty);
@@ -40,7 +40,7 @@ public class Food extends StaticObject {
 
 	/**
 	 * @param qty
-	 * @see fr.utbm.info.vi51.worldswar.environment.Stock#drop(int)
+	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#drop(int)
 	 */
 	public void drop(int qty) {
 		this.stock.drop(qty);
@@ -48,7 +48,7 @@ public class Food extends StaticObject {
 
 	/**
 	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.environment.Stock#getAvailable()
+	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#getAvailable()
 	 */
 	public int getAvailable() {
 		return this.stock.getAvailable();
@@ -56,7 +56,7 @@ public class Food extends StaticObject {
 
 	/**
 	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.environment.Stock#isEmpty()
+	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#isEmpty()
 	 */
 	public boolean isEmpty() {
 		return this.stock.isEmpty();

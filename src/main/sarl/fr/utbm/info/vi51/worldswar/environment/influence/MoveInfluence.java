@@ -1,6 +1,6 @@
 package fr.utbm.info.vi51.worldswar.environment.influence;
 
-import fr.utbm.info.vi51.worldswar.environment.Direction;
+import fr.utbm.info.vi51.worldswar.utils.Direction;
 
 /**
  * Move in the specified {@link Direction}. {@see Influence}
