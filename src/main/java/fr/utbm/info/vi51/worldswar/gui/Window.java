@@ -19,14 +19,14 @@ public class Window extends JFrame implements SimulatorListener {
 	private static final long serialVersionUID = 3509021382819712013L;
 
 	private GuiActionsManager guiActionsManager;
-	
+
 	private InfoPanel infoPanel;
-	
+
 	private float stepsPerSecond;
 	private long lastStepStart;
 	private boolean simulationRunning;
 	private int stepNumber;
-	
+
 	/**
 	 * @param controller
 	 * 
@@ -40,25 +40,25 @@ public class Window extends JFrame implements SimulatorListener {
 		this.lastStepStart = System.currentTimeMillis();
 
 		this.guiActionsManager = new GuiActionsManager(controller);
-		
+
 		this.stepNumber = 0;
 		this.simulationRunning = false;
-		
+
 		// Window initialization
 		this.setTitle(Messages.getString("Window.title")); //$NON-NLS-1$
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent evt) {
-					controller.stopProgram();
+				controller.stopProgram();
 			}
 		});
-		
+
 		this.getContentPane().setLayout(new BorderLayout());
 		this.setJMenuBar(new MenuBar(this.guiActionsManager));
-	
+
 		this.getContentPane().add(new GridViewPanel(this), BorderLayout.CENTER);
-		
+
 		this.infoPanel = new InfoPanel();
 		this.getContentPane().add(this.infoPanel, BorderLayout.SOUTH);
 
@@ -75,17 +75,15 @@ public class Window extends JFrame implements SimulatorListener {
 		long stepDuration = currentTime - this.lastStepStart;
 		this.lastStepStart = currentTime;
 		this.stepsPerSecond = 1000.f / stepDuration;
-		System.out.println(Messages.getString("Window.stepFiredMsg") + this.stepsPerSecond); //$NON-NLS-1$
-		
+
 		this.infoPanel.setSimulationStateLabel(this.simulationRunning);
 		this.infoPanel.setStepPerSecondLabel(this.stepsPerSecond);
 		this.infoPanel.setStepNumberLabel(this.stepNumber);
-		
-		
+
 		this.stepNumber++;
 
 	}
-	
+
 	@Override
 	public void simulationTerminated() {
 		this.simulationRunning = false;
