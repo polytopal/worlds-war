@@ -164,8 +164,13 @@ agent Environment {
 	
 	private def killAgent(uuid : UUID) {
 		var body = agentBodies.get(uuid)
-		this.grid.get(body.position).removeEnvObject(body)
-		this.agentBodies.remove(uuid)
+		
+		if(!this.grid.get(body.position).removeEnvObject(body)) {
+			error("Body not found in grid when killing agent #" + uuid)
+		}
+		if(this.agentBodies.remove(uuid) === null) {
+			error("Body not found in hashmap when killing agent #" + uuid)
+		}
 		emit(new DeadAgentEvent, Scopes.addresses(defaultSpace.getAddress(body.uuid)))
 	}
 	
