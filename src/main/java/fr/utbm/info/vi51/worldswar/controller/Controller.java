@@ -2,6 +2,7 @@ package fr.utbm.info.vi51.worldswar.controller;
 
 import fr.utbm.info.vi51.worldswar.environment.Environment;
 import fr.utbm.info.vi51.worldswar.simulator.SimulationSpeed;
+import fr.utbm.info.vi51.worldswar.simulator.Simulator;
 import io.sarl.lang.core.EventSpace;
 import io.sarl.util.Scopes;
 
@@ -31,21 +32,30 @@ public class Controller {
 	 * @param speed
 	 */
 	public void setSimulationSpeed(SimulationSpeed speed) {
-		emitEvent(new ControllerCommandEvent(new SimulationSpeedCommand(speed)));
+		this.emitEvent(new ControllerCommandEvent(new SimulationSpeedCommand(speed)));
 	}
-	
+
+	/**
+	 * Starts a new simulation
+	 */
 	public void newSimulation() {
-		emitEvent(new ControllerCommandEvent(new NewSimulationCommand()));
+		this.emitEvent(new ControllerCommandEvent(new NewSimulationCommand()));
 		System.out.println("lancement nouvelle simulation"); //$NON-NLS-1$
 	}
-	
+
+	/**
+	 * Stops the current simulation
+	 */
 	public void stopSimulation() {
-		emitEvent(new ControllerCommandEvent(new StopSimulationCommand()));
+		this.emitEvent(new ControllerCommandEvent(new StopSimulationCommand()));
 		System.out.println("arret simulation"); //$NON-NLS-1$
 	}
-	
+
+	/**
+	 * Closes the program
+	 */
 	public void stopProgram() {
-		emitEvent(new ControllerCommandEvent(new StopProgramCommand()));
+		this.emitEvent(new ControllerCommandEvent(new StopProgramCommand()));
 		System.out.println("arret programme"); //$NON-NLS-1$
 	}
 

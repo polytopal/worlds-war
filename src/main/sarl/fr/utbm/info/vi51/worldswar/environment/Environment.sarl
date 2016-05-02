@@ -1,12 +1,22 @@
 package fr.utbm.info.vi51.worldswar.environment
 
+import fr.utbm.info.vi51.worldswar.^agent.AntAgent
+import fr.utbm.info.vi51.worldswar.^agent.GathererAgent
+import fr.utbm.info.vi51.worldswar.^agent.^event.DeadAgentEvent
+import fr.utbm.info.vi51.worldswar.^agent.^event.InfluenceEvent
+import fr.utbm.info.vi51.worldswar.^agent.^event.PerceptionEvent
+import fr.utbm.info.vi51.worldswar.environment.envobject.AgentBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill
 import fr.utbm.info.vi51.worldswar.environment.envobject.Food
+import fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone
+import fr.utbm.info.vi51.worldswar.environment.envobject.Wall
 import fr.utbm.info.vi51.worldswar.environment.perceivable.Perceivable
 import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableAnt
 import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableAntHill
 import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableFood
+import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivablePheromone
+import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableWall
 import fr.utbm.info.vi51.worldswar.simulator.SimulationStepEvent
 import fr.utbm.info.vi51.worldswar.simulator.StopSimulationEvent
 import fr.utbm.info.vi51.worldswar.utils.Grid
@@ -15,12 +25,12 @@ import io.sarl.core.Destroy
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
+import io.sarl.util.Scopes
+import java.awt.Point
 import java.util.ArrayList
+import java.util.HashMap
 import java.util.List
-import fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivablePheromone
-import fr.utbm.info.vi51.worldswar.environment.envobject.Wall
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableWall
+import java.util.UUID
 
 /**
  * While it does not appear obvious, this agent manages the environment.
@@ -28,7 +38,9 @@ import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableWall
 agent Environment {
 	uses Logging, DefaultContextInteractions, Lifecycle
 	
-	var grid : Grid<Cell>
+	
+	val AGENTS_MAP_INITIAL_SIZE : int = 5000
+	
 	
 	val width : int = 500
 	val height : int = 500
@@ -36,6 +48,12 @@ agent Environment {
 	// X max = width-1
 	// Y max = height-1
 	
+	var grid : Grid<Cell>
+	
+	var agentBodies : HashMap<UUID, AgentBody>
+	var influencesReceived : int
+
+
 	on Initialize {
 		// TODO replace values with actual width and height of the environment
 		this.grid = new Grid(0,width-1,0,height-1)
@@ -44,18 +62,19 @@ agent Environment {
 				grid.set(x,y, new Cell)
 			}
 		}
-	}
-	
-	on SimulationStepEvent {
-		println("Simulation step")
 		
-		var perceptionGrid = computePerceptionGrid
+		info("Creating map...")
+		this.agentBodies = new HashMap(AGENTS_MAP_INITIAL_SIZE)
+		info("Map created")
 		
-		// TODO - send the complete grid to the listeners (the gui)
 		
-		// TODO - compute and send the perception to each agent from the perception grid
+		//TODO for testing purpose, should be removed when we have ants spawners
+//		for(var i=0; i<500; i++) {
+//			spawnAnt(new Colony(Breed.DARK_ANTS_OF_THE_NORTH), Caste.GATHERER, new Point((Math.random()*500f) as int,(Math.random()*500f) as int))
+//		}
+//		info("Ants spawned")
 		
-		emit(new EnvironmentReadyEvent)
+		emit(new EnvironmentReadyEvent) 
 	}
 	
 	
@@ -68,8 +87,97 @@ agent Environment {
 		emit(new EnvironmentTerminatedEvent)
 	}
 	
-	// ----------------
+	on SimulationStepEvent {
+		
+		var perceptionGrid = computePerceptionGrid
+		
+		// TODO - send the complete grid to the listeners (the gui)
+		
+		influencesReceived = 0
+		sendPerceptionsToAgents
+	}
 	
+	/**
+	 * Invoked when all influences have been received.
+	 * Performs the changes to the envObjects for this step.
+	 * Once this is done, the environment is ready for a new step.
+	 */
+	
+	private def applyStep {
+		applyInfluences
+		
+		//TODO apply other world rules, like pheromones dissipation, ants spawns and ants dying of old age
+		
+		emit(new EnvironmentReadyEvent)
+	}
+	
+	/**
+	 * Applies the ant influence stored in their bodies, then clear them.
+	 */
+	private def applyInfluences {
+		
+		//TODO implement
+		
+		
+		// Clear all the stored influences because we don't want them anymore
+		for(body : agentBodies.values()) {
+			body.influence = null
+		}
+	}
+	
+	/**
+	 * Receive an influence : store it in the proper agentBody and increase the count of influences received for the current step
+	 */
+	on InfluenceEvent {
+		var body = agentBodies.get(occurrence.uuid);
+		
+		if(body.influence !== null) {
+			error("Agent #" + occurrence.uuid + " has sent multiple influences in the same step")
+		}
+		else {
+			body.influence = occurrence.influence
+			influencesReceived++
+			
+			if(influencesReceived == agentBodies.size) {
+				applyStep
+			}
+		}
+	}
+	
+	
+	////////////////////////////////////////
+	///         SPAWN/KILL AGENTS        ///
+	////////////////////////////////////////
+	
+	private def spawnAnt(colony : Colony, caste : Caste, position : Point) {
+		
+		//TODO determine the class depending on the caste of the ant to spawn
+		var agentClass : Class<? extends AntAgent> = typeof(GathererAgent)
+		
+		var antUuid : UUID = spawn(agentClass)
+		var body : AntBody = new AntBody(position, antUuid, colony, caste)
+		
+		//Add the new body in the proper cell of the grid, and in the agentBodies table
+		this.grid.get(position).addEnvObject(body)
+		this.agentBodies.put(antUuid, body)
+	}
+	
+	private def killAgent(uuid : UUID) {
+		var body = agentBodies.get(uuid)
+		
+		if(!this.grid.get(body.position).removeEnvObject(body)) {
+			error("Body not found in grid when killing agent #" + uuid)
+		}
+		if(this.agentBodies.remove(uuid) === null) {
+			error("Body not found in hashmap when killing agent #" + uuid)
+		}
+		emit(new DeadAgentEvent, Scopes.addresses(defaultSpace.getAddress(body.uuid)))
+	}
+	
+	
+	////////////////////////////////////////
+	///            PERCEPTIONS           ///
+	////////////////////////////////////////
 	
 	def computePerceptionGrid : Grid<List<Perceivable>>{
 		var perceptionGrid = new Grid<List<Perceivable>>(0, width-1, 0, height-1)
@@ -109,5 +217,21 @@ agent Environment {
 		}
 	
 		return perceptionGrid;
+	}
+	
+	private def sendPerceptionsToAgents {
+		
+		//If there is no agent, there is no perception to send, and no influence to wait.
+		//We can directly apply the step
+		if(agentBodies.isEmpty) {
+			applyStep
+			return
+		}
+		
+		for(agentBody : agentBodies.values()) {
+			emit(new PerceptionEvent(this.defaultAddress), 
+				Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
+			)
+		}
 	}
 }

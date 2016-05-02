@@ -15,7 +15,7 @@ public class Colony {
 	 * @param breed
 	 *            the {@link Breed} of the ants of this colony
 	 */
-	private Colony(Breed breed) {
+	public Colony(Breed breed) {
 		this.breed = breed;
 	}
 

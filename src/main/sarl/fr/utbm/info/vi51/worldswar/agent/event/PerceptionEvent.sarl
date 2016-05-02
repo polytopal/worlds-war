@@ -1,0 +1,22 @@
+package fr.utbm.info.vi51.worldswar.^agent.^event
+
+import fr.utbm.info.vi51.worldswar.^agent.AntAgent
+import fr.utbm.info.vi51.worldswar.environment.Environment
+import io.sarl.lang.core.Address
+
+/**
+ * Event emitted by the {@link Environment} to a specific {@link AntAgent}.
+ * Contains the agent's perceptions for the current step, and triggers the agent's AI.
+ */
+event PerceptionEvent {
+	//TODO insert perception here
+	
+	val callbackAddress : Address
+	
+	/**
+	 * @param callbackAddress : the address to send the influence to
+	 */	
+	new(callbackAddress : Address) {
+		this.callbackAddress = callbackAddress;
+	}
+}

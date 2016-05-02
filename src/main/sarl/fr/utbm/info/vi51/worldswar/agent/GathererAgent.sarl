@@ -1,0 +1,25 @@
+/**
+ * 
+ */
+package fr.utbm.info.vi51.worldswar.^agent
+
+import fr.utbm.info.vi51.worldswar.^agent.^event.InfluenceEvent
+import fr.utbm.info.vi51.worldswar.^agent.^event.PerceptionEvent
+import fr.utbm.info.vi51.worldswar.environment.Direction
+import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Logging
+import io.sarl.util.Scopes
+
+/**
+ * A gatherer tries to find food and bring it back to the anthill.
+ */
+agent GathererAgent extends AntAgent {
+	uses DefaultContextInteractions, Logging
+	
+	on PerceptionEvent {
+		//TODO implement a brain here
+		emit(new InfluenceEvent(this.getID(), new MoveInfluence(Direction.EAST)),
+			Scopes.addresses(occurrence.callbackAddress))
+	}
+}

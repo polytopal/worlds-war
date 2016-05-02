@@ -1,5 +1,7 @@
 package fr.utbm.info.vi51.worldswar.environment.envobject;
 
+import java.awt.Point;
+
 import fr.utbm.info.vi51.worldswar.environment.Colony;
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 
@@ -23,7 +25,8 @@ public class Pheromone extends StaticObject {
 	 * @param qty
 	 *            the quantity of pheromone to place
 	 */
-	public Pheromone(Colony colony, PheromoneType type, float qty) {
+	public Pheromone(Point position, Colony colony, PheromoneType type, float qty) {
+		super(position);
 		this.colony = colony;
 		this.type = type;
 		this.qty = qty;

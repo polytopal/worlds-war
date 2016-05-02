@@ -72,9 +72,8 @@ agent Simulator {
 			simulationRunning = true
 			newSimulationPending = false
 			spawn(typeof(Environment))
-			environmentReady = true
+			environmentReady = false
 			stepToFire = true
-			fireSimulationStep
 			
 			for(l as SimulatorListener : listeners) {
 				l.simulationStarted

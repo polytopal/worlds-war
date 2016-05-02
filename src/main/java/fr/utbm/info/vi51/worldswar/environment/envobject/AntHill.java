@@ -1,5 +1,7 @@
 package fr.utbm.info.vi51.worldswar.environment.envobject;
 
+import java.awt.Point;
+
 import fr.utbm.info.vi51.worldswar.environment.Colony;
 import fr.utbm.info.vi51.worldswar.environment.Stock;
 
@@ -15,7 +17,12 @@ public class AntHill extends StaticObject {
 
 	private Colony colony;
 
-	public AntHill(Colony colony) {
+	/**
+	 * @param position
+	 * @param colony
+	 */
+	public AntHill(Point position, Colony colony) {
+		super(position);
 		this.colony = colony;
 		this.foodStock = new Stock(INITIAL_FOOD_STOCK);
 	}

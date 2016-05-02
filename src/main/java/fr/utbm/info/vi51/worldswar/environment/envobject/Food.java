@@ -1,5 +1,7 @@
 package fr.utbm.info.vi51.worldswar.environment.envobject;
 
+import java.awt.Point;
+
 import fr.utbm.info.vi51.worldswar.environment.Stock;
 
 /**
@@ -12,9 +14,12 @@ public class Food extends StaticObject {
 	/**
 	 * Creates a food stack with the given amount of food units
 	 * 
+	 * @param position
 	 * @param qty
 	 */
-	public Food(int qty) {
+
+	public Food(Point position, int qty) {
+		super(position);
 		this.stock = new Stock(qty);
 	}
 

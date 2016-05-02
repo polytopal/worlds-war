@@ -1,0 +1,7 @@
+
+package fr.utbm.info.vi51.worldswar.^agent.^event
+
+/**
+ * Sent by the {@link Environment} to a given {@link Agent} to tell him that its body died.
+ */
+event DeadAgentEvent
