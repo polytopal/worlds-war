@@ -2,28 +2,27 @@ package fr.utbm.info.vi51.worldswar.simulator
 
 import fr.utbm.info.vi51.worldswar.controller.Controller
 import fr.utbm.info.vi51.worldswar.controller.ControllerCommandEvent
+import fr.utbm.info.vi51.worldswar.controller.NewSimulationCommand
 import fr.utbm.info.vi51.worldswar.controller.SimulationSpeedCommand
+import fr.utbm.info.vi51.worldswar.controller.StopProgramCommand
+import fr.utbm.info.vi51.worldswar.controller.StopSimulationCommand
 import fr.utbm.info.vi51.worldswar.environment.Environment
+import fr.utbm.info.vi51.worldswar.environment.EnvironmentReadyEvent
+import fr.utbm.info.vi51.worldswar.environment.EnvironmentTerminatedEvent
+import fr.utbm.info.vi51.worldswar.gui.Window
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
-import io.sarl.core.Logging
-import io.sarl.core.Schedules
-import java.util.List
-import java.util.LinkedList
-import fr.utbm.info.vi51.worldswar.environment.EnvironmentReadyEvent
-import fr.utbm.info.vi51.worldswar.gui.Window
-import fr.utbm.info.vi51.worldswar.controller.NewSimulationCommand
-import fr.utbm.info.vi51.worldswar.controller.StopSimulationCommand
-import fr.utbm.info.vi51.worldswar.environment.EnvironmentTerminatedEvent
 import io.sarl.core.Lifecycle
-import fr.utbm.info.vi51.worldswar.controller.StopProgramCommand
+import io.sarl.core.Schedules
+import java.util.LinkedList
+import java.util.List
 
 /**
  * Main agent of the software.
  * Manages the flow of the simulation
  */
 agent Simulator {
-	uses Logging, Schedules, DefaultContextInteractions, Lifecycle
+	uses Schedules, DefaultContextInteractions, Lifecycle
 	
 	/** Delay in ms, when a new environment is generated, before the simulation begins */
 	private final val STARTUP_DELAY = 2000
@@ -64,7 +63,9 @@ agent Simulator {
 	 * which will cause newSimulation to be called once the 
 	 * simulation is stopped
 	 */
-	private def newSimulation {
+	private def newSimulation{
+		
+		
 		if(simulationRunning) {
 			stopSimulation
 			newSimulationPending = true
@@ -131,6 +132,10 @@ agent Simulator {
 			var command = occurrence.command as SimulationSpeedCommand
 			this.simulationSpeed = command.speed
 		} else if (occurrence.command instanceof NewSimulationCommand) {
+			var command = occurrence.command as NewSimulationCommand
+			//TODO do something with "simPara"
+			var simPara = command.getSimulationParameters
+			
 			newSimulation
 		} else if (occurrence.command instanceof StopSimulationCommand) {
 			stopSimulation

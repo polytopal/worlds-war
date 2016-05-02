@@ -5,5 +5,17 @@ package fr.utbm.info.vi51.worldswar.environment;
  *
  */
 public enum Breed {
-	DARK_ANTS_OF_THE_NORTH, RED_ANTS_OF_THE_JUNGLE, GREEN_ANTS_OF_MARS
+	DARK_ANTS_OF_THE_NORTH("DARK_ANTS_OF_THE_NORTH"), RED_ANTS_OF_THE_JUNGLE(
+			"RED_ANTS_OF_THE_JUNGLE"), GREEN_ANTS_OF_MARS("GREEN_ANTS_OF_MARS");
+
+	private String stringRepresentation;
+
+	private Breed(String stringRepresentation) {
+		this.stringRepresentation = stringRepresentation;
+	}
+
+	@Override
+	public String toString() {
+		return stringRepresentation;
+	}
 }
