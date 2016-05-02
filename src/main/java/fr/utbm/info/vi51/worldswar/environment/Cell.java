@@ -20,10 +20,19 @@ public class Cell {
 		return this.envObjects;
 	}
 
+	/**
+	 * @param envObj
+	 *            the environmentObject to add in the cell
+	 */
 	public void addEnvObject(EnvironmentObject envObj) {
 		this.envObjects.add(envObj);
 	}
 
+	/**
+	 * @param envObj
+	 *            the environmentObject to remove
+	 * @return true if the object was found and removed, false otherwise
+	 */
 	public boolean removeEnvObject(EnvironmentObject envObj) {
 		return this.envObjects.remove(envObj);
 	}

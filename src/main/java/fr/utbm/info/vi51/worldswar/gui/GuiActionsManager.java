@@ -27,10 +27,6 @@ public class GuiActionsManager {
 	}
 
 	/**
-	 * @return the unique instance of the manager
-	 */
-
-	/**
 	 * @return the action to start a new simulation
 	 */
 	public Action getNewSimulationAction() {
@@ -63,7 +59,6 @@ public class GuiActionsManager {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("lancement nouvelle simulation"); //$NON-NLS-1$
 			this.controller.newSimulation();
 		}
 	}
@@ -87,7 +82,6 @@ public class GuiActionsManager {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("arret simulation"); //$NON-NLS-1$
 			this.controller.stopSimulation();
 		}
 	}
