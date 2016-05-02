@@ -15,20 +15,24 @@ import fr.utbm.info.vi51.worldswar.gui.Window
 import fr.utbm.info.vi51.worldswar.controller.NewSimulationCommand
 import fr.utbm.info.vi51.worldswar.controller.StopSimulationCommand
 import fr.utbm.info.vi51.worldswar.environment.EnvironmentTerminatedEvent
+import io.sarl.core.Lifecycle
+import fr.utbm.info.vi51.worldswar.controller.StopProgramCommand
 
 /**
  * Main agent of the software.
  * Manages the flow of the simulation
  */
 agent Simulator {
-	uses Logging, Schedules, DefaultContextInteractions
+	uses Logging, Schedules, DefaultContextInteractions, Lifecycle
 	
 	/** Delay in ms, when a new environment is generated, before the simulation begins */
 	private final val STARTUP_DELAY = 2000
 	
+	/** the controller is what allows the simulator to receive events from the gui */
 	private var controller : Controller
 	private var gui : Window
 	
+	/** list of listeners of the Simulator, which will receive events from the Simulator */
 	private var listeners : List<SimulatorListener>
 
 	/** Simulation speed, as chosen by the user */
@@ -40,9 +44,10 @@ agent Simulator {
 	private var environmentReady = false
 	/** Indicates if the simulation is currently running */
 	private var simulationRunning = false
-	/** Indicates if the simulation is currently stopping */
-	
+	/** Indicates if a new simulation is pending */
 	private var newSimulationPending = false
+	/** Indicates if the simulator should kill himself when the environment terminates */
+	private var stopProgramPending = false
 	
 	on Initialize {
 		controller = new Controller(defaultSpace)
@@ -53,6 +58,12 @@ agent Simulator {
 		
 	}
 	
+	/** this method is used to start a new simulation.
+	 * If a simulation is currently running, it stops 
+	 * the current one and sets the newSimulationPending flag,
+	 * which will cause newSimulation to be called once the 
+	 * simulation is stopped
+	 */
 	private def newSimulation {
 		if(simulationRunning) {
 			stopSimulation
@@ -64,10 +75,19 @@ agent Simulator {
 			environmentReady = true
 			stepToFire = true
 			fireSimulationStep
+			
+			for(l as SimulatorListener : listeners) {
+				l.simulationStarted
+			}
 		}
 		
 	}
 	
+	/** When the GUI sends a StopSimulationCommand,
+	 *  this method is called, stops the next simulationStep,
+	 * 	and sends a StopSimulationEvent, signaling the
+	 *  environment and the agents to terminate.
+	 */ 
 	private def stopSimulation {
 		environmentReady = false
 		stepToFire = false
@@ -84,7 +104,9 @@ agent Simulator {
 	}
 	
 	/** Checks that both the step timer and the environment allow a new step to be fired, 
-	 * and fire this new step if that's the case.
+	 * and fire this new step if that's the case. Also verify that the simulation is
+	 * currently running(the environment being terminated resulting in simulationRunning = false)
+	 * if the simulation isn't running and there is a pending simulation, start it
 	 */
 	private def fireSimulationStep {
 		if(stepToFire && environmentReady && simulationRunning) {
@@ -113,10 +135,26 @@ agent Simulator {
 			newSimulation
 		} else if (occurrence.command instanceof StopSimulationCommand) {
 			stopSimulation
+		} else if (occurrence.command instanceof StopProgramCommand) {
+			stopProgramPending = true
+			stopSimulation
 		}
 	}
 	
+	/**
+	 * When the environment is terminated, the simulationRunning flag is set to false
+	 * in order to stop the simulationStep loop. the listeners of the simulator are also
+	 * signaled, in particular so that the GUI is aware of the state of the simulation.
+	 */
 	on EnvironmentTerminatedEvent {
-		simulationRunning = false
+		if (stopProgramPending) {
+			killMe()
+		} else {
+			simulationRunning = false
+			for(l as SimulatorListener : listeners) {
+					l.simulationTerminated
+			}
+		}
+		
 	}
 }
