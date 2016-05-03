@@ -9,6 +9,7 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import fr.utbm.info.vi51.worldswar.controller.Controller;
+import fr.utbm.info.vi51.worldswar.controller.SimulationParameters;
 
 /**
  * @author Leo
@@ -47,7 +48,8 @@ public class GuiActionsManager {
 	 */
 	private class NewSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 4958436812700297538L;
-		private Controller controller;
+		private final Controller controller;
+
 		/**
 		 * New Simulation Action constructor
 		 */
@@ -59,7 +61,11 @@ public class GuiActionsManager {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.controller.newSimulation();
+			final SimulationParameters simulationParameters = LaunchSimulationDialog.getSimulationParameters();
+
+			if (simulationParameters != null) {
+				this.controller.newSimulation(simulationParameters);
+			}
 		}
 	}
 
@@ -70,7 +76,8 @@ public class GuiActionsManager {
 	 */
 	private class StopSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
-		private Controller controller;
+		private final Controller controller;
+
 		/**
 		 * Stop Simulation Action constructor
 		 */

@@ -37,9 +37,13 @@ public class Controller {
 
 	/**
 	 * Starts a new simulation
+	 * 
+	 * @param simulationParameters
+	 *            The parameters of the simulation of type
+	 *            {@link SimulationParameters}
 	 */
-	public void newSimulation() {
-		this.emitEvent(new ControllerCommandEvent(new NewSimulationCommand()));
+	public void newSimulation(SimulationParameters simulationParameters) {
+		this.emitEvent(new ControllerCommandEvent(new NewSimulationCommand(simulationParameters)));
 		System.out.println("lancement nouvelle simulation"); //$NON-NLS-1$
 	}
 
