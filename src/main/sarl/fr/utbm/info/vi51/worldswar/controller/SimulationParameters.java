@@ -5,6 +5,16 @@ import java.util.List;
 import fr.utbm.info.vi51.worldswar.environment.Breed;
 import fr.utbm.info.vi51.worldswar.environment.Colony;
 
+/**
+ * 
+ * @author Leo
+ *
+ *         This class represents the parameters of a new simulation. It contains
+ *         the grid width and height and the list of colonies
+ * 
+ *         This class contains also the constants about the grid min and max
+ *         size, the default breed list ...
+ */
 public class SimulationParameters {
 
 	public static final int DEFAULT_WIDTH = 500;

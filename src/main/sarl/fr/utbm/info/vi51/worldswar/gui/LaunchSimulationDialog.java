@@ -20,6 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -40,16 +41,17 @@ public class LaunchSimulationDialog extends JDialog {
 		setTitle(Messages.getString("LaunchSimulation.newSimulation")); //$NON-NLS-1$
 		this.setModal(true);
 		this.setResizable(false);
-		setBounds(100, 100, 358, 237);
+		setBounds(100, 100, 400, 285);
 
 		this.simPara = null;
 
 		getContentPane().setLayout(new BorderLayout());
 		final JPanel contentPanel = new JPanel();
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		final GridBagLayout gbl_contentPanel = new GridBagLayout();
-		gbl_contentPanel.rowHeights = new int[] { 30, 80, 30 };
-		gbl_contentPanel.columnWidths = new int[] { 100, 100, 0, 100 };
+		gbl_contentPanel.rowHeights = new int[] { 30, 100, 30 };
+		gbl_contentPanel.columnWidths = new int[] { 100, 120, 0, 120 };
 		contentPanel.setLayout(gbl_contentPanel);
 
 		// --------- Grid size ---------
@@ -116,6 +118,7 @@ public class LaunchSimulationDialog extends JDialog {
 		breedColumn.setCellEditor(new DefaultCellEditor(new JComboBox<>(Breed.values())));
 		coloniesScrollPane.setViewportView(coloniesTable);
 
+		// add colony button
 		final JButton btnAddColony = new JButton(Messages.getString("LaunchSimulation.addColony")); //$NON-NLS-1$
 		final GridBagConstraints gbc_btnAddColony = new GridBagConstraints();
 		gbc_btnAddColony.fill = GridBagConstraints.HORIZONTAL;
@@ -130,6 +133,7 @@ public class LaunchSimulationDialog extends JDialog {
 			}
 		});
 
+		// remove colony button
 		final JButton btnRemoveColony = new JButton(Messages.getString("LaunchSimulation.removeColony")); //$NON-NLS-1$
 		final GridBagConstraints gbc_btnRemoveColony = new GridBagConstraints();
 		gbc_btnRemoveColony.insets = new Insets(0, 0, 5, 5);
@@ -161,6 +165,7 @@ public class LaunchSimulationDialog extends JDialog {
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
+		// ok button
 		final JButton okButton = new JButton(Messages.getString("LaunchSimulation.OK")); //$NON-NLS-1$
 		buttonPane.add(okButton);
 		getRootPane().setDefaultButton(okButton);
@@ -184,6 +189,7 @@ public class LaunchSimulationDialog extends JDialog {
 			}
 		});
 
+		// cancel button
 		final JButton cancelButton = new JButton(Messages.getString("LaunchSimulation.cancel")); //$NON-NLS-1$
 		buttonPane.add(cancelButton);
 		cancelButton.addActionListener(new ActionListener() {
@@ -201,7 +207,7 @@ public class LaunchSimulationDialog extends JDialog {
 	 * simulation parameters when the user uses the "OK" button, or return null
 	 * if the user close the window
 	 * 
-	 * @return the Simulation parameters filled by the user, or null
+	 * @return the {@link SimulationParameters} filled by the user, or null
 	 */
 	public static SimulationParameters getSimulationParameters() {
 

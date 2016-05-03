@@ -39,7 +39,8 @@ public class Controller {
 	 * Starts a new simulation
 	 * 
 	 * @param simPara
-	 *            The parameters of the simulation
+	 *            The parameters of the simulation of type
+	 *            {@link SimulationParameters}
 	 */
 	public void newSimulation(SimulationParameters simPara) {
 		this.emitEvent(new ControllerCommandEvent(new NewSimulationCommand(simPara)));
