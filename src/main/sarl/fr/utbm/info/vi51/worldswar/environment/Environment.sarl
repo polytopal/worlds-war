@@ -6,6 +6,7 @@ import fr.utbm.info.vi51.worldswar.^agent.^event.AgentInitializedEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.DeadAgentEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.InfluenceEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.PerceptionEvent
+import fr.utbm.info.vi51.worldswar.controller.SimulationParameters
 import fr.utbm.info.vi51.worldswar.environment.envobject.AgentBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill
@@ -33,7 +34,6 @@ import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
 import java.util.UUID
-import fr.utbm.info.vi51.worldswar.controller.SimulationParameters
 
 /**
  * While it does not appear obvious, this agent manages the environment.
