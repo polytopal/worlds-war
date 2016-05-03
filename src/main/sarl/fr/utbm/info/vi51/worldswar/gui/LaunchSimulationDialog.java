@@ -35,7 +35,7 @@ public class LaunchSimulationDialog extends JDialog {
 
 	private static int SPINNER_STEP = 10;
 
-	private SimulationParameters simPara;
+	private SimulationParameters simulationParameters;
 
 	private LaunchSimulationDialog() {
 		setTitle(Messages.getString("LaunchSimulation.newSimulation")); //$NON-NLS-1$
@@ -43,7 +43,7 @@ public class LaunchSimulationDialog extends JDialog {
 		this.setResizable(false);
 		setBounds(100, 100, 400, 285);
 
-		this.simPara = null;
+		this.simulationParameters = null;
 
 		getContentPane().setLayout(new BorderLayout());
 		final JPanel contentPanel = new JPanel();
@@ -183,7 +183,7 @@ public class LaunchSimulationDialog extends JDialog {
 					coloniesList.add(new Colony(breed));
 				}
 
-				LaunchSimulationDialog.this.simPara = new SimulationParameters(gridWidth, gridHeight, coloniesList);
+				LaunchSimulationDialog.this.simulationParameters = new SimulationParameters(gridWidth, gridHeight, coloniesList);
 
 				dispose();
 			}
@@ -215,7 +215,7 @@ public class LaunchSimulationDialog extends JDialog {
 		dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
 
-		return dialog.simPara;
+		return dialog.simulationParameters;
 	}
 
 }

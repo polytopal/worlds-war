@@ -133,8 +133,8 @@ agent Simulator {
 			this.simulationSpeed = command.speed
 		} else if (occurrence.command instanceof NewSimulationCommand) {
 			var command = occurrence.command as NewSimulationCommand
-			//TODO do something with "simPara"
-			var simPara = command.getSimulationParameters
+			//TODO do something with "simulationParameters"
+			var simulationParameters = command.getSimulationParameters
 			
 			newSimulation
 		} else if (occurrence.command instanceof StopSimulationCommand) {

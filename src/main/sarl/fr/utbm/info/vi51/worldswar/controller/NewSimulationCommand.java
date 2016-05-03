@@ -5,13 +5,13 @@ package fr.utbm.info.vi51.worldswar.controller;
  * 
  */
 public class NewSimulationCommand {
-	private final SimulationParameters simParameters;
+	private final SimulationParameters simulationParameters;
 
 	public NewSimulationCommand(SimulationParameters simParameters) {
-		this.simParameters = simParameters;
+		this.simulationParameters = simParameters;
 	}
 
 	public SimulationParameters getSimulationParameters() {
-		return this.simParameters;
+		return this.simulationParameters;
 	}
 }
