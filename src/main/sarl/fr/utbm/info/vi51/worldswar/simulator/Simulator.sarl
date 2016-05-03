@@ -74,7 +74,7 @@ agent Simulator {
 	private def newSimulation(params : SimulationParameters) {
 		spawn(typeof(Environment), {params})
 		
-		for(l as SimulatorListener : listeners) {
+		for(l : listeners) {
 			l.simulationStarted
 		}
 	}
