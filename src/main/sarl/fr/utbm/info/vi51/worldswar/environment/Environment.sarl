@@ -82,7 +82,6 @@ agent Environment {
 	
 	
 	on StopSimulationEvent {
-		//TODO In the future, it should wait for all the spawned agents to terminate
 		killMe
 	}
 	
