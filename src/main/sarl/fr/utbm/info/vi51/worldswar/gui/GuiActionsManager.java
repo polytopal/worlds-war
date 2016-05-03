@@ -104,8 +104,8 @@ public class GuiActionsManager {
 	/**
 	 * @author Leo
 	 * 
-	 *         This action allow to modify the simulation speed, with the speed
-	 *         passed in the constructor
+	 *         This action allows to modify the simulation speed, with the speed
+	 *         given in the constructor
 	 */
 	private class SpeedSetterAction extends AbstractAction {
 		private static final long serialVersionUID = -3918672044655803199L;
