@@ -1,5 +1,6 @@
 package fr.utbm.info.vi51.worldswar.environment;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,5 +36,15 @@ public class Cell {
 	 */
 	public boolean removeEnvObject(EnvironmentObject envObj) {
 		return this.envObjects.remove(envObj);
+	}
+
+	/**
+	 * @param c
+	 *            the collection of objects to remove from the cell
+	 * @return true if something was removed
+	 * @see java.util.List#removeAll(java.util.Collection)
+	 */
+	public boolean removeAllEnvObjects(Collection<? extends EnvironmentObject> c) {
+		return this.envObjects.removeAll(c);
 	}
 }

@@ -1,5 +1,10 @@
 package fr.utbm.info.vi51.worldswar.environment;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import fr.utbm.info.vi51.worldswar.environment.envobject.EnvironmentObject;
+import fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone;
 import fr.utbm.info.vi51.worldswar.utils.Grid;
 
 /**
@@ -15,13 +20,32 @@ public class EnvironmentUtils {
 	}
 
 	/**
-	 * Applies one step of pheromone dissipation
+	 * Applies one step of {@link Pheromone} dissipation. If the pheromone
+	 * quantity reaches zero, the corresponding {@link EnvironmentObject} is
+	 * removed from the map.
 	 * 
 	 * @param grid
 	 *            the environment grid
+	 * 
+	 * 
+	 * @see Pheromone#dissipate()
 	 */
-	public static void applyPheromoneDisspation(Grid<Cell> grid) {
-		// TODO
+	public static void applyPheromoneDissipation(Grid<Cell> grid) {
+
+		for (Cell c : grid) {
+			List<EnvironmentObject> toRemove = new LinkedList<>();
+			for (EnvironmentObject envObj : c.getEnvObjects()) {
+				if (envObj instanceof Pheromone) {
+					Pheromone p = (Pheromone) envObj;
+					p.dissipate();
+					if (p.getQty() <= 0) {
+						toRemove.add(p);
+					}
+				}
+			}
+			c.removeAllEnvObjects(toRemove);
+		}
+
 	}
 
 }
