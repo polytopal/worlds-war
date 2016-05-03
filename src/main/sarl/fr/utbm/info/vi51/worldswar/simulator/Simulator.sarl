@@ -2,21 +2,23 @@ package fr.utbm.info.vi51.worldswar.simulator
 
 import fr.utbm.info.vi51.worldswar.controller.Controller
 import fr.utbm.info.vi51.worldswar.controller.ControllerCommandEvent
+import fr.utbm.info.vi51.worldswar.controller.NewSimulationCommand
 import fr.utbm.info.vi51.worldswar.controller.SimulationSpeedCommand
+import fr.utbm.info.vi51.worldswar.controller.StopProgramCommand
+import fr.utbm.info.vi51.worldswar.controller.StopSimulationCommand
 import fr.utbm.info.vi51.worldswar.environment.Environment
+import fr.utbm.info.vi51.worldswar.environment.EnvironmentInitializedEvent
+import fr.utbm.info.vi51.worldswar.environment.EnvironmentReadyEvent
+import fr.utbm.info.vi51.worldswar.environment.EnvironmentTerminatedEvent
+import fr.utbm.info.vi51.worldswar.gui.Window
+import io.sarl.core.AgentTask
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
 import io.sarl.core.Schedules
-import java.util.List
 import java.util.LinkedList
-import fr.utbm.info.vi51.worldswar.environment.EnvironmentReadyEvent
-import fr.utbm.info.vi51.worldswar.gui.Window
-import fr.utbm.info.vi51.worldswar.controller.NewSimulationCommand
-import fr.utbm.info.vi51.worldswar.controller.StopSimulationCommand
-import fr.utbm.info.vi51.worldswar.environment.EnvironmentTerminatedEvent
-import io.sarl.core.Lifecycle
-import fr.utbm.info.vi51.worldswar.controller.StopProgramCommand
+import java.util.List
 
 /**
  * Main agent of the software.
@@ -24,9 +26,6 @@ import fr.utbm.info.vi51.worldswar.controller.StopProgramCommand
  */
 agent Simulator {
 	uses Logging, Schedules, DefaultContextInteractions, Lifecycle
-	
-	/** Delay in ms, when a new environment is generated, before the simulation begins */
-	private final val STARTUP_DELAY = 2000
 	
 	/** the controller is what allows the simulator to receive events from the gui */
 	private var controller : Controller
@@ -39,15 +38,22 @@ agent Simulator {
 	private var simulationSpeed = SimulationSpeed.NORMAL
 	
 	/** Indicates whether the step timer has passed, hence a new step should be fired */
-	private var stepToFire = false
+	private var stepTimerReady = false
 	/** Indicates whether the environment is ready to compute a new step */
 	private var environmentReady = false
-	/** Indicates if the simulation is currently running */
-	private var simulationRunning = false
-	/** Indicates if a new simulation is pending */
-	private var newSimulationPending = false
-	/** Indicates if the simulator should kill himself when the environment terminates */
-	private var stopProgramPending = false
+	/** Indicates whether the environment is spawned and initialized */
+	private var environmentExists = false
+	
+	/** If a new simulation has been requested, contains the parameters of this new simulation. null otherwise. */
+	//TODO replace Object with relevant type
+	private var pendingSimulationParams : Object = null
+	
+	private var stepTimerTask : AgentTask = null
+	
+
+	////////////////////////////////////////
+	///          INITIALIZATION          ///
+	////////////////////////////////////////
 	
 	on Initialize {
 		controller = new Controller(defaultSpace)
@@ -55,73 +61,101 @@ agent Simulator {
 		
 		listeners = new LinkedList
 		listeners.add(gui)
-		
 	}
 	
-	/** this method is used to start a new simulation.
-	 * If a simulation is currently running, it stops 
-	 * the current one and sets the newSimulationPending flag,
-	 * which will cause newSimulation to be called once the 
-	 * simulation is stopped
+	
+	////////////////////////////////////////
+	///          START SIMULATION        ///
+	////////////////////////////////////////
+	
+	//TODO add new simulation params
+	/** Spawns a new environment to start a new simulation.
+	 * Should NEVER be called while an environment is already running.
 	 */
-	private def newSimulation {
-		if(simulationRunning) {
-			stopSimulation
-			newSimulationPending = true
-		} else {
-			simulationRunning = true
-			newSimulationPending = false
-			spawn(typeof(Environment))
-			environmentReady = false
-			stepToFire = true
-			
-			for(l as SimulatorListener : listeners) {
-				l.simulationStarted
-			}
-		}
+	private def newSimulation(params : Object) {
+		spawn(typeof(Environment))
 		
+		for(l as SimulatorListener : listeners) {
+			l.simulationStarted
+		}
 	}
 	
-	/** When the GUI sends a StopSimulationCommand,
-	 *  this method is called, stops the next simulationStep,
-	 * 	and sends a StopSimulationEvent, signaling the
-	 *  environment and the agents to terminate.
-	 */ 
-	private def stopSimulation {
-		environmentReady = false
-		stepToFire = false
-		emit(new StopSimulationEvent)
-	}
-	on EnvironmentReadyEvent {
-		environmentReady = true
+	/**
+	 * The environment has finished its initialization, we can start the simulation loop
+	 */
+	on EnvironmentInitializedEvent {
+		this.environmentExists = true
+		this.environmentReady = true
+		this.stepTimerReady = true
 		fireSimulationStep
 	}
 	
-	private def stepReady {
-		stepToFire = true
+	////////////////////////////////////////
+	///     SIMULATION STEP HANDLING     ///
+	////////////////////////////////////////
+	
+	on EnvironmentReadyEvent {
+		this.environmentReady = true
+		fireSimulationStep
+	}
+	
+	private def setStepTimerReady {
+		this.stepTimerReady = true
 		fireSimulationStep
 	}
 	
 	/** Checks that both the step timer and the environment allow a new step to be fired, 
-	 * and fire this new step if that's the case. Also verify that the simulation is
-	 * currently running(the environment being terminated resulting in simulationRunning = false)
-	 * if the simulation isn't running and there is a pending simulation, start it
+	 * and fire this new step if that's the case.
 	 */
 	private def fireSimulationStep {
-		if(stepToFire && environmentReady && simulationRunning) {
-			environmentReady = false
-			stepToFire = false
+		if(this.stepTimerReady && this.environmentReady) {
+			this.environmentReady = false
+			this.stepTimerReady = false
 			emit(new SimulationStepEvent)
-			for(l as SimulatorListener : listeners) {
+			for(l as SimulatorListener : this.listeners) {
 				l.simulationStepFired
 			}
-			in(simulationSpeed.milliseconds) [ stepReady ]
-		} else if (!simulationRunning) {
-			if (newSimulationPending) {
-				newSimulation
-			}
+			this.stepTimerTask = in(this.simulationSpeed.milliseconds) [ setStepTimerReady ]
 		}
 	}
+	
+	
+	////////////////////////////////////////
+	///     STOP SIMULATION/PROGRAM      ///
+	////////////////////////////////////////
+	
+	/**
+	 * Cancels the step timer task and asks agents to stop.
+	 */
+	private def stopSimulation {
+		info("Simulation was requested to stop")
+		cancel(this.stepTimerTask)
+		emit(new StopSimulationEvent)
+	}
+	
+	/**
+	 * Environment has been successfully destroyed
+	 */
+	on EnvironmentTerminatedEvent {
+		info("Environment destroyed")
+		this.environmentExists = false
+		
+		// If a new simulation was waiting to start, start it
+		if(this.pendingSimulationParams !== null) {
+			newSimulation(this.pendingSimulationParams)
+			this.pendingSimulationParams = null
+		}
+	}
+	
+	private def closeProgram {
+		stopSimulation
+		info("Killing Simulator")
+		killMe
+	}
+	
+	////////////////////////////////////////
+	///       CONTROLLER COMMANDS        ///
+	////////////////////////////////////////
 	
 	/**
 	 * Handles the controller's commands
@@ -131,29 +165,24 @@ agent Simulator {
 			var command = occurrence.command as SimulationSpeedCommand
 			this.simulationSpeed = command.speed
 		} else if (occurrence.command instanceof NewSimulationCommand) {
-			newSimulation
+			//TODO simulation params
+			handleNewSimulationCommand(new Object)
 		} else if (occurrence.command instanceof StopSimulationCommand) {
 			stopSimulation
 		} else if (occurrence.command instanceof StopProgramCommand) {
-			stopProgramPending = true
-			stopSimulation
+			closeProgram
 		}
 	}
 	
-	/**
-	 * When the environment is terminated, the simulationRunning flag is set to false
-	 * in order to stop the simulationStep loop. the listeners of the simulator are also
-	 * signaled, in particular so that the GUI is aware of the state of the simulation.
-	 */
-	on EnvironmentTerminatedEvent {
-		if (stopProgramPending) {
-			killMe()
-		} else {
-			simulationRunning = false
-			for(l as SimulatorListener : listeners) {
-					l.simulationTerminated
-			}
+	//TODO replace params
+	private def handleNewSimulationCommand(params : Object) {
+		if(this.environmentExists) {
+			this.pendingSimulationParams = params
+			stopSimulation
 		}
-		
+		else {
+			newSimulation(params)
+		}
 	}
+	
 }

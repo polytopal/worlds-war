@@ -74,7 +74,7 @@ agent Environment {
 //		}
 //		info("Ants spawned")
 		
-		emit(new EnvironmentReadyEvent) 
+		emit(new EnvironmentInitializedEvent) 
 	}
 	
 	
