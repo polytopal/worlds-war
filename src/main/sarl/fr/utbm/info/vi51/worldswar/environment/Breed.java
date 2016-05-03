@@ -1,5 +1,7 @@
 package fr.utbm.info.vi51.worldswar.environment;
 
+import fr.utbm.info.vi51.worldswar.gui.Messages;
+
 /**
  * Lists the available ant breeds for colonies
  *
