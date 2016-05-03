@@ -72,7 +72,7 @@ agent Simulator {
 	 * Should NEVER be invoked while an environment is already running.
 	 */
 	private def newSimulation(params : SimulationParameters) {
-		spawn(typeof(Environment))
+		spawn(typeof(Environment), {params})
 		
 		for(l as SimulatorListener : listeners) {
 			l.simulationStarted

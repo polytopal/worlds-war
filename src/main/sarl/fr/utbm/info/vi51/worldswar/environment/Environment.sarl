@@ -31,6 +31,7 @@ import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
 import java.util.UUID
+import fr.utbm.info.vi51.worldswar.controller.SimulationParameters
 
 /**
  * While it does not appear obvious, this agent manages the environment.
@@ -38,28 +39,28 @@ import java.util.UUID
 agent Environment {
 	uses Logging, DefaultContextInteractions, Lifecycle
 	
-	
 	val AGENTS_MAP_INITIAL_SIZE : int = 5000
 	
-	
-	val width : int = 500
-	val height : int = 500
+	var width : int
+	var height : int
 	// X min = Y min = 0
 	// X max = width-1
 	// Y max = height-1
 	
 	var grid : Grid<Cell>
-	
 	var agentBodies : HashMap<UUID, AgentBody>
 	var influencesReceived : int
 
-
 	on Initialize {
-		// TODO replace values with actual width and height of the environment
-		this.grid = new Grid(0,width-1,0,height-1)
-		for(var x = 0; x < width; x++) {
-			for(var y = 0; y < height; y++) {
-				grid.set(x,y, new Cell)
+		
+		var simParameters = occurrence.parameters.get(0) as SimulationParameters
+		this.width = simParameters.gridWidth
+		this.height = simParameters.gridHeight
+		
+		this.grid = new Grid(0, this.width-1, 0, this.height-1)
+		for(var x = 0; x < this.width; x++) {
+			for(var y = 0; y < this.height; y++) {
+				this.grid.set(x,y, new Cell)
 			}
 		}
 		
@@ -68,9 +69,11 @@ agent Environment {
 		info("Map created")
 		
 		
+		//TODO map generation, also store the colonies of the simParameters somewhere safe
+		
 		//TODO for testing purpose, should be removed when we have ants spawners
 //		for(var i=0; i<500; i++) {
-//			spawnAnt(new Colony(Breed.DARK_ANTS_OF_THE_NORTH), Caste.GATHERER, new Point((Math.random()*500f) as int,(Math.random()*500f) as int))
+//			spawnAnt(new Colony(Breed.DARK_ANTS_OF_THE_NORTH), Caste.GATHERER, new Point(0,0) as int))
 //		}
 //		info("Ants spawned")
 		
