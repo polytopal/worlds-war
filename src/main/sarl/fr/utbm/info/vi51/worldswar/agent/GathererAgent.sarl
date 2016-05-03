@@ -3,11 +3,13 @@
  */
 package fr.utbm.info.vi51.worldswar.^agent
 
+import fr.utbm.info.vi51.worldswar.^agent.^event.AgentInitializedEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.InfluenceEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.PerceptionEvent
-import fr.utbm.info.vi51.worldswar.utils.Direction
 import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence
+import fr.utbm.info.vi51.worldswar.utils.Direction
 import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Initialize
 import io.sarl.core.Logging
 import io.sarl.util.Scopes
 
@@ -17,9 +19,17 @@ import io.sarl.util.Scopes
 agent GathererAgent extends AntAgent {
 	uses DefaultContextInteractions, Logging
 	
+	on Initialize {
+		synchronized(this) {
+			emit(new AgentInitializedEvent)
+		}
+	}
+	
 	on PerceptionEvent {
-		//TODO implement a brain here
-		emit(new InfluenceEvent(this.getID(), new MoveInfluence(Direction.EAST)),
-			Scopes.addresses(occurrence.callbackAddress))
+		synchronized(this) {
+			//TODO implement a brain here
+			emit(new InfluenceEvent(this.getID(), new MoveInfluence(Direction.EAST)),
+				Scopes.addresses(occurrence.callbackAddress))
+		}
 	}
 }
