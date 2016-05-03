@@ -33,7 +33,7 @@ public class GuiActionsManager {
 
 		this.speedActionsMap = new HashMap<>();
 		for (final SimulationSpeed simSpeed : SimulationSpeed.values()) {
-			this.speedActionsMap.put(simSpeed, new SetSpeedAction(controller, simSpeed));
+			this.speedActionsMap.put(simSpeed, new SpeedSetterAction(controller, simSpeed));
 		}
 	}
 
@@ -101,13 +101,19 @@ public class GuiActionsManager {
 		}
 	}
 
-	private class SetSpeedAction extends AbstractAction {
+	/**
+	 * @author Leo
+	 * 
+	 *         This action allow to modify the simulation speed, with the speed
+	 *         passed in the constructor
+	 */
+	private class SpeedSetterAction extends AbstractAction {
 		private static final long serialVersionUID = -3918672044655803199L;
 
 		private final Controller controller;
 		private final SimulationSpeed speed;
 
-		public SetSpeedAction(final Controller controller, SimulationSpeed speed) {
+		public SpeedSetterAction(final Controller controller, SimulationSpeed speed) {
 			super(speed.getPropertyKey());
 			this.speed = speed;
 			this.controller = controller;
