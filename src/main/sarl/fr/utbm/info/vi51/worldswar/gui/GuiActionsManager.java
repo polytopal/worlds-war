@@ -3,6 +3,8 @@ package fr.utbm.info.vi51.worldswar.gui;
 import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -23,19 +25,16 @@ public class GuiActionsManager {
 	private final Action newSimulationAction;
 	private final Action stopSimulationAction;
 
-	private final Action slowSpeedAction;
-	private final Action normalSpeedAction;
-	private final Action fastSpeedAction;
-	private final Action maxSpeedAction;
+	private final Map<SimulationSpeed, Action> speedActionsMap;
 
 	GuiActionsManager(final Controller controller) {
 		this.newSimulationAction = new NewSimulationAction(controller);
 		this.stopSimulationAction = new StopSimulationAction(controller);
 
-		this.slowSpeedAction = new SetSpeedAction(controller, SimulationSpeed.SLOW);
-		this.normalSpeedAction = new SetSpeedAction(controller, SimulationSpeed.NORMAL);
-		this.fastSpeedAction = new SetSpeedAction(controller, SimulationSpeed.FAST);
-		this.maxSpeedAction = new SetSpeedAction(controller, SimulationSpeed.MAX);
+		this.speedActionsMap = new HashMap<>();
+		for (final SimulationSpeed simSpeed : SimulationSpeed.values()) {
+			this.speedActionsMap.put(simSpeed, new SetSpeedAction(controller, simSpeed));
+		}
 	}
 
 	/**
@@ -52,20 +51,8 @@ public class GuiActionsManager {
 		return this.stopSimulationAction;
 	}
 
-	public Action getSlowSpeedAction() {
-		return this.slowSpeedAction;
-	}
-
-	public Action getNormalSpeedAction() {
-		return this.normalSpeedAction;
-	}
-
-	public Action getFastSpeedAction() {
-		return this.fastSpeedAction;
-	}
-
-	public Action getMaxSpeedAction() {
-		return this.maxSpeedAction;
+	public Action getSpeedAction(SimulationSpeed simSpeed) {
+		return this.speedActionsMap.get(simSpeed);
 	}
 
 	/**
