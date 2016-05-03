@@ -27,6 +27,10 @@ public enum SimulationSpeed {
 		return this.propertyKey;
 	}
 
+	public static SimulationSpeed getDefaultSpeed() {
+		return NORMAL;
+	}
+
 	/**
 	 * @return the minimum delay in ms between each simulation step
 	 */

@@ -10,6 +10,7 @@ import javax.swing.KeyStroke;
 
 import fr.utbm.info.vi51.worldswar.controller.Controller;
 import fr.utbm.info.vi51.worldswar.controller.SimulationParameters;
+import fr.utbm.info.vi51.worldswar.simulator.SimulationSpeed;
 
 /**
  * @author Leo
@@ -22,9 +23,19 @@ public class GuiActionsManager {
 	private final Action newSimulationAction;
 	private final Action stopSimulationAction;
 
+	private final Action slowSpeedAction;
+	private final Action normalSpeedAction;
+	private final Action fastSpeedAction;
+	private final Action maxSpeedAction;
+
 	GuiActionsManager(final Controller controller) {
 		this.newSimulationAction = new NewSimulationAction(controller);
 		this.stopSimulationAction = new StopSimulationAction(controller);
+
+		this.slowSpeedAction = new SetSpeedAction(controller, SimulationSpeed.SLOW);
+		this.normalSpeedAction = new SetSpeedAction(controller, SimulationSpeed.NORMAL);
+		this.fastSpeedAction = new SetSpeedAction(controller, SimulationSpeed.FAST);
+		this.maxSpeedAction = new SetSpeedAction(controller, SimulationSpeed.MAX);
 	}
 
 	/**
@@ -41,6 +52,22 @@ public class GuiActionsManager {
 		return this.stopSimulationAction;
 	}
 
+	public Action getSlowSpeedAction() {
+		return this.slowSpeedAction;
+	}
+
+	public Action getNormalSpeedAction() {
+		return this.normalSpeedAction;
+	}
+
+	public Action getFastSpeedAction() {
+		return this.fastSpeedAction;
+	}
+
+	public Action getMaxSpeedAction() {
+		return this.maxSpeedAction;
+	}
+
 	/**
 	 * @author Leo
 	 * 
@@ -50,9 +77,6 @@ public class GuiActionsManager {
 		private static final long serialVersionUID = 4958436812700297538L;
 		private final Controller controller;
 
-		/**
-		 * New Simulation Action constructor
-		 */
 		public NewSimulationAction(final Controller controller) {
 			super(Messages.getString("MenuBar.newSimulation")); //$NON-NLS-1$
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK));
@@ -78,9 +102,6 @@ public class GuiActionsManager {
 		private static final long serialVersionUID = 2286692516797367038L;
 		private final Controller controller;
 
-		/**
-		 * Stop Simulation Action constructor
-		 */
 		public StopSimulationAction(final Controller controller) {
 			super(Messages.getString("MenuBar.stopSimulation")); //$NON-NLS-1$
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
@@ -91,6 +112,25 @@ public class GuiActionsManager {
 		public void actionPerformed(ActionEvent e) {
 			this.controller.stopSimulation();
 		}
+	}
+
+	private class SetSpeedAction extends AbstractAction {
+		private static final long serialVersionUID = -3918672044655803199L;
+
+		private final Controller controller;
+		private final SimulationSpeed speed;
+
+		public SetSpeedAction(final Controller controller, SimulationSpeed speed) {
+			super(speed.getPropertyKey());
+			this.speed = speed;
+			this.controller = controller;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			this.controller.setSimulationSpeed(this.speed);
+		}
+
 	}
 
 }
