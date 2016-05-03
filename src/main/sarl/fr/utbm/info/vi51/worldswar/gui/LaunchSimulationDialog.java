@@ -20,8 +20,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -71,13 +71,13 @@ public class LaunchSimulationDialog extends JDialog {
 		gbc_widthFormattedTextField.gridy = 0;
 		contentPanel.add(widthSpinner, gbc_widthFormattedTextField);
 
-		final JLabel label = new JLabel("*"); //$NON-NLS-1$
-		final GridBagConstraints gbc_label = new GridBagConstraints();
-		gbc_label.insets = new Insets(5, 0, 5, 5);
-		gbc_label.anchor = GridBagConstraints.EAST;
-		gbc_label.gridx = 2;
-		gbc_label.gridy = 0;
-		contentPanel.add(label, gbc_label);
+		final JLabel starLabel = new JLabel("*"); //$NON-NLS-1$
+		final GridBagConstraints gbc_starLabel = new GridBagConstraints();
+		gbc_starLabel.insets = new Insets(5, 0, 5, 5);
+		gbc_starLabel.anchor = GridBagConstraints.EAST;
+		gbc_starLabel.gridx = 2;
+		gbc_starLabel.gridy = 0;
+		contentPanel.add(starLabel, gbc_starLabel);
 
 		final JSpinner heightSpinner = new JSpinner(new SpinnerNumberModel(SimulationParameters.DEFAULT_HEIGHT,
 				SimulationParameters.MIN_HEIGHT, SimulationParameters.MAX_HEIGHT, SPINNER_STEP));
@@ -108,8 +108,9 @@ public class LaunchSimulationDialog extends JDialog {
 		contentPanel.add(coloniesScrollPane, gbc_coloniesScrollPane);
 
 		final JTable coloniesTable = new JTable();
-		final DefaultTableModel coloniesTableModel = new DefaultTableModel(new Object[][] {},
-				new String[] { Messages.getString("LaunchSimulation.breed") }); //$NON-NLS-1$
+		final DefaultTableModel coloniesTableModel = new DefaultTableModel();
+		coloniesTableModel.addColumn(Messages.getString("LaunchSimulation.breed"), //$NON-NLS-1$
+				SimulationParameters.DEFAULT_BREED_LIST);
 		coloniesTable.setModel(coloniesTableModel);
 		final TableColumn breedColumn = coloniesTable.getColumnModel().getColumn(0);
 		breedColumn.setCellEditor(new DefaultCellEditor(new JComboBox<>(Breed.values())));
@@ -125,12 +126,11 @@ public class LaunchSimulationDialog extends JDialog {
 		btnAddColony.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				coloniesTableModel.addRow(new Object[] { SimulationParameters.DEFAULT_BREED });
+				coloniesTableModel.addRow(new Object[] { SimulationParameters.DEFAULT_BREED_ON_ADD });
 			}
 		});
 
 		final JButton btnRemoveColony = new JButton(Messages.getString("LaunchSimulation.removeColony")); //$NON-NLS-1$
-		btnRemoveColony.setEnabled(false);
 		final GridBagConstraints gbc_btnRemoveColony = new GridBagConstraints();
 		gbc_btnRemoveColony.insets = new Insets(0, 0, 5, 5);
 		gbc_btnRemoveColony.fill = GridBagConstraints.HORIZONTAL;
@@ -140,19 +140,18 @@ public class LaunchSimulationDialog extends JDialog {
 		btnRemoveColony.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final int selectedRow = coloniesTable.getSelectedRow();
-				if (selectedRow >= 0) {
-					coloniesTableModel.removeRow(selectedRow);
-					System.out.println("remove : " + selectedRow);
+				final int nbElement = coloniesTableModel.getDataVector().size();
+				if (nbElement > 0) {
+					coloniesTableModel.removeRow(nbElement - 1);
 				}
 			}
 		});
-		coloniesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		coloniesTableModel.addTableModelListener(new TableModelListener() {
 			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				final int selectedRow = coloniesTable.getSelectedRow();
-				System.out.println(selectedRow);
-				btnRemoveColony.setEnabled(selectedRow >= 0);
+			public void tableChanged(TableModelEvent arg0) {
+				final int nbElement = coloniesTableModel.getDataVector().size();
+				btnRemoveColony.setEnabled(nbElement > SimulationParameters.MIN_COLONY_NUMBER);
+				btnAddColony.setEnabled(nbElement < SimulationParameters.MAX_COLONY_NUMBER);
 			}
 		});
 

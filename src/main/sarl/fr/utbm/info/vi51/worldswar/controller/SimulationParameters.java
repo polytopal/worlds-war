@@ -15,7 +15,10 @@ public class SimulationParameters {
 	public static final int MIN_HEIGHT = 30;
 	public static final int MAX_HEIGHT = 5000;
 
-	public static final Breed DEFAULT_BREED = Breed.DARK_ANTS_OF_THE_NORTH;
+	public static final Breed DEFAULT_BREED_ON_ADD = Breed.DARK_ANTS_OF_THE_NORTH;
+	public static final Breed[] DEFAULT_BREED_LIST = { Breed.DARK_ANTS_OF_THE_NORTH, Breed.GREEN_ANTS_OF_MARS };
+	public static final int MAX_COLONY_NUMBER = 5;
+	public static final int MIN_COLONY_NUMBER = 1;
 
 	private final int gridWidth;
 	private final int gridHeight;
