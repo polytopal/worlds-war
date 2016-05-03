@@ -39,7 +39,7 @@ import fr.utbm.info.vi51.worldswar.controller.SimulationParameters
 agent Environment {
 	uses Logging, DefaultContextInteractions, Lifecycle
 	
-	val AGENTS_MAP_INITIAL_SIZE : int = 5000
+	val AGENTS_MAP_INITIAL_SIZE : int = 1000
 	
 	var width : int
 	var height : int
