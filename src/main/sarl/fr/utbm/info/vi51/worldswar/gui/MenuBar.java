@@ -29,8 +29,6 @@ public class MenuBar extends JMenuBar {
 		final JMenuItem stopSimulationItem = new JMenuItem(guiActionsManager.getStopSimulationAction());
 		simulationMenu.add(stopSimulationItem);
 
-		simulationMenu.addSeparator();
-
 		// -------- speed menu --------
 
 		final JMenu speedMenu = new JMenu(Messages.getString("MenuBar.Speed")); //$NON-NLS-1$
@@ -40,7 +38,7 @@ public class MenuBar extends JMenuBar {
 		for (final SimulationSpeed simSpeed : SimulationSpeed.values()) {
 			final JRadioButtonMenuItem speedButton = new JRadioButtonMenuItem(
 					guiActionsManager.getSpeedAction(simSpeed));
-			speedButton.setSelected(simSpeed == SimulationSpeed.getDefaultSpeed());
+			speedButton.setSelected(simSpeed == SimulationSpeed.getInitialSpeed());
 			speedButtonsGroup.add(speedButton);
 			speedMenu.add(speedButton);
 		}

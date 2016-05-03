@@ -27,7 +27,13 @@ public enum SimulationSpeed {
 		return this.propertyKey;
 	}
 
-	public static SimulationSpeed getDefaultSpeed() {
+	/**
+	 * @return the initial speed used when the simulator is initialized.
+	 * 
+	 *         When a new simulation is started, the speed of the previous
+	 *         simulation is kept for the new one
+	 */
+	public static SimulationSpeed getInitialSpeed() {
 		return NORMAL;
 	}
 
