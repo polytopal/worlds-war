@@ -5,8 +5,7 @@ package fr.utbm.info.vi51.worldswar.environment;
  *
  */
 public enum Breed {
-	DARK_ANTS_OF_THE_NORTH("dark ants of the north"), RED_ANTS_OF_THE_JUNGLE(
-			"RED_ANTS_OF_THE_JUNGLE"), GREEN_ANTS_OF_MARS("GREEN_ANTS_OF_MARS");
+	DARK_ANTS(Messages.getString("Breed.darkAnts")), RED_ANTS(Messages.getString("Breed.redAnts")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private String stringRepresentation;
 
