@@ -5,5 +5,13 @@ package fr.utbm.info.vi51.worldswar.controller;
  * 
  */
 public class NewSimulationCommand {
-	// TODO - parameters of new Simulation 
+	private final SimulationParameters simulationParameters;
+
+	public NewSimulationCommand(SimulationParameters simParameters) {
+		this.simulationParameters = simParameters;
+	}
+
+	public SimulationParameters getSimulationParameters() {
+		return this.simulationParameters;
+	}
 }

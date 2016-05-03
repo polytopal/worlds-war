@@ -3,6 +3,7 @@ package fr.utbm.info.vi51.worldswar.simulator
 import fr.utbm.info.vi51.worldswar.controller.Controller
 import fr.utbm.info.vi51.worldswar.controller.ControllerCommandEvent
 import fr.utbm.info.vi51.worldswar.controller.NewSimulationCommand
+import fr.utbm.info.vi51.worldswar.controller.SimulationParameters
 import fr.utbm.info.vi51.worldswar.controller.SimulationSpeedCommand
 import fr.utbm.info.vi51.worldswar.controller.StopProgramCommand
 import fr.utbm.info.vi51.worldswar.controller.StopSimulationCommand
@@ -25,7 +26,7 @@ import java.util.List
  * Manages the flow of the simulation
  */
 agent Simulator {
-	uses Logging, Schedules, DefaultContextInteractions, Lifecycle
+	uses Schedules, DefaultContextInteractions, Lifecycle, Logging
 	
 	/** the controller is what allows the simulator to receive events from the gui */
 	private var controller : Controller
@@ -45,8 +46,7 @@ agent Simulator {
 	private var environmentExists = false
 	
 	/** If a new simulation has been requested, contains the parameters of this new simulation. null otherwise. */
-	//TODO replace Object with relevant type
-	private var pendingSimulationParams : Object = null
+	private var pendingSimulationParams : SimulationParameters = null
 	
 	private var stepTimerTask : AgentTask = null
 	
@@ -68,11 +68,10 @@ agent Simulator {
 	///          START SIMULATION        ///
 	////////////////////////////////////////
 	
-	//TODO add new simulation params
 	/** Spawns a new environment to start a new simulation.
-	 * Should NEVER be called while an environment is already running.
+	 * Should NEVER be invoked while an environment is already running.
 	 */
-	private def newSimulation(params : Object) {
+	private def newSimulation(params : SimulationParameters) {
 		spawn(typeof(Environment))
 		
 		for(l as SimulatorListener : listeners) {
@@ -165,8 +164,8 @@ agent Simulator {
 			var command = occurrence.command as SimulationSpeedCommand
 			this.simulationSpeed = command.speed
 		} else if (occurrence.command instanceof NewSimulationCommand) {
-			//TODO simulation params
-			handleNewSimulationCommand(new Object)
+			var command = occurrence.command as NewSimulationCommand
+			handleNewSimulationCommand(command.simulationParameters)
 		} else if (occurrence.command instanceof StopSimulationCommand) {
 			stopSimulation
 		} else if (occurrence.command instanceof StopProgramCommand) {
@@ -174,8 +173,7 @@ agent Simulator {
 		}
 	}
 	
-	//TODO replace params
-	private def handleNewSimulationCommand(params : Object) {
+	private def handleNewSimulationCommand(params : SimulationParameters) {
 		if(this.environmentExists) {
 			this.pendingSimulationParams = params
 			stopSimulation
