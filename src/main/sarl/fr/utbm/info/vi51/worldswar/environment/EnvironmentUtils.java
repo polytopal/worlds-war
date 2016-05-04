@@ -45,7 +45,6 @@ public class EnvironmentUtils {
 			}
 			c.removeAllEnvObjects(toRemove);
 		}
-
 	}
 
 }

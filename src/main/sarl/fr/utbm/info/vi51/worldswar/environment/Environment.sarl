@@ -121,6 +121,7 @@ agent Environment {
 		applyInfluences
 		
 		EnvironmentUtils.applyPheromoneDissipation(grid)
+		spawnAntsInAntHills
 		//TODO apply other world rules, ants spawns and ants dying of old age
 		
 		
@@ -284,4 +285,30 @@ agent Environment {
 			)
 		}
 	}
+	
+	
+	////////////////////////////////////////
+	///            WORLD RULES           ///
+	////////////////////////////////////////
+	
+	/** To be called each step. Periodically spawn an ant inside each anthill */
+	private def spawnAntsInAntHills {
+		
+		for (c : this.grid) {
+			for (envObj : c.getEnvObjects()) {
+				if (envObj instanceof AntHill) {
+					var antHill = envObj
+					antHill.decrementSpawnCooldown
+					if(antHill.spawnCooldown === 0 && antHill.availableFood > AntHill.SPAWN_COST) {
+						antHill.pickFood(AntHill.SPAWN_COST)
+						antHill.spawnCooldown = AntHill.SPAWN_COOLDOWN
+						//TODO spawn some other castes sometimes
+						spawnAnt(antHill.colony, Caste.GATHERER, antHill.position)
+					}
+				}
+			}
+		}
+	}
+	
+	
 }

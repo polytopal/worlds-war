@@ -53,8 +53,13 @@ public class AntBody extends AgentBody {
 		this.colony = colony;
 		this.caste = caste;
 
-		// TODO placeholder constructor, stats need to be calculated
-		this.capacity = 42;
+		// TODO placeholder constructor, stats will need to be calculated
+		// according to the ant's breed and caste
+		this.capacity = 10;
+		this.foodCarried = 0;
+		this.burrowed = true;
+		this.health = 100;
+		this.remainingLifeTime = 150;
 	}
 
 	/** {@inheritDoc} **/
