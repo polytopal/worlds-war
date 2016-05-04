@@ -1,0 +1,9 @@
+
+package fr.utbm.info.vi51.worldswar.^agent.^event
+
+/**
+ * Any {@link AntAgent} receiving this event should kill itself.
+ * Can be sent by the {@link Environment} to a given {@link Agent} to tell him that its body died.
+ * Also sent by the {@link Environment} to all its agents when a simulation stops.
+ */
+event KillAgentEvent

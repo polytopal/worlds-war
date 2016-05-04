@@ -3,8 +3,8 @@ package fr.utbm.info.vi51.worldswar.environment
 import fr.utbm.info.vi51.worldswar.^agent.AntAgent
 import fr.utbm.info.vi51.worldswar.^agent.GathererAgent
 import fr.utbm.info.vi51.worldswar.^agent.^event.AgentInitializedEvent
-import fr.utbm.info.vi51.worldswar.^agent.^event.DeadAgentEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.InfluenceEvent
+import fr.utbm.info.vi51.worldswar.^agent.^event.KillAgentEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.PerceptionEvent
 import fr.utbm.info.vi51.worldswar.controller.SimulationParameters
 import fr.utbm.info.vi51.worldswar.environment.envobject.AgentBody
@@ -79,10 +79,11 @@ agent Environment {
 			this.waitingAgentsInitialization = false
 			
 			//TODO for testing purpose, should be removed when we have ants spawners
-			//for(var i=0; i<500; i++) {
-			//	spawnAnt(new Colony(Breed.DARK_ANTS), Caste.GATHERER, new Point(0,0))
-			//}
-			//info("Ants spawned")
+//			info("Spawning ants")
+//			for(var i=0; i<500; i++) {
+//				spawnAnt(new Colony(Breed.DARK_ANTS), Caste.GATHERER, new Point(0,0))
+//			}
+//			info("Ants spawned")
 			
 			emit(new EnvironmentInitializedEvent)
 		}
@@ -90,6 +91,8 @@ agent Environment {
 	
 	on StopSimulationEvent {
 		synchronized(this) {
+			info("Environment stopping")
+			emit(new KillAgentEvent)
 			killMe
 		}
 	}
@@ -209,7 +212,7 @@ agent Environment {
 			warning("Agent #" + uuid + " was killed before it was fully initialized")
 		}
 		
-		emit(new DeadAgentEvent, Scopes.addresses(defaultSpace.getAddress(body.uuid)))
+		emit(new KillAgentEvent, Scopes.addresses(defaultSpace.getAddress(body.uuid)))
 	}
 	
 	on AgentInitializedEvent {
