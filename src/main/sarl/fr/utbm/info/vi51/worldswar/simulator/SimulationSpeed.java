@@ -1,18 +1,16 @@
 package fr.utbm.info.vi51.worldswar.simulator;
 
-import fr.utbm.info.vi51.worldswar.gui.Messages;
-
 /**
  * Defines the available speed settings for the simulation
  *
  */
 public enum SimulationSpeed {
 
-	SLOW(Messages.getString("SimulationSpeed.slow"), 500), NORMAL(Messages.getString("SimulationSpeed.normal"), 250), FAST(Messages.getString("SimulationSpeed.fast"), 100), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	SLOW("SimulationSpeed.slow", 500), NORMAL("SimulationSpeed.normal", 250), FAST("SimulationSpeed.fast", 100), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	/**
 	 * No delay between steps means the simulation will run as fast as possible
 	 */
-	MAX(Messages.getString("SimulationSpeed.max"), 1); //$NON-NLS-1$
+	MAX("SimulationSpeed.max", 1); //$NON-NLS-1$
 
 	private SimulationSpeed(String key, int ms) {
 		this.propertyKey = key;

@@ -35,7 +35,7 @@ agent Simulator {
 	private var listeners : List<SimulatorListener>
 
 	/** Simulation speed, as chosen by the user */
-	private var simulationSpeed = SimulationSpeed.getDefaultSpeed
+	private var simulationSpeed = SimulationSpeed.initialSpeed
 	
 	/** Indicates whether the step timer has passed, hence a new step should be fired */
 	private var stepToFire = false

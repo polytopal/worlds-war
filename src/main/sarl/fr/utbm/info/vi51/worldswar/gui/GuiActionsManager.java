@@ -114,7 +114,7 @@ public class GuiActionsManager {
 		private final SimulationSpeed speed;
 
 		public SpeedSetterAction(final Controller controller, SimulationSpeed speed) {
-			super(speed.getPropertyKey());
+			super(Messages.getString(speed.getPropertyKey()));
 			this.speed = speed;
 			this.controller = controller;
 		}
