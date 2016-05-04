@@ -9,16 +9,6 @@ import fr.utbm.info.vi51.worldswar.^agent.^event.PerceptionEvent
 import fr.utbm.info.vi51.worldswar.controller.SimulationParameters
 import fr.utbm.info.vi51.worldswar.environment.envobject.AgentBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody
-import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill
-import fr.utbm.info.vi51.worldswar.environment.envobject.Food
-import fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone
-import fr.utbm.info.vi51.worldswar.environment.envobject.Wall
-import fr.utbm.info.vi51.worldswar.environment.perceivable.Perceivable
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableAnt
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableAntHill
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableFood
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivablePheromone
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableWall
 import fr.utbm.info.vi51.worldswar.simulator.SimulationStepEvent
 import fr.utbm.info.vi51.worldswar.simulator.StopSimulationEvent
 import fr.utbm.info.vi51.worldswar.utils.Grid
@@ -29,8 +19,6 @@ import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
 import io.sarl.util.Scopes
 import java.awt.Point
-import java.util.ArrayList
-import java.util.Collections
 import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
@@ -242,23 +230,11 @@ agent Environment {
 		
 		for(agentBody : agentBodies.values()) {
 			
-			val agentPerception = computAntPerception(agentBody, perceptionGrid)
-			//TODO do something with agentPerception
+			val agentPerception = perceptionGrid.computeAgentPerception(agentBody)
 			
-			
-			emit(new PerceptionEvent(this.defaultAddress), 
-				Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
+			emit(new PerceptionEvent(this.defaultAddress, agentPerception), Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
 			)
 		}
 	}
 	
-	def computAntPerception (antBody : AgentBody, perceptionGrid : PerceptionGrid): Grid<List<Perceivable>> {
-		var position = antBody.position
-		var range = antBody.visionRange
-		
-		// TODO convert to local coordinate system
-		
-		
-		return null
-	}
 }

@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.naming.directory.InvalidAttributesException;
+
 /**
  * @author Leo
  *
@@ -149,15 +151,69 @@ public class Grid<T> implements Iterable<T> {
 	}
 
 	/**
-	 * Compute a conversion to a local coordinate system.
+	 * Compute a conversion to a local coordinate system. If the center is near
+	 * the grid border, the output grid can be cut
+	 * 
+	 * ex : using the notation (xMin,yMin);(xMax,yMax) to describe a grid
+	 * 
+	 * input grid from the points (0,0);(10,10) center = (1,5), range = 3 output
+	 * grid from the points (0,1);(4,8) in the old system and from the point
+	 * (-1,-3) to (3,3) in new system
 	 * 
 	 * @param center
+	 *            the point in the original grid that will become the point
+	 *            (0,0) in the new grid. center must be contained in the grid.
 	 * @param range
-	 * @return
+	 * @return a new {@link Grid} from the point (-range,-range) to (range,
+	 *         range) if possible centered on the point "center" in the old
+	 *         system.
+	 * @throws InvalidAttributesException
+	 *             if the center point is not contained in the grid
 	 */
-	public Grid<T> getSubSystem(Point center, int range) {
-		// TODO
-		return null;
+	public Grid<T> getSubGrid(Point center, int range) throws InvalidAttributesException {
+		if (center.x < this.getXMin() || center.x > this.getXMax() || center.y < this.getYMin()
+				|| center.y > this.getYMax()) {
+			throw new InvalidAttributesException("center point is not contained in the grid"); //$NON-NLS-1$
+		}
+
+		int xMinNewSystem = -range;
+		// if map left border
+		if (center.x - range < this.getXMin()) {
+			// we increment xMin with the difference between this.XMin and the
+			// wanted XMin
+			final int diff = this.getXMin() - (center.x - range);
+			xMinNewSystem += diff;
+		}
+
+		int yMinNewSystem = -range;
+		// if map top border
+		if (center.y - range < this.getYMin()) {
+			final int diff = this.getYMin() - (center.y - range);
+			yMinNewSystem += diff;
+		}
+
+		int xMaxNewSystem = range;
+		// if map right border
+		if (center.x + range > this.getXMax()) {
+			final int diff = (center.x + range) - this.getXMax();
+			xMaxNewSystem -= diff;
+		}
+
+		int yMaxNewSystem = range;
+		if (center.y + range > this.getYMax()) {
+			final int diff = (center.y + range) - this.getYMax();
+			yMaxNewSystem -= diff;
+		}
+
+		final Grid<T> localGrid = new Grid<>(xMinNewSystem, xMaxNewSystem, yMinNewSystem, yMaxNewSystem);
+
+		for (int x = xMinNewSystem; x <= xMaxNewSystem; x++) {
+			for (int y = yMinNewSystem; y <= yMaxNewSystem; y++) {
+				localGrid.set(x, y, this.get(center.x + x, center.y + y));
+			}
+		}
+
+		return localGrid;
 	}
 
 	private static class GridIterator<T> implements Iterator<T> {
