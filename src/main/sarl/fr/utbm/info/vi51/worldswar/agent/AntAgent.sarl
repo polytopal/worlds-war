@@ -11,10 +11,14 @@ abstract agent AntAgent {
 	uses Lifecycle
 	
 	on StopSimulationEvent {
-		killMe
+		synchronized(this) {
+			killMe
+		}
 	}
 	
 	on DeadAgentEvent {
-		killMe
+		synchronized(this) {
+			killMe
+		}
 	}
 }
