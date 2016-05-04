@@ -10,10 +10,10 @@ import fr.utbm.info.vi51.worldswar.environment.envobject.EnvironmentObject;
  * Stores the content of a tile in the environment grid.
  *
  */
-public class Cell {
+public class EnvObjectCell {
 	private final List<EnvironmentObject> envObjects;
 
-	public Cell() {
+	public EnvObjectCell() {
 		this.envObjects = new LinkedList<>();
 	}
 

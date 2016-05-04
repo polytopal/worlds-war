@@ -148,9 +148,21 @@ public class Grid<T> implements Iterable<T> {
 		return new GridIterator<>(this);
 	}
 
+	/**
+	 * Compute a conversion to a local coordinate system.
+	 * 
+	 * @param center
+	 * @param range
+	 * @return
+	 */
+	public Grid<T> getSubSystem(Point center, int range) {
+		// TODO
+		return null;
+	}
+
 	private static class GridIterator<T> implements Iterator<T> {
 
-		private Grid<T> grid;
+		private final Grid<T> grid;
 		private int x, y;
 
 		public GridIterator(Grid<T> grid) {

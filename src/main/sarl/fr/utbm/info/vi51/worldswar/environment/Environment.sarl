@@ -30,6 +30,7 @@ import io.sarl.core.Logging
 import io.sarl.util.Scopes
 import java.awt.Point
 import java.util.ArrayList
+import java.util.Collections
 import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
@@ -49,7 +50,7 @@ agent Environment {
 	// X max = width-1
 	// Y max = height-1
 	
-	var grid : Grid<Cell>
+	var grid : Grid<EnvObjectCell>
 	var agentBodies : HashMap<UUID, AgentBody>
 	var influencesReceived : int
 
@@ -67,7 +68,7 @@ agent Environment {
 			this.grid = new Grid(0, this.width-1, 0, this.height-1)
 			for(var x = 0; x < this.width; x++) {
 				for(var y = 0; y < this.height; y++) {
-					this.grid.set(x,y, new Cell)
+					this.grid.set(x,y, new EnvObjectCell)
 				}
 			}
 			
@@ -102,12 +103,12 @@ agent Environment {
 	
 	on SimulationStepEvent {
 		synchronized(this) {
-			var perceptionGrid = computePerceptionGrid
+			var perceptionGrid = new PerceptionGrid(grid)
 			
 			// TODO - send the complete grid to the listeners (the gui)
 			
 			influencesReceived = 0
-			sendPerceptionsToAgents
+			sendPerceptionsToAgents(perceptionGrid)
 		}
 	}
 	
@@ -229,47 +230,8 @@ agent Environment {
 	///            PERCEPTIONS           ///
 	////////////////////////////////////////
 	
-	def computePerceptionGrid : Grid<List<Perceivable>>{
-		var perceptionGrid = new Grid<List<Perceivable>>(0, width-1, 0, height-1)
-		
-		for(var x = 0; x < width; x++) {
-			for(var y = 0; y < height; y++) {
-				// foreach cell
-				
-				var perceptionList : List<Perceivable> = new ArrayList<Perceivable>
-				perceptionGrid.set(x,y, perceptionList)
-				
-				var envObjectList = grid.get(x, y).getEnvObjects
-				
-				// foreach Environment object in the cell
-				for(envObj : envObjectList){
-					var perceivable : Perceivable
-					
-					// we change each envObject in Perceivable
-					if(envObj instanceof AntBody){
-						perceivable = new PerceivableAnt(envObj)
-					}else if(envObj instanceof AntHill){
-						perceivable = new PerceivableAntHill(envObj)
-					}else if(envObj instanceof Food){
-						perceivable = new PerceivableFood(envObj)
-					}else if(envObj instanceof Pheromone){
-						perceivable = new PerceivablePheromone(envObj)
-					}else if(envObj instanceof Wall){
-						perceivable = new PerceivableWall(envObj)
-					}
-					
-					if(perceivable !== null){
-						perceptionList.add(perceivable)
-					}
-				}
-				
-			}
-		}
 	
-		return perceptionGrid;
-	}
-	
-	private def sendPerceptionsToAgents {
+	def sendPerceptionsToAgents(perceptionGrid : PerceptionGrid) {
 		
 		//If there is no agent, there is no perception to send, and no influence to wait.
 		//We can directly apply the step
@@ -279,9 +241,24 @@ agent Environment {
 		}
 		
 		for(agentBody : agentBodies.values()) {
+			
+			val agentPerception = computAntPerception(agentBody, perceptionGrid)
+			//TODO do something with agentPerception
+			
+			
 			emit(new PerceptionEvent(this.defaultAddress), 
 				Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
 			)
 		}
+	}
+	
+	def computAntPerception (antBody : AgentBody, perceptionGrid : PerceptionGrid): Grid<List<Perceivable>> {
+		var position = antBody.position
+		var range = antBody.visionRange
+		
+		// TODO convert to local coordinate system
+		
+		
+		return null
 	}
 }
