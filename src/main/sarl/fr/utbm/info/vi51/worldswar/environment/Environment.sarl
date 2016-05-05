@@ -125,8 +125,6 @@ agent Environment {
 		EnvironmentUtils.applyPheromoneDissipation(grid)
 		growOldAnts
 		spawnAntsInAntHills
-		//TODO apply other world rules, ants spawns and ants dying of old age
-		
 		
 		if(this.uninitializedAgents.size > 0) {
 			this.waitingAgentsInitialization = true
