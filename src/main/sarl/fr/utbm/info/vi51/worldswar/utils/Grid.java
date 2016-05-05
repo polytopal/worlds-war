@@ -176,38 +176,42 @@ public class Grid<T> implements Iterable<T> {
 			throw new InvalidAttributesException("center point is not contained in the grid"); //$NON-NLS-1$
 		}
 
-		int xMinNewSystem = -range;
-		// if map left border
+		int xMinLocalSystem = -range;
+		// the left border of the local grid in old system is center.x - range
+		// if this value is lower than this.Xmin, the local grid is out of the
+		// global grid
+		// in this case, we have to "cut" the left border of the new grid
 		if (center.x - range < this.getXMin()) {
 			// we increment xMin with the difference between this.XMin and the
 			// wanted XMin
-			final int diff = this.getXMin() - (center.x - range);
-			xMinNewSystem += diff;
+			// real xMin = this.getXMin()
+			// wanted xMin = (center.x - range)
+			// difference = real xMin - wanted xMin
+			xMinLocalSystem += this.getXMin() - (center.x - range);
 		}
 
 		int yMinNewSystem = -range;
-		// if map top border
+		// if new grid out of top border
 		if (center.y - range < this.getYMin()) {
-			final int diff = this.getYMin() - (center.y - range);
-			yMinNewSystem += diff;
+			yMinNewSystem += this.getYMin() - (center.y - range);
 		}
 
 		int xMaxNewSystem = range;
-		// if map right border
+		// if new grid out of right border
 		if (center.x + range > this.getXMax()) {
-			final int diff = (center.x + range) - this.getXMax();
-			xMaxNewSystem -= diff;
+			xMaxNewSystem -= (center.x + range) - this.getXMax();
 		}
 
 		int yMaxNewSystem = range;
+		// if new grid out of bottom border
 		if (center.y + range > this.getYMax()) {
-			final int diff = (center.y + range) - this.getYMax();
-			yMaxNewSystem -= diff;
+			yMaxNewSystem -= (center.y + range) - this.getYMax();
 		}
 
-		final Grid<T> localGrid = new Grid<>(xMinNewSystem, xMaxNewSystem, yMinNewSystem, yMaxNewSystem);
-
-		for (int x = xMinNewSystem; x <= xMaxNewSystem; x++) {
+		// we create the local grid and we copy the values of the global grid to
+		// the local grid
+		final Grid<T> localGrid = new Grid<>(xMinLocalSystem, xMaxNewSystem, yMinNewSystem, yMaxNewSystem);
+		for (int x = xMinLocalSystem; x <= xMaxNewSystem; x++) {
 			for (int y = yMinNewSystem; y <= yMaxNewSystem; y++) {
 				localGrid.set(x, y, this.get(center.x + x, center.y + y));
 			}

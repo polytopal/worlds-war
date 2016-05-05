@@ -13,19 +13,21 @@ public class PerceptionGrid {
 
 	private final Grid<PerceptionCell> perceptionCellGrid;
 
-	// TODO - c'est dégeu, trouver solution
-	public PerceptionGrid(Grid<PerceptionCell> perceptionCellGrid, Object blblblbJeSertARien) {
+	public PerceptionGrid(Grid<PerceptionCell> perceptionCellGrid) {
 		this.perceptionCellGrid = perceptionCellGrid;
 	}
 
-	public PerceptionGrid(Grid<EnvObjectCell> envObjectCellGrid) {
+	public PerceptionGrid(int xMin, int xMax, int yMin, int yMax) {
+		this.perceptionCellGrid = new Grid<>(xMin, xMax, yMin, yMax);
+	}
 
+	public static PerceptionGrid buildFromEnvObjectGrid(Grid<EnvObjectCell> envObjectCellGrid) {
 		final int xMin = envObjectCellGrid.getXMin();
 		final int xMax = envObjectCellGrid.getXMax();
 		final int yMin = envObjectCellGrid.getYMin();
 		final int yMax = envObjectCellGrid.getYMax();
 
-		this.perceptionCellGrid = new Grid<PerceptionCell>(xMin, xMax, yMin, yMax);
+		final Grid<PerceptionCell> perceptionCellGrid = new Grid<>(xMin, xMax, yMin, yMax);
 
 		for (int x = xMin; x <= xMax; x++) {
 			for (int y = yMin; y <= yMax; y++) {
@@ -33,24 +35,21 @@ public class PerceptionGrid {
 				final List<EnvironmentObject> envObjects = envObjectCellGrid.get(x, y).getEnvObjects();
 				final PerceptionCell perceptionCell = new PerceptionCell(envObjects);
 
-				this.perceptionCellGrid.set(x, y, perceptionCell);
+				perceptionCellGrid.set(x, y, perceptionCell);
 			}
 		}
-	}
-
-	public PerceptionGrid(int xMin, int xMax, int yMin, int yMax) {
-		this.perceptionCellGrid = new Grid<>(xMin, xMax, yMin, yMax);
+		return new PerceptionGrid(perceptionCellGrid);
 	}
 
 	public PerceptionGrid computeAgentPerception(AgentBody agentBody) {
 		final Point position = agentBody.getPosition();
-		final int range = agentBody.getVisionRange();
+		final int range = AgentBody.PERCEPTION_RANGE;
 
 		try {
 			// coordinate system change
 			final Grid<PerceptionCell> localCellGrid = this.perceptionCellGrid.getSubGrid(position, range);
 
-			// with manhattan distance
+			// circle with Manhattan distance
 			for (int x = localCellGrid.getXMin(); x < localCellGrid.getXMax(); x++) {
 				for (int y = localCellGrid.getYMin(); y < localCellGrid.getYMax(); y++) {
 					if (Math.abs(x + y) > range) {
@@ -59,10 +58,10 @@ public class PerceptionGrid {
 				}
 			}
 
-			return new PerceptionGrid(localCellGrid, 0);
+			return new PerceptionGrid(localCellGrid);
 		} catch (final InvalidAttributesException e) {
 			// TODO - use an other logger
-			System.err.println("Error : the body is not in the grid"); //$NON-NLS-1$
+			System.err.println("Error : the body is not in the grid : " + e); //$NON-NLS-1$
 			return null;
 		}
 	}

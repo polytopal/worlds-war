@@ -91,7 +91,7 @@ agent Environment {
 	
 	on SimulationStepEvent {
 		synchronized(this) {
-			var perceptionGrid = new PerceptionGrid(grid)
+			var perceptionGrid = PerceptionGrid.buildFromEnvObjectGrid(grid)
 			
 			// TODO - send the complete grid to the listeners (the gui)
 			

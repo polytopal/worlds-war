@@ -15,7 +15,8 @@ public abstract class AgentBody extends DynamicObject {
 	/**
 	 * The range used to compute agent perception
 	 */
-	private final int visionRange = 4;
+
+	public static final int PERCEPTION_RANGE = 4;
 
 	/**
 	 * The {@link Environment} stores here the {@link Influence} he received for
@@ -29,6 +30,8 @@ public abstract class AgentBody extends DynamicObject {
 	private final UUID uuid;
 
 	/**
+	 * @param position
+	 *            The Initial position of the body
 	 * @param uuid
 	 *            the UUID of the agent that owns the body
 	 */
@@ -59,7 +62,4 @@ public abstract class AgentBody extends DynamicObject {
 		return this.uuid;
 	}
 
-	public int getVisionRange() {
-		return visionRange;
-	}
 }
