@@ -16,7 +16,7 @@ public class AntHill extends StaticObject {
 	/** Food consumed by the spawn of a new ant */
 	public static final int SPAWN_COST = 25;
 
-	private static final int INITIAL_FOOD_STOCK = 10;
+	private static final int INITIAL_FOOD_STOCK = 100;
 
 	private Stock foodStock;
 

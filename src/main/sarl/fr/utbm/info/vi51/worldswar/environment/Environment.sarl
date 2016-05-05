@@ -84,6 +84,8 @@ agent Environment {
 			//}
 			//info("Ants spawned")
 			
+			//this.grid.get(0,0).addEnvObject(new AntHill(new Point(0,0), new Colony(Breed.DARK_ANTS)))
+			
 			emit(new EnvironmentInitializedEvent)
 		}
 	}
@@ -121,6 +123,7 @@ agent Environment {
 		applyInfluences
 		
 		EnvironmentUtils.applyPheromoneDissipation(grid)
+		growOldAnts
 		spawnAntsInAntHills
 		//TODO apply other world rules, ants spawns and ants dying of old age
 		
@@ -294,21 +297,52 @@ agent Environment {
 	/** To be called each step. Periodically spawn an ant inside each anthill */
 	private def spawnAntsInAntHills {
 		
+		// Since we can not spawn ants while iterating on environment objects, the spawn commands need to be stored and executed later
+		var antsToSpawn = new LinkedList<SpawnAntCommand>
 		for (c : this.grid) {
 			for (envObj : c.getEnvObjects()) {
 				if (envObj instanceof AntHill) {
 					var antHill = envObj
 					antHill.decrementSpawnCooldown
-					if(antHill.spawnCooldown === 0 && antHill.availableFood > AntHill.SPAWN_COST) {
+					if(antHill.spawnCooldown === 0 && antHill.availableFood >= AntHill.SPAWN_COST) {
 						antHill.pickFood(AntHill.SPAWN_COST)
 						antHill.spawnCooldown = AntHill.SPAWN_COOLDOWN
 						//TODO spawn some other castes sometimes
-						spawnAnt(antHill.colony, Caste.GATHERER, antHill.position)
+						antsToSpawn += new SpawnAntCommand(antHill.colony, Caste.GATHERER, antHill.position)
 					}
 				}
 			}
 		}
+		for(a : antsToSpawn) {
+			this.spawnAnt(a.colony, a.caste, a.position)
+		}
 	}
 	
+	private static class SpawnAntCommand {
+		val colony : Colony
+		val caste : Caste
+		val position : Point
+		
+		private new(colony : Colony, caste : Caste, position : Point) {
+			this.colony = colony
+			this.caste = caste
+			this.position = position
+		}
+	}
 	
+	/** Simulates ants aging, kill agents that are too old */
+	private def growOldAnts {
+		var toKill = new LinkedList<UUID>
+		for(body : this.agentBodies.values) {
+			if(body instanceof AntBody) {
+				body.decrementRemainingLifeTime
+				if(body.remainingLifeTime < 0) {
+					toKill += body.uuid
+				}
+			}
+		}
+		for(uuid : toKill) {
+			this.killAgent(uuid)
+		}
+	}
 }
