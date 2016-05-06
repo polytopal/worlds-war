@@ -23,6 +23,7 @@ import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
 import java.util.UUID
+import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener
 
 /**
  * While it does not appear obvious, this agent manages the environment.
@@ -38,6 +39,8 @@ agent Environment {
 	// X max = width-1
 	// Y max = height-1
 	
+	private var listeners : List<SimulatorListener>
+	
 	var grid : Grid<EnvCell>
 	var agentBodies : HashMap<UUID, AgentBody>
 	var influencesReceived : int
@@ -50,6 +53,8 @@ agent Environment {
 	on Initialize {
 		synchronized(this) {
 			var simParameters = occurrence.parameters.get(0) as SimulationParameters
+			this.listeners = occurrence.parameters.get(1) as List<SimulatorListener>
+			
 			this.width = simParameters.gridWidth
 			this.height = simParameters.gridHeight
 			
@@ -98,7 +103,9 @@ agent Environment {
 //			info("perceptionGrid computed :")
 //			info(perceptionGrid)
 
-			// TODO - send the complete grid to the listeners (the gui)
+			for(l : this.listeners) {
+				l.environmentUpdated(perceptionGrid)
+			}
 			
 			influencesReceived = 0
 			sendPerceptionsToAgents(perceptionGrid)

@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import fr.utbm.info.vi51.worldswar.controller.Controller;
+import fr.utbm.info.vi51.worldswar.environment.PerceptionGrid;
 import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
 
 /**
@@ -18,9 +19,9 @@ import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
 public class Window extends JFrame implements SimulatorListener {
 	private static final long serialVersionUID = 3509021382819712013L;
 
-	private GuiActionsManager guiActionsManager;
+	private final GuiActionsManager guiActionsManager;
 
-	private InfoPanel infoPanel;
+	private final InfoPanel infoPanel;
 
 	private float stepsPerSecond;
 	private long lastStepStart;
@@ -71,8 +72,8 @@ public class Window extends JFrame implements SimulatorListener {
 
 	@Override
 	public void simulationStepFired() {
-		long currentTime = System.currentTimeMillis();
-		long stepDuration = currentTime - this.lastStepStart;
+		final long currentTime = System.currentTimeMillis();
+		final long stepDuration = currentTime - this.lastStepStart;
 		this.lastStepStart = currentTime;
 		this.stepsPerSecond = 1000.f / stepDuration;
 
@@ -82,6 +83,11 @@ public class Window extends JFrame implements SimulatorListener {
 
 		this.stepNumber++;
 
+	}
+
+	@Override
+	public void environmentUpdated(PerceptionGrid perceptionGrid) {
+		// TODO
 	}
 
 	@Override
