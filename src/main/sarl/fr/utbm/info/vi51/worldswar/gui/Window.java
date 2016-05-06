@@ -28,6 +28,8 @@ public class Window extends JFrame implements SimulatorListener {
 	private boolean simulationRunning;
 	private int stepNumber;
 
+	private final CentralPanel centralPanel;
+
 	/**
 	 * @param controller
 	 * 
@@ -58,7 +60,8 @@ public class Window extends JFrame implements SimulatorListener {
 		this.getContentPane().setLayout(new BorderLayout());
 		this.setJMenuBar(new MenuBar(this.guiActionsManager));
 
-		this.getContentPane().add(new GridViewPanel(this), BorderLayout.CENTER);
+		centralPanel = new CentralPanel(this);
+		this.getContentPane().add(centralPanel, BorderLayout.CENTER);
 
 		this.infoPanel = new InfoPanel();
 		this.getContentPane().add(this.infoPanel, BorderLayout.SOUTH);
@@ -87,7 +90,7 @@ public class Window extends JFrame implements SimulatorListener {
 
 	@Override
 	public void environmentUpdated(PerceptionGrid perceptionGrid) {
-		// TODO
+		centralPanel.updateGrid(perceptionGrid);
 	}
 
 	@Override
