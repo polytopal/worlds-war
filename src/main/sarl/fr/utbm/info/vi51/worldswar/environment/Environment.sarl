@@ -130,7 +130,7 @@ agent Environment {
 		applyInfluences
 		
 		EnvironmentUtils.applyPheromoneDissipation(grid)
-		growOldAnts
+		antsAging
 		spawnAntsInAntHills
 		
 		if(this.uninitializedAgents.size > 0) {
@@ -315,7 +315,7 @@ agent Environment {
 	}
 
 	/** Simulates ants aging, kill agents that are too old */
-	private def growOldAnts {
+	private def antsAging {
 		var toKill = new LinkedList<UUID>
 		for(body : this.agentBodies.values) {
 			if(body instanceof AntBody) {
