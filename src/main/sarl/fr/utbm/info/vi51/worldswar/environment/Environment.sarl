@@ -93,6 +93,9 @@ agent Environment {
 		synchronized(this) {
 			var perceptionGrid = PerceptionGrid.buildFromEnvObjectGrid(grid)
 
+//			info("perceptionGrid computed :")
+//			info(perceptionGrid)
+
 			// TODO - send the complete grid to the listeners (the gui)
 			
 			influencesReceived = 0

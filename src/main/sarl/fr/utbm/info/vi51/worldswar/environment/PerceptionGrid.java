@@ -45,14 +45,21 @@ public class PerceptionGrid {
 			// coordinate system change
 			final Grid<PerceptionCell> localCellGrid = this.perceptionCellGrid.getSubGrid(position, range);
 
+			// System.out.println("localCellGrid : \n" + localCellGrid);
+
 			// circle with Manhattan distance
-			for (int x = localCellGrid.getXMin(); x < localCellGrid.getXMax(); x++) {
-				for (int y = localCellGrid.getYMin(); y < localCellGrid.getYMax(); y++) {
+			for (int x = localCellGrid.getXMin(); x <= localCellGrid.getXMax(); x++) {
+				for (int y = localCellGrid.getYMin(); y <= localCellGrid.getYMax(); y++) {
 					if (Math.abs(x + y) > range) {
+						// TODO voir ici si on met clear la cellule ou si on la
+						// met a null
+						// localCellGrid.get(x, y).clear();
 						localCellGrid.set(x, y, null);
 					}
 				}
 			}
+
+			// System.out.println("after manhattan : \n" + localCellGrid);
 
 			return new PerceptionGrid(localCellGrid);
 		} catch (final InvalidAttributesException e) {
@@ -60,5 +67,10 @@ public class PerceptionGrid {
 			System.err.println("Error : the body is not in the grid : " + e); //$NON-NLS-1$
 			return null;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return this.perceptionCellGrid.toString();
 	}
 }

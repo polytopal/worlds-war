@@ -46,4 +46,16 @@ public class PerceptionCell {
 			}
 		}
 	}
+
+	/**
+	 * remove the content of the cell
+	 */
+	public void clear() {
+		this.perceptionList.clear();
+	}
+
+	@Override
+	public String toString() {
+		return this.perceptionList.toString();
+	}
 }
