@@ -21,7 +21,7 @@ public class PerceptionGrid {
 		this.perceptionCellGrid = new Grid<>(xMin, xMax, yMin, yMax);
 	}
 
-	public static PerceptionGrid buildFromEnvObjectGrid(Grid<EnvObjectCell> envObjectCellGrid) {
+	public static PerceptionGrid buildFromEnvObjectGrid(Grid<EnvCell> envObjectCellGrid) {
 		final int xMin = envObjectCellGrid.getXMin();
 		final int xMax = envObjectCellGrid.getXMax();
 		final int yMin = envObjectCellGrid.getYMin();

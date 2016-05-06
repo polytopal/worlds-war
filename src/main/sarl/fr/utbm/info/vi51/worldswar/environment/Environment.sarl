@@ -38,7 +38,7 @@ agent Environment {
 	// X max = width-1
 	// Y max = height-1
 	
-	var grid : Grid<EnvObjectCell>
+	var grid : Grid<EnvCell>
 	var agentBodies : HashMap<UUID, AgentBody>
 	var influencesReceived : int
 
@@ -56,7 +56,7 @@ agent Environment {
 			this.grid = new Grid(0, this.width-1, 0, this.height-1)
 			for(var x = 0; x < this.width; x++) {
 				for(var y = 0; y < this.height; y++) {
-					this.grid.set(x,y, new EnvObjectCell)
+					this.grid.set(x,y, new EnvCell)
 				}
 			}
 			
