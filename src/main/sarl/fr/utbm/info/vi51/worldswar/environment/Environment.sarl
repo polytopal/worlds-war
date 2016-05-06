@@ -50,6 +50,7 @@ agent Environment {
 	// Y max = height-1
 	
 	var grid : Grid<Cell>
+	var antHills : List<AntHill>
 	var agentBodies : HashMap<UUID, AgentBody>
 	var influencesReceived : int
 
@@ -71,6 +72,8 @@ agent Environment {
 				}
 			}
 			
+			this.antHills = new ArrayList
+			
 			info("Creating agents map...")
 			this.agentBodies = new HashMap(AGENTS_MAP_INITIAL_SIZE)
 			info("Map created")
@@ -78,13 +81,17 @@ agent Environment {
 			this.uninitializedAgents = new LinkedList
 			this.waitingAgentsInitialization = false
 			
+			
+			
 			//TODO for testing purpose, should be removed when we have ants spawners
 			//for(var i=0; i<500; i++) {
 			//	spawnAnt(new Colony(Breed.DARK_ANTS), Caste.GATHERER, new Point(0,0))
 			//}
 			//info("Ants spawned")
 			
-			//this.grid.get(0,0).addEnvObject(new AntHill(new Point(0,0), new Colony(Breed.DARK_ANTS)))
+//			var antHill = new AntHill(new Point(0,0), new Colony(Breed.DARK_ANTS));
+//			this.grid.get(0,0).addEnvObject(antHill);
+//			this.antHills += antHill;
 			
 			emit(new EnvironmentInitializedEvent)
 		}
@@ -294,40 +301,19 @@ agent Environment {
 	
 	/** To be called each step. Periodically spawn an ant inside each anthill */
 	private def spawnAntsInAntHills {
-		
-		// Since we can not spawn ants while iterating on environment objects, the spawn commands need to be stored and executed later
-		var antsToSpawn = new LinkedList<SpawnAntCommand>
-		for (c : this.grid) {
-			for (envObj : c.getEnvObjects()) {
-				if (envObj instanceof AntHill) {
-					var antHill = envObj
-					antHill.decrementSpawnCooldown
-					if(antHill.spawnCooldown === 0 && antHill.availableFood >= AntHill.SPAWN_COST) {
-						antHill.pickFood(AntHill.SPAWN_COST)
-						antHill.spawnCooldown = AntHill.SPAWN_COOLDOWN
-						//TODO spawn some other castes sometimes
-						antsToSpawn += new SpawnAntCommand(antHill.colony, Caste.GATHERER, antHill.position)
-					}
-				}
+		for(antHill : this.antHills) {
+			antHill.decrementSpawnCooldown
+			if(antHill.spawnCooldown === 0 && antHill.availableFood >= AntHill.SPAWN_COST) {
+				antHill.pickFood(AntHill.SPAWN_COST)
+				antHill.spawnCooldown = AntHill.SPAWN_COOLDOWN
+				//TODO spawn some other castes sometimes
+				//antsToSpawn += new SpawnAntCommand(antHill.colony, Caste.GATHERER, antHill.position)
+				this.spawnAnt(antHill.colony, Caste.GATHERER, antHill.position)
+				
 			}
 		}
-		for(a : antsToSpawn) {
-			this.spawnAnt(a.colony, a.caste, a.position)
-		}
 	}
-	
-	private static class SpawnAntCommand {
-		val colony : Colony
-		val caste : Caste
-		val position : Point
-		
-		private new(colony : Colony, caste : Caste, position : Point) {
-			this.colony = colony
-			this.caste = caste
-			this.position = position
-		}
-	}
-	
+
 	/** Simulates ants aging, kill agents that are too old */
 	private def growOldAnts {
 		var toKill = new LinkedList<UUID>
