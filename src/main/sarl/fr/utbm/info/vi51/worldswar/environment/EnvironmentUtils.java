@@ -30,9 +30,9 @@ public class EnvironmentUtils {
 	 * 
 	 * @see Pheromone#dissipate()
 	 */
-	public static void applyPheromoneDissipation(Grid<Cell> grid) {
+	public static void applyPheromoneDissipation(Grid<EnvCell> grid) {
 
-		for (Cell c : grid) {
+		for (EnvCell c : grid) {
 			List<EnvironmentObject> toRemove = new LinkedList<>();
 			for (EnvironmentObject envObj : c.getEnvObjects()) {
 				if (envObj instanceof Pheromone) {

@@ -2,6 +2,7 @@ package fr.utbm.info.vi51.worldswar.^agent.^event
 
 import fr.utbm.info.vi51.worldswar.^agent.AntAgent
 import fr.utbm.info.vi51.worldswar.environment.Environment
+import fr.utbm.info.vi51.worldswar.environment.PerceptionGrid
 import io.sarl.lang.core.Address
 
 /**
@@ -13,10 +14,14 @@ event PerceptionEvent {
 	
 	val callbackAddress : Address
 	
+	var perceptionGrid : PerceptionGrid
+	
 	/**
 	 * @param callbackAddress : the address to send the influence to
+	 * @param perceptionGrid : the collection of perceivable that will be sent to the agent
 	 */	
-	new(callbackAddress : Address) {
-		this.callbackAddress = callbackAddress;
+	new(callbackAddress : Address, perceptionGrid : PerceptionGrid) {
+		this.callbackAddress = callbackAddress
+		this.perceptionGrid = perceptionGrid
 	}
 }

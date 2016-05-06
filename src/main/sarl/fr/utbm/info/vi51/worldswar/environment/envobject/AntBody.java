@@ -34,9 +34,9 @@ public class AntBody extends AgentBody {
 	 */
 	private int remainingLifeTime;
 
-	private Caste caste;
+	private final Caste caste;
 
-	private Colony colony;
+	private final Colony colony;
 
 	/**
 	 * @param position
