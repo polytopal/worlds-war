@@ -68,10 +68,10 @@ agent Environment {
 			this.waitingAgentsInitialization = false
 			
 			//TODO for testing purpose, should be removed when we have ants spawners
-			//for(var i=0; i<500; i++) {
-			//	spawnAnt(new Colony(Breed.DARK_ANTS), Caste.GATHERER, new Point(0,0))
-			//}
-			//info("Ants spawned")
+//			for(var i=0; i<500; i++) {
+//				spawnAnt(new Colony(Breed.DARK_ANTS), Caste.GATHERER, new Point(0,0))
+//			}
+//			info("Ants spawned")
 			
 			emit(new EnvironmentInitializedEvent)
 		}
@@ -92,7 +92,7 @@ agent Environment {
 	on SimulationStepEvent {
 		synchronized(this) {
 			var perceptionGrid = PerceptionGrid.buildFromEnvObjectGrid(grid)
-			
+
 			// TODO - send the complete grid to the listeners (the gui)
 			
 			influencesReceived = 0
