@@ -1,8 +1,11 @@
 package fr.utbm.info.vi51.worldswar.controller;
 
+import java.util.UUID;
+
 import fr.utbm.info.vi51.worldswar.environment.Environment;
 import fr.utbm.info.vi51.worldswar.simulator.SimulationSpeed;
 import fr.utbm.info.vi51.worldswar.simulator.Simulator;
+import io.sarl.lang.core.Address;
 import io.sarl.lang.core.EventSpace;
 import io.sarl.util.Scopes;
 
@@ -15,6 +18,8 @@ import io.sarl.util.Scopes;
 public class Controller {
 
 	private final EventSpace space;
+	private final UUID uuid;
+	private final Address address;
 
 	/**
 	 * Builds a controller that will send its events to the given
@@ -24,6 +29,8 @@ public class Controller {
 	 */
 	public Controller(EventSpace space) {
 		this.space = space;
+		this.uuid = UUID.randomUUID();
+		this.address = new Address(space.getID(), this.uuid);
 	}
 
 	/**
@@ -64,6 +71,7 @@ public class Controller {
 	}
 
 	private void emitEvent(ControllerCommandEvent event) {
+		event.setSource(this.address);
 		this.space.emit(event, Scopes.allParticipants());
 	}
 

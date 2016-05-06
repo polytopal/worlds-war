@@ -36,7 +36,7 @@ agent Simulator {
 	private var listeners : List<SimulatorListener>
 
 	/** Simulation speed, as chosen by the user */
-	private var simulationSpeed = SimulationSpeed.NORMAL
+	private var simulationSpeed = SimulationSpeed.initialSpeed
 	
 	/** Indicates whether the step timer has passed, hence a new step should be fired */
 	private var stepTimerReady = false
@@ -56,11 +56,13 @@ agent Simulator {
 	////////////////////////////////////////
 	
 	on Initialize {
-		controller = new Controller(defaultSpace)
-		gui = new Window(controller)
-		
-		listeners = new LinkedList
-		listeners.add(gui)
+		synchronized(this) {
+			controller = new Controller(defaultSpace)
+			gui = new Window(controller)
+			
+			listeners = new LinkedList
+			listeners.add(gui)
+		}
 	}
 	
 	
@@ -83,10 +85,12 @@ agent Simulator {
 	 * The environment has finished its initialization, we can start the simulation loop
 	 */
 	on EnvironmentInitializedEvent {
-		this.environmentExists = true
-		this.environmentReady = true
-		this.stepTimerReady = true
-		fireSimulationStep
+		synchronized(this) {
+			this.environmentExists = true
+			this.environmentReady = true
+			this.stepTimerReady = true
+			fireSimulationStep
+		}
 	}
 	
 	////////////////////////////////////////
@@ -94,13 +98,18 @@ agent Simulator {
 	////////////////////////////////////////
 	
 	on EnvironmentReadyEvent {
-		this.environmentReady = true
-		fireSimulationStep
+		synchronized(this) {
+			this.environmentReady = true
+			fireSimulationStep
+		}
 	}
 	
 	private def setStepTimerReady {
-		this.stepTimerReady = true
-		fireSimulationStep
+		// Called from the scheduler, so needs to be synchronized too
+		synchronized(this) {
+			this.stepTimerReady = true
+			fireSimulationStep
+		}
 	}
 	
 	/** Checks that both the step timer and the environment allow a new step to be fired, 
@@ -136,13 +145,15 @@ agent Simulator {
 	 * Environment has been successfully destroyed
 	 */
 	on EnvironmentTerminatedEvent {
-		info("Environment destroyed")
-		this.environmentExists = false
-		
-		// If a new simulation was waiting to start, start it
-		if(this.pendingSimulationParams !== null) {
-			newSimulation(this.pendingSimulationParams)
-			this.pendingSimulationParams = null
+		synchronized(this) {
+			info("Environment destroyed")
+			this.environmentExists = false
+			
+			// If a new simulation was waiting to start, start it
+			if(this.pendingSimulationParams !== null) {
+				newSimulation(this.pendingSimulationParams)
+				this.pendingSimulationParams = null
+			}
 		}
 	}
 	
@@ -160,16 +171,18 @@ agent Simulator {
 	 * Handles the controller's commands
 	 */
 	on ControllerCommandEvent {
-		if(occurrence.command instanceof SimulationSpeedCommand) {
-			var command = occurrence.command as SimulationSpeedCommand
-			this.simulationSpeed = command.speed
-		} else if (occurrence.command instanceof NewSimulationCommand) {
-			var command = occurrence.command as NewSimulationCommand
-			handleNewSimulationCommand(command.simulationParameters)
-		} else if (occurrence.command instanceof StopSimulationCommand) {
-			stopSimulation
-		} else if (occurrence.command instanceof StopProgramCommand) {
-			closeProgram
+		synchronized(this) {
+			if(occurrence.command instanceof SimulationSpeedCommand) {
+				var command = occurrence.command as SimulationSpeedCommand
+				this.simulationSpeed = command.speed
+			} else if (occurrence.command instanceof NewSimulationCommand) {
+				var command = occurrence.command as NewSimulationCommand
+				handleNewSimulationCommand(command.simulationParameters)
+			} else if (occurrence.command instanceof StopSimulationCommand) {
+				stopSimulation
+			} else if (occurrence.command instanceof StopProgramCommand) {
+				closeProgram
+			}
 		}
 	}
 	

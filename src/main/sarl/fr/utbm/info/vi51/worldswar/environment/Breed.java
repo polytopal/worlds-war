@@ -9,14 +9,14 @@ import fr.utbm.info.vi51.worldswar.gui.Messages;
 public enum Breed {
 	DARK_ANTS("Breed.darkAnts"), RED_ANTS("Breed.redAnts"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	private String stringRepresentation;
+	private String propertyKey;
 
 	private Breed(String stringRepresentation) {
-		this.stringRepresentation = stringRepresentation;
+		this.propertyKey = stringRepresentation;
 	}
 
 	@Override
 	public String toString() {
-		return Messages.getString(this.stringRepresentation);
+		return Messages.getString(this.propertyKey);
 	}
 }

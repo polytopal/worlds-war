@@ -6,11 +6,11 @@ package fr.utbm.info.vi51.worldswar.simulator;
  */
 public enum SimulationSpeed {
 
-	SLOW("slow", 500), NORMAL("normal", 250), FAST("fast", 100),
+	SLOW("SimulationSpeed.slow", 500), NORMAL("SimulationSpeed.normal", 250), FAST("SimulationSpeed.fast", 100), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	/**
 	 * No delay between steps means the simulation will run as fast as possible
 	 */
-	MAX("max", 1);
+	MAX("SimulationSpeed.max", 1); //$NON-NLS-1$
 
 	private SimulationSpeed(String key, int ms) {
 		this.propertyKey = key;
@@ -25,6 +25,16 @@ public enum SimulationSpeed {
 	 */
 	public String getPropertyKey() {
 		return this.propertyKey;
+	}
+
+	/**
+	 * @return the initial speed used when the simulator is initialized.
+	 * 
+	 *         When a new simulation is started, the speed of the previous
+	 *         simulation is kept for the new one
+	 */
+	public static SimulationSpeed getInitialSpeed() {
+		return NORMAL;
 	}
 
 	/**
