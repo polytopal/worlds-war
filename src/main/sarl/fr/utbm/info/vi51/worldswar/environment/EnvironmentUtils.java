@@ -35,9 +35,9 @@ public class EnvironmentUtils {
 	 * 
 	 * @see Pheromone#dissipate()
 	 */
-	public static void applyPheromoneDissipation(Grid<Cell> grid) {
+	public static void applyPheromoneDissipation(Grid<EnvCell> grid) {
 
-		for (Cell c : grid) {
+		for (EnvCell c : grid) {
 			List<EnvironmentObject> toRemove = new LinkedList<>();
 			for (EnvironmentObject envObj : c.getEnvObjects()) {
 				if (envObj instanceof Pheromone) {
@@ -63,7 +63,7 @@ public class EnvironmentUtils {
 	 * @param ant
 	 * @param grid
 	 */
-	public static void burrow(AntBody ant, Grid<Cell> grid) {
+	public static void burrow(AntBody ant, Grid<EnvCell> grid) {
 		if (ant.isBurrowed()) {
 			ant.setBurrowed(false);
 		} else if (getAntHillAt(ant.getPosition(), grid) != null) {
@@ -79,7 +79,7 @@ public class EnvironmentUtils {
 	 * @param qty
 	 * @param grid
 	 */
-	public static void dropFood(AntBody ant, int qty, Grid<Cell> grid) {
+	public static void dropFood(AntBody ant, int qty, Grid<EnvCell> grid) {
 		int foodDropped = ant.pickFood(qty);
 		Food food = getFoodAt(ant.getPosition(), grid);
 		if (food == null) {
@@ -99,7 +99,7 @@ public class EnvironmentUtils {
 	 * @param qty
 	 * @param grid
 	 */
-	public static void pickFood(AntBody ant, int qty, Grid<Cell> grid) {
+	public static void pickFood(AntBody ant, int qty, Grid<EnvCell> grid) {
 		Food food = getFoodAt(ant.getPosition(), grid);
 		if (food == null) {
 			// Nothing to do if there is no food to pick
@@ -123,7 +123,7 @@ public class EnvironmentUtils {
 	 * @param direction
 	 * @param grid
 	 */
-	public static void moveAnt(AntBody body, Direction direction, Grid<Cell> grid) {
+	public static void moveAnt(AntBody body, Direction direction, Grid<EnvCell> grid) {
 		Point target = new Point(body.getPosition().x + direction.getX(), body.getPosition().y + direction.getY());
 
 		// Prevents moving out of the map
@@ -151,7 +151,8 @@ public class EnvironmentUtils {
 	 * @param position
 	 * @param grid
 	 */
-	public static void placePheromone(Colony colony, PheromoneType type, float qty, Point position, Grid<Cell> grid) {
+	public static void placePheromone(Colony colony, PheromoneType type, float qty, Point position,
+			Grid<EnvCell> grid) {
 		Pheromone pheromone = getPheromoneAt(position, colony, type, grid);
 		if (pheromone == null) {
 			pheromone = new Pheromone(position, colony, type, qty);
@@ -170,7 +171,7 @@ public class EnvironmentUtils {
 	 * @return the {@link AntHill} at the given position, or {@code null} if
 	 *         there is none.
 	 */
-	public static AntHill getAntHillAt(Point position, Grid<Cell> grid) {
+	public static AntHill getAntHillAt(Point position, Grid<EnvCell> grid) {
 		AntHill antHill = null;
 		for (EnvironmentObject object : grid.get(position).getEnvObjects()) {
 			if (object instanceof AntHill) {
@@ -186,7 +187,7 @@ public class EnvironmentUtils {
 	 * @return the {@link Food} at the given position, or {@code null} if there
 	 *         is none.
 	 */
-	public static Food getFoodAt(Point position, Grid<Cell> grid) {
+	public static Food getFoodAt(Point position, Grid<EnvCell> grid) {
 		Food food = null;
 		for (EnvironmentObject object : grid.get(position).getEnvObjects()) {
 			if (object instanceof Food) {
@@ -205,7 +206,7 @@ public class EnvironmentUtils {
 	 *         {@link PheromoneType} and belonging to the given {@link Colony},
 	 *         or {@code null} if there is none.
 	 */
-	private static Pheromone getPheromoneAt(Point position, Colony colony, PheromoneType type, Grid<Cell> grid) {
+	private static Pheromone getPheromoneAt(Point position, Colony colony, PheromoneType type, Grid<EnvCell> grid) {
 		Pheromone validPheromone = null;
 		for (EnvironmentObject object : grid.get(position).getEnvObjects()) {
 			if (object instanceof Pheromone) {

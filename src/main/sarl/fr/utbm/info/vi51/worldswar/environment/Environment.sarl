@@ -10,21 +10,12 @@ import fr.utbm.info.vi51.worldswar.controller.SimulationParameters
 import fr.utbm.info.vi51.worldswar.environment.envobject.AgentBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill
-import fr.utbm.info.vi51.worldswar.environment.envobject.Food
-import fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone
-import fr.utbm.info.vi51.worldswar.environment.envobject.Wall
 import fr.utbm.info.vi51.worldswar.environment.influence.BurrowInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.DropFoodInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.MeleeAttackInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.PheromoneAndMoveInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.PickFoodInfluence
-import fr.utbm.info.vi51.worldswar.environment.perceivable.Perceivable
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableAnt
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableAntHill
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableFood
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivablePheromone
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableWall
 import fr.utbm.info.vi51.worldswar.simulator.SimulationStepEvent
 import fr.utbm.info.vi51.worldswar.simulator.StopSimulationEvent
 import fr.utbm.info.vi51.worldswar.utils.Grid
@@ -55,7 +46,9 @@ agent Environment {
 	// X max = width-1
 	// Y max = height-1
 	
-	var grid : Grid<Cell>
+	var grid : Grid<EnvCell>
+	var antHills : List<AntHill>
+
 	var agentBodies : HashMap<UUID, AgentBody>
 	var influencesReceived : int
 
@@ -73,9 +66,11 @@ agent Environment {
 			this.grid = new Grid(0, this.width-1, 0, this.height-1)
 			for(var x = 0; x < this.width; x++) {
 				for(var y = 0; y < this.height; y++) {
-					this.grid.set(x,y, new Cell)
+					this.grid.set(x,y, new EnvCell)
 				}
 			}
+			
+			this.antHills = new ArrayList
 			
 			info("Creating agents map...")
 			this.agentBodies = new HashMap(AGENTS_MAP_INITIAL_SIZE)
@@ -84,12 +79,17 @@ agent Environment {
 			this.uninitializedAgents = new LinkedList
 			this.waitingAgentsInitialization = false
 			
+			
+			
 			//TODO for testing purpose, should be removed when we have ants spawners
-//			info("Spawning ants")
 //			for(var i=0; i<500; i++) {
 //				spawnAnt(new Colony(Breed.DARK_ANTS), Caste.GATHERER, new Point(0,0))
 //			}
 //			info("Ants spawned")
+			
+//			var antHill = new AntHill(new Point(0,0), new Colony(Breed.DARK_ANTS));
+//			this.grid.get(0,0).addEnvObject(antHill);
+//			this.antHills += antHill;
 			
 			emit(new EnvironmentInitializedEvent)
 		}
@@ -111,12 +111,15 @@ agent Environment {
 	
 	on SimulationStepEvent {
 		synchronized(this) {
-			var perceptionGrid = computePerceptionGrid
-			
+			var perceptionGrid = PerceptionGrid.buildFromEnvObjectGrid(grid)
+
+//			info("perceptionGrid computed :")
+//			info(perceptionGrid)
+
 			// TODO - send the complete grid to the listeners (the gui)
 			
 			influencesReceived = 0
-			sendPerceptionsToAgents
+			sendPerceptionsToAgents(perceptionGrid)
 		}
 	}
 	
@@ -130,8 +133,8 @@ agent Environment {
 		applyInfluences
 		
 		EnvironmentUtils.applyPheromoneDissipation(grid)
-		//TODO apply other world rules, ants spawns and ants dying of old age
-		
+		antsAging
+		spawnAntsInAntHills
 		
 		if(this.uninitializedAgents.size > 0) {
 			this.waitingAgentsInitialization = true
@@ -258,47 +261,8 @@ agent Environment {
 	///            PERCEPTIONS           ///
 	////////////////////////////////////////
 	
-	def computePerceptionGrid : Grid<List<Perceivable>>{
-		var perceptionGrid = new Grid<List<Perceivable>>(0, width-1, 0, height-1)
-		
-		for(var x = 0; x < width; x++) {
-			for(var y = 0; y < height; y++) {
-				// foreach cell
-				
-				var perceptionList : List<Perceivable> = new ArrayList<Perceivable>
-				perceptionGrid.set(x,y, perceptionList)
-				
-				var envObjectList = grid.get(x, y).getEnvObjects
-				
-				// foreach Environment object in the cell
-				for(envObj : envObjectList){
-					var perceivable : Perceivable
-					
-					// we change each envObject in Perceivable
-					if(envObj instanceof AntBody){
-						perceivable = new PerceivableAnt(envObj)
-					}else if(envObj instanceof AntHill){
-						perceivable = new PerceivableAntHill(envObj)
-					}else if(envObj instanceof Food){
-						perceivable = new PerceivableFood(envObj)
-					}else if(envObj instanceof Pheromone){
-						perceivable = new PerceivablePheromone(envObj)
-					}else if(envObj instanceof Wall){
-						perceivable = new PerceivableWall(envObj)
-					}
-					
-					if(perceivable !== null){
-						perceptionList.add(perceivable)
-					}
-				}
-				
-			}
-		}
 	
-		return perceptionGrid;
-	}
-	
-	private def sendPerceptionsToAgents {
+	def sendPerceptionsToAgents(perceptionGrid : PerceptionGrid) {
 		
 		//If there is no agent, there is no perception to send, and no influence to wait.
 		//We can directly apply the step
@@ -308,9 +272,47 @@ agent Environment {
 		}
 		
 		for(agentBody : agentBodies.values()) {
-			emit(new PerceptionEvent(this.defaultAddress), 
-				Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
+			
+			val agentPerception = perceptionGrid.computeAgentPerception(agentBody)
+			
+			emit(new PerceptionEvent(this.defaultAddress, agentPerception), Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
 			)
+		}
+	}
+	
+	
+	////////////////////////////////////////
+	///            WORLD RULES           ///
+	////////////////////////////////////////
+	
+	/** To be called each step. Periodically spawn an ant inside each anthill */
+	private def spawnAntsInAntHills {
+		for(antHill : this.antHills) {
+			antHill.decrementSpawnCooldown
+			if(antHill.spawnCooldown === 0 && antHill.availableFood >= AntHill.SPAWN_COST) {
+				antHill.pickFood(AntHill.SPAWN_COST)
+				antHill.spawnCooldown = AntHill.SPAWN_COOLDOWN
+				//TODO spawn some other castes sometimes
+				//antsToSpawn += new SpawnAntCommand(antHill.colony, Caste.GATHERER, antHill.position)
+				this.spawnAnt(antHill.colony, Caste.GATHERER, antHill.position)
+				
+			}
+		}
+	}
+
+	/** Simulates ants aging, kill agents that are too old */
+	private def antsAging {
+		var toKill = new LinkedList<UUID>
+		for(body : this.agentBodies.values) {
+			if(body instanceof AntBody) {
+				body.decrementRemainingLifeTime
+				if(body.remainingLifeTime < 0) {
+					toKill += body.uuid
+				}
+			}
+		}
+		for(uuid : toKill) {
+			this.killAgent(uuid)
 		}
 	}
 }

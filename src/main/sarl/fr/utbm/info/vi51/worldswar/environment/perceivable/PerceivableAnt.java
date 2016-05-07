@@ -49,4 +49,9 @@ public class PerceivableAnt extends Perceivable {
 		return this.ant.getColony();
 	}
 
+	@Override
+	public String toString() {
+		return "ant";
+	}
+
 }

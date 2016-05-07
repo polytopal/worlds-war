@@ -35,9 +35,9 @@ public class AntBody extends AgentBody {
 	 */
 	private int remainingLifeTime;
 
-	private Caste caste;
+	private final Caste caste;
 
-	private Colony colony;
+	private final Colony colony;
 
 	/**
 	 * @param position
@@ -54,10 +54,13 @@ public class AntBody extends AgentBody {
 		this.colony = colony;
 		this.caste = caste;
 
-		// TODO placeholder constructor, stats need to be calculated
-		this.capacity = 42;
-
+		// TODO placeholder constructor, stats will need to be calculated
+		// according to the ant's breed and caste
+		this.capacity = 10;
 		this.foodCarried = new Stock(0);
+		this.burrowed = true;
+		this.health = 100;
+		this.remainingLifeTime = 150;
 	}
 
 	/** {@inheritDoc} **/

@@ -27,7 +27,12 @@ agent GathererAgent extends AntAgent {
 	
 	on PerceptionEvent {
 		synchronized(this) {
-			//TODO implement a brain here
+			
+			val perceptionGrid = occurrence.perceptionGrid
+			//TODO implement a brain here, do something with perceptionGrid
+			
+			
+			
 			emit(new InfluenceEvent(this.getID(), new MoveInfluence(Direction.EAST)),
 				Scopes.addresses(occurrence.callbackAddress))
 		}
