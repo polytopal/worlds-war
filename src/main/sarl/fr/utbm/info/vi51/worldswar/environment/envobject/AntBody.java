@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import fr.utbm.info.vi51.worldswar.environment.Caste;
 import fr.utbm.info.vi51.worldswar.environment.Colony;
+import fr.utbm.info.vi51.worldswar.utils.Stock;
 
 /**
  * Physical body of an {@link Ant}
@@ -20,7 +21,7 @@ public class AntBody extends AgentBody {
 	/**
 	 * Number of food units currently carried by the ant
 	 */
-	private int foodCarried;
+	private Stock foodCarried;
 
 	/**
 	 * Current health points
@@ -55,6 +56,8 @@ public class AntBody extends AgentBody {
 
 		// TODO placeholder constructor, stats need to be calculated
 		this.capacity = 42;
+
+		this.foodCarried = new Stock(0);
 	}
 
 	/** {@inheritDoc} **/
@@ -75,21 +78,6 @@ public class AntBody extends AgentBody {
 	 */
 	public void decrementRemainingLifeTime() {
 		this.remainingLifeTime--;
-	}
-
-	/**
-	 * @return the foodCarried
-	 */
-	public int getFoodCarried() {
-		return this.foodCarried;
-	}
-
-	/**
-	 * @param foodCarried
-	 *            the foodCarried to set
-	 */
-	public void setFoodCarried(int foodCarried) {
-		this.foodCarried = foodCarried;
 	}
 
 	/**
@@ -127,4 +115,44 @@ public class AntBody extends AgentBody {
 	public void setBurrowed(boolean burrowed) {
 		this.burrowed = burrowed;
 	}
+
+	////////////////////////////////////////
+	/////////// FOOD STOCK METHODS /////////
+	////////////////////////////////////////
+
+	/**
+	 * Picks food from the ant
+	 * 
+	 * @param qty
+	 * @return
+	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#pick(int)
+	 */
+	public int pickFood(int qty) {
+		return this.foodCarried.pick(qty);
+	}
+
+	/**
+	 * @param qty
+	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#drop(int)
+	 */
+	public void giveFood(int qty) {
+		this.foodCarried.drop(qty);
+	}
+
+	/**
+	 * @return
+	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#getAvailable()
+	 */
+	public int getFoodCarried() {
+		return this.foodCarried.getAvailable();
+	}
+
+	/**
+	 * @return
+	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#isEmpty()
+	 */
+	public boolean carriesFood() {
+		return !(this.foodCarried.isEmpty());
+	}
+
 }

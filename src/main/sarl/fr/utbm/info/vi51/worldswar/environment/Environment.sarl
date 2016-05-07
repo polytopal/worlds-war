@@ -13,6 +13,12 @@ import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill
 import fr.utbm.info.vi51.worldswar.environment.envobject.Food
 import fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone
 import fr.utbm.info.vi51.worldswar.environment.envobject.Wall
+import fr.utbm.info.vi51.worldswar.environment.influence.BurrowInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.DropFoodInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.MeleeAttackInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.PheromoneAndMoveInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.PickFoodInfluence
 import fr.utbm.info.vi51.worldswar.environment.perceivable.Perceivable
 import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableAnt
 import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableAntHill
@@ -148,12 +154,32 @@ agent Environment {
 	 */
 	private def applyInfluences {
 		
-		//TODO implement
+		//TODO we might want to iterate in a random order later
+		for(agentBody : agentBodies.values) {
+			// Currently, all of our agents are ants, so our influences apply to ants. 
+			// If we add other types of agents, the nature of the agent and the influences he can send will have to be determined.
+			val antBody = agentBody as AntBody
+			applyAntInfluence(antBody)
+			antBody.influence = null
+		}
+	}
+	
+	private def applyAntInfluence(ant : AntBody) {
+		val influence = ant.influence
 		
-		
-		// Clear all the stored influences because we don't want them anymore
-		for(body : agentBodies.values()) {
-			body.influence = null
+		if(influence instanceof BurrowInfluence) {
+			EnvironmentUtils.burrow(ant, grid)
+		} else if(influence instanceof DropFoodInfluence) {
+			EnvironmentUtils.dropFood(ant, influence.droppedAmount, grid)
+		} else if(influence instanceof MeleeAttackInfluence) {
+			throw(new UnsupportedOperationException("No fights only farm pls"))
+		} else if(influence instanceof MoveInfluence) {
+			EnvironmentUtils.moveAnt(ant, influence.direction, grid)
+		} else if (influence instanceof PheromoneAndMoveInfluence) {
+			EnvironmentUtils.placePheromone(ant.colony, influence.pheromoneType, influence.pheromoneQty, ant.position, grid)
+			EnvironmentUtils.moveAnt(ant, influence.direction, grid)
+		} else if (influence instanceof PickFoodInfluence) {
+			EnvironmentUtils.pickFood(ant, influence.qty, grid)
 		}
 	}
 	
