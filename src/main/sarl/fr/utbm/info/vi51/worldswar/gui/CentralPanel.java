@@ -39,6 +39,8 @@ public class CentralPanel extends JPanel {
 
 	private int cellSize = 8;
 
+	private PheromoneType pheromoneFilter;
+
 	private final JScrollPane scrollPane;
 	private final JPanel gridPanel;
 
@@ -80,6 +82,7 @@ public class CentralPanel extends JPanel {
 		this.panelTable = new ArrayList<>(0);
 		this.width = 0;
 		this.height = 0;
+		this.pheromoneFilter = null;
 
 		this.scrollPane = new JScrollPane(this.gridPanel);
 		this.scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -143,12 +146,21 @@ public class CentralPanel extends JPanel {
 			}
 			for (int x = 0; x < this.width; x++) {
 				for (int y = 0; y < this.height; y++) {
-					final Color cellColor = GUIUtils.computeCellColor(perceptionGrid.getCell(x, y), PheromoneType.FOOD);
+					final Color cellColor = GUIUtils.computeCellColor(perceptionGrid.getCell(x, y),
+							this.pheromoneFilter);
 					this.panelTable.get(x).set(y, cellColor);
 				}
 			}
 		}
 		this.gridPanel.repaint();
+	}
+
+	public void setPheromoneFilter(PheromoneType pheromoneType) {
+		synchronized (CentralPanel.this.panelTable) {
+			if (this.pheromoneFilter != pheromoneType) {
+				this.pheromoneFilter = pheromoneType;
+			}
+		}
 	}
 
 	/**

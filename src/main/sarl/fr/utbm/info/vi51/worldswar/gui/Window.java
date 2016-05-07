@@ -42,8 +42,6 @@ public class Window extends JFrame implements SimulatorListener {
 		this.stepsPerSecond = 0;
 		this.lastStepStart = System.currentTimeMillis();
 
-		this.guiActionsManager = new GuiActionsManager(controller);
-
 		this.stepNumber = 0;
 		this.simulationRunning = false;
 
@@ -58,10 +56,13 @@ public class Window extends JFrame implements SimulatorListener {
 		});
 
 		this.getContentPane().setLayout(new BorderLayout());
-		this.setJMenuBar(new MenuBar(this.guiActionsManager));
 
 		this.centralPanel = new CentralPanel(this);
 		this.getContentPane().add(this.centralPanel, BorderLayout.CENTER);
+
+		this.guiActionsManager = new GuiActionsManager(controller, this.centralPanel);
+
+		this.setJMenuBar(new MenuBar(this.guiActionsManager));
 
 		this.infoPanel = new InfoPanel();
 		this.getContentPane().add(this.infoPanel, BorderLayout.SOUTH);
