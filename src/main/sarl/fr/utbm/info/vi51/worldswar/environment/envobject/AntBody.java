@@ -91,6 +91,13 @@ public class AntBody extends AgentBody {
 	}
 
 	/**
+	 * @return the capacity
+	 */
+	public int getCapacity() {
+		return this.capacity;
+	}
+
+	/**
 	 * @return the caste
 	 */
 	public Caste getCaste() {

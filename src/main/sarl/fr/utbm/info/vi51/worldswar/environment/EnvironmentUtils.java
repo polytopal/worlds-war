@@ -96,10 +96,16 @@ public class EnvironmentUtils {
 	 * Picks food from the ground to the ant's inventory.
 	 * 
 	 * @param ant
-	 * @param qty
+	 * @param requestedQty
 	 * @param grid
 	 */
-	public static void pickFood(AntBody ant, int qty, Grid<EnvCell> grid) {
+	public static void pickFood(AntBody ant, int requestedQty, Grid<EnvCell> grid) {
+		// Prevent the ant to pick more food than it can carry
+		int qty = Math.min(requestedQty, ant.getCapacity() - ant.getFoodCarried());
+		if (qty <= 0) {
+			return;
+		}
+
 		Food food = getFoodAt(ant.getPosition(), grid);
 		if (food == null) {
 			// Nothing to do if there is no food to pick
