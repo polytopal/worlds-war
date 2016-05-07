@@ -19,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 import fr.utbm.info.vi51.worldswar.environment.PerceptionGrid;
+import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 
 /**
  * @author Leo
@@ -142,7 +143,7 @@ public class CentralPanel extends JPanel {
 			}
 			for (int x = 0; x < this.width; x++) {
 				for (int y = 0; y < this.height; y++) {
-					final Color cellColor = GUIUtils.computeCellColor(perceptionGrid.getCell(x, y));
+					final Color cellColor = GUIUtils.computeCellColor(perceptionGrid.getCell(x, y), PheromoneType.FOOD);
 					this.panelTable.get(x).set(y, cellColor);
 				}
 			}

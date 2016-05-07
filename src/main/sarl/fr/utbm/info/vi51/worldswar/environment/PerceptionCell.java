@@ -97,6 +97,23 @@ public class PerceptionCell {
 	}
 
 	/**
+	 * If the cell contains the pheromone type, return its quantity, else return
+	 * 0
+	 * 
+	 * @param type
+	 *            the {@link PheromoneType} of the pheromone
+	 * @return the pheromone quantity
+	 */
+	public float getPheromoneQuantity(PheromoneType type) {
+		for (final Perceivable perceivable : this.perceptionList) {
+			if (perceivable instanceof PerceivablePheromone && ((PerceivablePheromone) perceivable).getType() == type) {
+				return ((PerceivablePheromone) perceivable).getQty();
+			}
+		}
+		return 0;
+	}
+
+	/**
 	 * remove the content of the cell
 	 */
 	public void clear() {

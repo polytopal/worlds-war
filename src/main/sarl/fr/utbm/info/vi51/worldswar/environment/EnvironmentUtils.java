@@ -38,22 +38,29 @@ public class EnvironmentUtils {
 			for (int y = 0; y < height; y++) {
 				final EnvCell envCell = new EnvCell();
 				grid.set(x, y, envCell);
+				final Point point = new Point(x, y);
 
 				// TODO add envObjects here
 
 				// --- used to test GUI ---
 				if (x == 10 && y == 10) {
-					envCell.addEnvObject(new AntHill(new Point(x, y), coloniesList.get(0)));
+					envCell.addEnvObject(new AntHill(point, coloniesList.get(0)));
 				}
 				if (Math.random() > 0.9) {
-					envCell.addEnvObject(new Food(new Point(x, y), (int) (Math.random() * 10) + 1));
+					envCell.addEnvObject(new Food(point, (int) (Math.random() * 10) + 1));
 				}
 				if (Math.random() > 0.95) {
 					Collections.shuffle(coloniesList);
 					final List<Caste> castes = Arrays.asList(Caste.values());
 					Collections.shuffle(castes);
-					envCell.addEnvObject(
-							new AntBody(new Point(x, y), new UUID(0, 0), coloniesList.get(0), castes.get(0)));
+					envCell.addEnvObject(new AntBody(point, new UUID(0, 0), coloniesList.get(0), castes.get(0)));
+				}
+				if (Math.random() > 0.3) {
+					Collections.shuffle(coloniesList);
+					final List<PheromoneType> pheromonesTypes = Arrays.asList(PheromoneType.values());
+					Collections.shuffle(pheromonesTypes);
+					envCell.addEnvObject(new Pheromone(point, coloniesList.get(0), pheromonesTypes.get(0),
+							(float) Math.random() * 3));
 				}
 				// ------------------------
 			}
