@@ -142,13 +142,7 @@ public class CentralPanel extends JPanel {
 			}
 			for (int x = 0; x < this.width; x++) {
 				for (int y = 0; y < this.height; y++) {
-					final Color cellColor = Utils.computeCellColor(perceptionGrid.getCell(x, y));
-					// --- TODO - to remove - used to test the gui
-					// if (Math.random() > 0.5) {
-					// cellColor = new Color((float) 1.0 * x / this.width,
-					// (float) 1.0 * y / this.height, (float) 0.0);
-					// }
-					// ---
+					final Color cellColor = GUIUtils.computeCellColor(perceptionGrid.getCell(x, y));
 					this.panelTable.get(x).set(y, cellColor);
 				}
 			}

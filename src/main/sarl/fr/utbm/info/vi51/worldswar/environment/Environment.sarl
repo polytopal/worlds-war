@@ -33,8 +33,9 @@ agent Environment {
 	
 	val AGENTS_MAP_INITIAL_SIZE : int = 1000
 	
-	var width : int
-	var height : int
+	//TODO to remove
+//	var width : int
+//	var height : int
 	// X min = Y min = 0
 	// X max = width-1
 	// Y max = height-1
@@ -55,15 +56,11 @@ agent Environment {
 			var simParameters = occurrence.parameters.get(0) as SimulationParameters
 			this.listeners = occurrence.parameters.get(1) as List<SimulatorListener>
 			
-			this.width = simParameters.gridWidth
-			this.height = simParameters.gridHeight
+//			this.width = simParameters.gridWidth
+//			this.height = simParameters.gridHeight
 			
-			this.grid = new Grid(0, this.width-1, 0, this.height-1)
-			for(var x = 0; x < this.width; x++) {
-				for(var y = 0; y < this.height; y++) {
-					this.grid.set(x,y, new EnvCell)
-				}
-			}
+			this.grid = EnvironmentUtils.generateGround(simParameters)
+			
 			
 			info("Creating agents map...")
 			this.agentBodies = new HashMap(AGENTS_MAP_INITIAL_SIZE)
