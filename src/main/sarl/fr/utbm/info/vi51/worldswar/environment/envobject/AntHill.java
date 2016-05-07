@@ -11,11 +11,19 @@ import fr.utbm.info.vi51.worldswar.utils.Stock;
  */
 public class AntHill extends StaticObject {
 
-	private static final int INITIAL_FOOD_STOCK = 10;
+	/** Number of steps between the spawn of two ants in the anthill */
+	public static final int SPAWN_COOLDOWN = 5;
+	/** Food consumed by the spawn of a new ant */
+	public static final int SPAWN_COST = 25;
+
+	private static final int INITIAL_FOOD_STOCK = 100;
 
 	private Stock foodStock;
 
 	private Colony colony;
+
+	/** Number of steps before a new ant will spawn out of the anthill */
+	private int spawnCooldown;
 
 	/**
 	 * @param position
@@ -44,6 +52,30 @@ public class AntHill extends StaticObject {
 	 */
 	public void setColony(Colony colony) {
 		this.colony = colony;
+	}
+
+	/**
+	 * @return the spawnCooldown
+	 */
+	public int getSpawnCooldown() {
+		return this.spawnCooldown;
+	}
+
+	/**
+	 * @param spawnCooldown
+	 *            the spawnCooldown to set
+	 */
+	public void setSpawnCooldown(int spawnCooldown) {
+		this.spawnCooldown = spawnCooldown;
+	}
+
+	/**
+	 * Reduce by 1 the spawn cooldown. It can't be decremented under 0
+	 */
+	public void decrementSpawnCooldown() {
+		if (this.spawnCooldown > 0) {
+			this.spawnCooldown--;
+		}
 	}
 
 	////////////////////////////////////////

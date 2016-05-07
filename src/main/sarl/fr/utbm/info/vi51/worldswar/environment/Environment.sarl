@@ -9,6 +9,7 @@ import fr.utbm.info.vi51.worldswar.^agent.^event.PerceptionEvent
 import fr.utbm.info.vi51.worldswar.controller.SimulationParameters
 import fr.utbm.info.vi51.worldswar.environment.envobject.AgentBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody
+import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill
 import fr.utbm.info.vi51.worldswar.simulator.SimulationStepEvent
 import fr.utbm.info.vi51.worldswar.simulator.StopSimulationEvent
 import fr.utbm.info.vi51.worldswar.utils.Grid
@@ -19,6 +20,7 @@ import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
 import io.sarl.util.Scopes
 import java.awt.Point
+import java.util.ArrayList
 import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
@@ -39,6 +41,8 @@ agent Environment {
 	// Y max = height-1
 	
 	var grid : Grid<EnvCell>
+	var antHills : List<AntHill>
+
 	var agentBodies : HashMap<UUID, AgentBody>
 	var influencesReceived : int
 
@@ -60,6 +64,8 @@ agent Environment {
 				}
 			}
 			
+			this.antHills = new ArrayList
+			
 			info("Creating agents map...")
 			this.agentBodies = new HashMap(AGENTS_MAP_INITIAL_SIZE)
 			info("Map created")
@@ -67,11 +73,17 @@ agent Environment {
 			this.uninitializedAgents = new LinkedList
 			this.waitingAgentsInitialization = false
 			
+			
+			
 			//TODO for testing purpose, should be removed when we have ants spawners
 //			for(var i=0; i<500; i++) {
 //				spawnAnt(new Colony(Breed.DARK_ANTS), Caste.GATHERER, new Point(0,0))
 //			}
 //			info("Ants spawned")
+			
+//			var antHill = new AntHill(new Point(0,0), new Colony(Breed.DARK_ANTS));
+//			this.grid.get(0,0).addEnvObject(antHill);
+//			this.antHills += antHill;
 			
 			emit(new EnvironmentInitializedEvent)
 		}
@@ -115,8 +127,8 @@ agent Environment {
 		applyInfluences
 		
 		EnvironmentUtils.applyPheromoneDissipation(grid)
-		//TODO apply other world rules, ants spawns and ants dying of old age
-		
+		antsAging
+		spawnAntsInAntHills
 		
 		if(this.uninitializedAgents.size > 0) {
 			this.waitingAgentsInitialization = true
@@ -242,4 +254,39 @@ agent Environment {
 		}
 	}
 	
+	
+	////////////////////////////////////////
+	///            WORLD RULES           ///
+	////////////////////////////////////////
+	
+	/** To be called each step. Periodically spawn an ant inside each anthill */
+	private def spawnAntsInAntHills {
+		for(antHill : this.antHills) {
+			antHill.decrementSpawnCooldown
+			if(antHill.spawnCooldown === 0 && antHill.availableFood >= AntHill.SPAWN_COST) {
+				antHill.pickFood(AntHill.SPAWN_COST)
+				antHill.spawnCooldown = AntHill.SPAWN_COOLDOWN
+				//TODO spawn some other castes sometimes
+				//antsToSpawn += new SpawnAntCommand(antHill.colony, Caste.GATHERER, antHill.position)
+				this.spawnAnt(antHill.colony, Caste.GATHERER, antHill.position)
+				
+			}
+		}
+	}
+
+	/** Simulates ants aging, kill agents that are too old */
+	private def antsAging {
+		var toKill = new LinkedList<UUID>
+		for(body : this.agentBodies.values) {
+			if(body instanceof AntBody) {
+				body.decrementRemainingLifeTime
+				if(body.remainingLifeTime < 0) {
+					toKill += body.uuid
+				}
+			}
+		}
+		for(uuid : toKill) {
+			this.killAgent(uuid)
+		}
+	}
 }
