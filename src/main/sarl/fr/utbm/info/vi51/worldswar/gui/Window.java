@@ -60,8 +60,8 @@ public class Window extends JFrame implements SimulatorListener {
 		this.getContentPane().setLayout(new BorderLayout());
 		this.setJMenuBar(new MenuBar(this.guiActionsManager));
 
-		centralPanel = new CentralPanel(this);
-		this.getContentPane().add(centralPanel, BorderLayout.CENTER);
+		this.centralPanel = new CentralPanel(this);
+		this.getContentPane().add(this.centralPanel, BorderLayout.CENTER);
 
 		this.infoPanel = new InfoPanel();
 		this.getContentPane().add(this.infoPanel, BorderLayout.SOUTH);
@@ -90,7 +90,7 @@ public class Window extends JFrame implements SimulatorListener {
 
 	@Override
 	public void environmentUpdated(PerceptionGrid perceptionGrid) {
-		centralPanel.updateGrid(perceptionGrid);
+		this.centralPanel.updateGrid(perceptionGrid);
 	}
 
 	@Override

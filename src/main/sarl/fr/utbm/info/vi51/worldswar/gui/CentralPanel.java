@@ -108,16 +108,16 @@ public class CentralPanel extends JPanel {
 
 				switch (e.getExtendedKeyCode()) {
 				case KeyEvent.VK_LEFT: // left arrow
-					moveCameraLeft();
+					moveCameraLeft(CAMERA_MOVE_SPEED);
 					break;
 				case KeyEvent.VK_UP:// up arrow
-					moveCameraUp();
+					moveCameraUp(CAMERA_MOVE_SPEED);
 					break;
 				case KeyEvent.VK_RIGHT:// right arrow
-					moveCameraRight();
+					moveCameraRight(CAMERA_MOVE_SPEED);
 					break;
 				case KeyEvent.VK_DOWN:// down arrow
-					moveCameraDown();
+					moveCameraDown(CAMERA_MOVE_SPEED);
 					break;
 				case KeyEvent.VK_ADD:// + button
 					zoomIn();
@@ -142,10 +142,13 @@ public class CentralPanel extends JPanel {
 			}
 			for (int x = 0; x < this.width; x++) {
 				for (int y = 0; y < this.height; y++) {
-					Color cellColor = Utils.computeCellColor(perceptionGrid.getCell(x, y));
-					if (Math.random() > 0.8) {
-						cellColor = Color.CYAN;
-					}
+					final Color cellColor = Utils.computeCellColor(perceptionGrid.getCell(x, y));
+					// --- TODO - to remove - used to test the gui
+					// if (Math.random() > 0.5) {
+					// cellColor = new Color((float) 1.0 * x / this.width,
+					// (float) 1.0 * y / this.height, (float) 0.0);
+					// }
+					// ---
 					this.panelTable.get(x).set(y, cellColor);
 				}
 			}
@@ -184,31 +187,42 @@ public class CentralPanel extends JPanel {
 		}
 	}
 
-	private void moveCameraLeft() {
+	private void moveCameraLeft(int pixel) {
 		final Point viewPosition = this.scrollPane.getViewport().getViewPosition();
-		if (viewPosition.getX() > CAMERA_MOVE_SPEED) {
-			viewPosition.setLocation(viewPosition.getX() - CAMERA_MOVE_SPEED, viewPosition.getY());
+		final double cameraX = viewPosition.getX();
+		if (cameraX != 0) {
+			if (cameraX > pixel) {
+				viewPosition.setLocation(cameraX - pixel, viewPosition.getY());
+			} else {
+				viewPosition.setLocation(0, viewPosition.getY());
+			}
 			this.scrollPane.getViewport().setViewPosition(viewPosition);
 		}
 	}
 
-	private void moveCameraUp() {
+	private void moveCameraUp(int pixel) {
 		final Point viewPosition = this.scrollPane.getViewport().getViewPosition();
-		if (viewPosition.getY() > CAMERA_MOVE_SPEED) {
-			viewPosition.setLocation(viewPosition.getX(), viewPosition.getY() - CAMERA_MOVE_SPEED);
+		final double cameraY = viewPosition.getY();
+		if (cameraY != 0) {
+			if (cameraY > pixel) {
+				viewPosition.setLocation(viewPosition.getX(), cameraY - pixel);
+			} else {
+				viewPosition.setLocation(viewPosition.getX(), 0);
+			}
 			CentralPanel.this.scrollPane.getViewport().setViewPosition(viewPosition);
 		}
 	}
 
-	private void moveCameraRight() {
+	private void moveCameraRight(int pixel) {
 		final Point viewPosition = this.scrollPane.getViewport().getViewPosition();
-		viewPosition.setLocation(viewPosition.getX() + CAMERA_MOVE_SPEED, viewPosition.getY());
+		viewPosition.setLocation(viewPosition.getX() + pixel, viewPosition.getY());
+
 		CentralPanel.this.scrollPane.getViewport().setViewPosition(viewPosition);
 	}
 
-	private void moveCameraDown() {
+	private void moveCameraDown(int pixel) {
 		final Point viewPosition = this.scrollPane.getViewport().getViewPosition();
-		viewPosition.setLocation(viewPosition.getX(), viewPosition.getY() + CAMERA_MOVE_SPEED);
+		viewPosition.setLocation(viewPosition.getX(), viewPosition.getY() + pixel);
 		CentralPanel.this.scrollPane.getViewport().setViewPosition(viewPosition);
 	}
 
