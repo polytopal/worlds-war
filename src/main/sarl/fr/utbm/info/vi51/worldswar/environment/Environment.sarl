@@ -33,13 +33,6 @@ agent Environment {
 	
 	val AGENTS_MAP_INITIAL_SIZE : int = 1000
 	
-	//TODO to remove
-//	var width : int
-//	var height : int
-	// X min = Y min = 0
-	// X max = width-1
-	// Y max = height-1
-	
 	private var listeners : List<SimulatorListener>
 	
 	var grid : Grid<EnvCell>
@@ -59,7 +52,7 @@ agent Environment {
 //			this.width = simParameters.gridWidth
 //			this.height = simParameters.gridHeight
 			
-			this.grid = EnvironmentUtils.generateGround(simParameters)
+			this.grid = EnvironmentUtils.generateMap(simParameters)
 			
 			
 			info("Creating agents map...")

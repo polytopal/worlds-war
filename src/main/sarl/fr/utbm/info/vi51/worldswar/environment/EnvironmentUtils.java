@@ -27,7 +27,7 @@ public class EnvironmentUtils {
 	private EnvironmentUtils() {
 	}
 
-	public static Grid<EnvCell> generateGround(SimulationParameters simulationParameters) {
+	public static Grid<EnvCell> generateMap(SimulationParameters simulationParameters) {
 
 		final int width = simulationParameters.getGridWidth();
 		final int height = simulationParameters.getGridHeight();

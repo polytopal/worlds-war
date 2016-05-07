@@ -21,8 +21,8 @@ public class GUIUtils {
 
 	private static Color EMPTY_CELL_COLOR = Color.WHITE;
 
-	private static int PHEROMONE_VISIBILITY_COEFFICIENT = 5;
-	private static Color PHEROMONE_COLOR = new Color((float) 1.0, 0, (float) 1.0);
+	private static int PHEROMONE_VISIBILITY_COEFFICIENT = 2;
+	private static Color PHEROMONE_COLOR = new Color(127, 0, 255);
 
 	/**
 	 * This class contains only static methods
@@ -78,7 +78,8 @@ public class GUIUtils {
 		}
 
 		if (pheromoneFilter != null) {
-			final int qty = (int) (cell.getPheromoneQuantity(pheromoneFilter) * PHEROMONE_VISIBILITY_COEFFICIENT);
+			// TODO doit dépendre d'une colonie
+			final int qty = (int) (cell.getTotalPheromoneQuantity(pheromoneFilter) * PHEROMONE_VISIBILITY_COEFFICIENT);
 			if (qty > 0) {
 				c = new Color((c.getRed() + PHEROMONE_COLOR.getRed() * qty) / (qty + 1),
 						(c.getGreen() + PHEROMONE_COLOR.getGreen() * qty) / (qty + 1),

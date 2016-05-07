@@ -97,20 +97,39 @@ public class PerceptionCell {
 	}
 
 	/**
-	 * If the cell contains the pheromone type, return its quantity, else return
-	 * 0
+	 * If the cell contains the pheromone type for the given colony, return its
+	 * quantity, else return 0
 	 * 
 	 * @param type
 	 *            the {@link PheromoneType} of the pheromone
+	 * @param colony
 	 * @return the pheromone quantity
 	 */
-	public float getPheromoneQuantity(PheromoneType type) {
+	public float getPheromoneQuantity(PheromoneType type, Colony colony) {
 		for (final Perceivable perceivable : this.perceptionList) {
-			if (perceivable instanceof PerceivablePheromone && ((PerceivablePheromone) perceivable).getType() == type) {
+			if (perceivable instanceof PerceivablePheromone && ((PerceivablePheromone) perceivable).getType() == type
+					&& ((PerceivablePheromone) perceivable).getColony() == colony) {
 				return ((PerceivablePheromone) perceivable).getQty();
 			}
 		}
 		return 0;
+	}
+
+	// TODO - to remove
+	/**
+	 * 
+	 * @param type
+	 * @return the total quantity of a given pheromone type, adding the
+	 *         pheromone of each colony
+	 */
+	public float getTotalPheromoneQuantity(PheromoneType type) {
+		float qty = 0;
+		for (final Perceivable perceivable : this.perceptionList) {
+			if (perceivable instanceof PerceivablePheromone && ((PerceivablePheromone) perceivable).getType() == type) {
+				qty += ((PerceivablePheromone) perceivable).getQty();
+			}
+		}
+		return qty;
 	}
 
 	/**
