@@ -20,6 +20,7 @@ import io.sarl.core.Logging
 import io.sarl.core.Schedules
 import java.util.LinkedList
 import java.util.List
+import fr.utbm.info.vi51.worldswar.controller.PauseSimulationCommand
 
 /**
  * Main agent of the software.
@@ -44,6 +45,8 @@ agent Simulator {
 	private var environmentReady = false
 	/** Indicates whether the environment is spawned and initialized */
 	private var environmentExists = false
+	/** Indicates whether or not the simulation is paused */
+	private var simulationPaused = false
 	
 	/** If a new simulation has been requested, contains the parameters of this new simulation. null otherwise. */
 	private var pendingSimulationParams : SimulationParameters = null
@@ -116,7 +119,7 @@ agent Simulator {
 	 * and fire this new step if that's the case.
 	 */
 	private def fireSimulationStep {
-		if(this.stepTimerReady && this.environmentReady) {
+		if(this.stepTimerReady && this.environmentReady && !this.simulationPaused) {
 			this.environmentReady = false
 			this.stepTimerReady = false
 			emit(new SimulationStepEvent)
@@ -136,7 +139,13 @@ agent Simulator {
 	 * Cancels the step timer task and asks agents to stop.
 	 */
 	private def stopSimulation {
+		if (simulationPaused) {
+			simulationPaused = false;
+		}
 		info("Simulation was requested to stop")
+		for(l : listeners) {
+			l.simulationTerminated
+		}
 		cancel(this.stepTimerTask)
 		emit(new StopSimulationEvent)
 	}
@@ -180,6 +189,8 @@ agent Simulator {
 				handleNewSimulationCommand(command.simulationParameters)
 			} else if (occurrence.command instanceof StopSimulationCommand) {
 				stopSimulation
+			} else if (occurrence.command instanceof PauseSimulationCommand) {
+				pauseSimulationToggle
 			} else if (occurrence.command instanceof StopProgramCommand) {
 				closeProgram
 			}
@@ -196,4 +207,13 @@ agent Simulator {
 		}
 	}
 	
+	private def pauseSimulationToggle() {
+		simulationPaused = !simulationPaused;
+		if (!simulationPaused) { // unpause case
+			fireSimulationStep
+		}
+		for(l : listeners) {
+			l.simulationPaused(simulationPaused);
+		}
+	}
 }

@@ -24,13 +24,13 @@ public class Window extends JFrame implements SimulatorListener {
 
 	private float stepsPerSecond;
 	private long lastStepStart;
-	private boolean simulationRunning;
+	private SimulationState simState;
 	private int stepNumber;
 
 	/**
 	 * @param controller
 	 * 
-	 *            a Java class that can emit SARL evenments to the simulation
+	 *            a Java class that can emit SARL events to the simulation
 	 */
 	public Window(final Controller controller) {
 
@@ -42,7 +42,7 @@ public class Window extends JFrame implements SimulatorListener {
 		this.guiActionsManager = new GuiActionsManager(controller);
 
 		this.stepNumber = 0;
-		this.simulationRunning = false;
+		this.simState = SimulationState.STOPPED;
 
 		// Window initialization
 		this.setTitle(Messages.getString("Window.title")); //$NON-NLS-1$
@@ -76,7 +76,7 @@ public class Window extends JFrame implements SimulatorListener {
 		this.lastStepStart = currentTime;
 		this.stepsPerSecond = 1000.f / stepDuration;
 
-		this.infoPanel.setSimulationStateLabel(this.simulationRunning);
+		this.infoPanel.setSimulationStateLabel(this.simState);
 		this.infoPanel.setStepPerSecondLabel(this.stepsPerSecond);
 		this.infoPanel.setStepNumberLabel(this.stepNumber);
 
@@ -86,15 +86,27 @@ public class Window extends JFrame implements SimulatorListener {
 
 	@Override
 	public void simulationTerminated() {
-		this.simulationRunning = false;
-		this.infoPanel.setSimulationStateLabel(this.simulationRunning);
+
+		this.simState = SimulationState.STOPPED;
+		this.infoPanel.setSimulationStateLabel(this.simState);
+		
 	}
 
 	@Override
 	public void simulationStarted() {
-		this.simulationRunning = true;
-		this.infoPanel.setSimulationStateLabel(this.simulationRunning);
 		this.stepNumber = 0;
+		this.simState = SimulationState.RUNNING;
+		this.infoPanel.setSimulationStateLabel(this.simState);
+	}
+
+	@Override
+	public void simulationPaused(boolean simulationPaused) {
+		if (simulationPaused) {
+			this.simState = SimulationState.PAUSED;
+		} else {
+			this.simState = SimulationState.RUNNING;
+		}
+		this.infoPanel.setSimulationStateLabel(this.simState);
 	}
 
 }

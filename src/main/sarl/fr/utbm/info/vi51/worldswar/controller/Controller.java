@@ -61,6 +61,14 @@ public class Controller {
 		this.emitEvent(new ControllerCommandEvent(new StopSimulationCommand()));
 		System.out.println("arret simulation"); //$NON-NLS-1$
 	}
+	
+	/**
+	 * Pause the current simulation
+	 */
+	public void pauseSimulation() {
+		this.emitEvent(new ControllerCommandEvent(new PauseSimulationCommand()));
+		System.out.println("pause simulation"); //$NON-NLS-1$
+	}
 
 	/**
 	 * Closes the program

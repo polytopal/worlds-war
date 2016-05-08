@@ -24,12 +24,14 @@ public class GuiActionsManager {
 
 	private final Action newSimulationAction;
 	private final Action stopSimulationAction;
+	private final Action pauseSimulationAction;
 
 	private final Map<SimulationSpeed, Action> speedActionsMap;
 
 	GuiActionsManager(final Controller controller) {
 		this.newSimulationAction = new NewSimulationAction(controller);
 		this.stopSimulationAction = new StopSimulationAction(controller);
+		this.pauseSimulationAction = new PauseSimulationAction(controller);
 
 		this.speedActionsMap = new HashMap<>();
 		for (final SimulationSpeed simSpeed : SimulationSpeed.values()) {
@@ -49,6 +51,10 @@ public class GuiActionsManager {
 	 */
 	public Action getStopSimulationAction() {
 		return this.stopSimulationAction;
+	}
+	
+	public Action getPauseSimulationAction() {
+		return this.pauseSimulationAction;
 	}
 
 	public Action getSpeedAction(SimulationSpeed simSpeed) {
@@ -98,6 +104,26 @@ public class GuiActionsManager {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			this.controller.stopSimulation();
+		}
+	}
+	
+	/**
+	 * 
+	 *         This action allows to pause/unpause the simulation
+	 */
+	private class PauseSimulationAction extends AbstractAction {
+		private static final long serialVersionUID = 2286692516797367038L;
+		private final Controller controller;
+
+		public PauseSimulationAction(final Controller controller) {
+			super(Messages.getString("MenuBar.pauseSimulation")); //$NON-NLS-1$
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
+			this.controller = controller;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			this.controller.pauseSimulation();
 		}
 	}
 
