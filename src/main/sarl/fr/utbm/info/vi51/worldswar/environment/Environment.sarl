@@ -27,6 +27,7 @@ import io.sarl.core.Logging
 import io.sarl.util.Scopes
 import java.awt.Point
 import java.util.ArrayList
+import java.util.Collections
 import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
@@ -157,8 +158,9 @@ agent Environment {
 	 */
 	private def applyInfluences {
 		
-		//TODO we might want to iterate in a random order later
-		for(agentBody : agentBodies.values) {
+		var shuffledAgentBodies = new LinkedList(agentBodies.values)
+		Collections.shuffle(shuffledAgentBodies)
+		for(agentBody : shuffledAgentBodies) {
 			// Currently, all of our agents are ants, so our influences apply to ants. 
 			// If we add other types of agents, the nature of the agent and the influences he can send will have to be determined.
 			val antBody = agentBody as AntBody
