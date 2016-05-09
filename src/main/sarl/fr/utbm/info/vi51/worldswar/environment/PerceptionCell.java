@@ -115,7 +115,6 @@ public class PerceptionCell {
 		return 0;
 	}
 
-	// TODO - to remove
 	/**
 	 * 
 	 * @param type

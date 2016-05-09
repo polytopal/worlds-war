@@ -21,8 +21,9 @@ public class GUIUtils {
 
 	private static Color EMPTY_CELL_COLOR = Color.WHITE;
 
+	// TODO - to adjust
 	private static float PHEROMONE_VISIBILITY_COEFFICIENT = 1.8f;
-	private static Color PHEROMONE_DANGER_COLOR = new Color(150, 50, 255);
+	private static Color PHEROMONE_DANGER_COLOR = new Color(180, 80, 255);
 	private static Color PHEROMONE_FOOD_COLOR = new Color(153, 255, 255);
 	private static Color PHEROMONE_HOME_COLOR = new Color(255, 204, 153);
 

@@ -157,9 +157,7 @@ public class CentralPanel extends JPanel {
 
 	public void setPheromoneFilter(PheromoneType pheromoneType) {
 		synchronized (CentralPanel.this.panelTable) {
-			if (this.pheromoneFilter != pheromoneType) {
-				this.pheromoneFilter = pheromoneType;
-			}
+			this.pheromoneFilter = pheromoneType;
 		}
 	}
 
@@ -194,12 +192,12 @@ public class CentralPanel extends JPanel {
 		}
 	}
 
-	private void moveCameraLeft(int pixel) {
+	private void moveCameraLeft(int pixelGap) {
 		final Point viewPosition = this.scrollPane.getViewport().getViewPosition();
 		final double cameraX = viewPosition.getX();
-		if (cameraX != 0) {
-			if (cameraX > pixel) {
-				viewPosition.setLocation(cameraX - pixel, viewPosition.getY());
+		if (cameraX > 0) {
+			if (cameraX > pixelGap) {
+				viewPosition.setLocation(cameraX - pixelGap, viewPosition.getY());
 			} else {
 				viewPosition.setLocation(0, viewPosition.getY());
 			}
@@ -207,12 +205,12 @@ public class CentralPanel extends JPanel {
 		}
 	}
 
-	private void moveCameraUp(int pixel) {
+	private void moveCameraUp(int pixelGap) {
 		final Point viewPosition = this.scrollPane.getViewport().getViewPosition();
 		final double cameraY = viewPosition.getY();
-		if (cameraY != 0) {
-			if (cameraY > pixel) {
-				viewPosition.setLocation(viewPosition.getX(), cameraY - pixel);
+		if (cameraY > 0) {
+			if (cameraY > pixelGap) {
+				viewPosition.setLocation(viewPosition.getX(), cameraY - pixelGap);
 			} else {
 				viewPosition.setLocation(viewPosition.getX(), 0);
 			}
@@ -220,16 +218,15 @@ public class CentralPanel extends JPanel {
 		}
 	}
 
-	private void moveCameraRight(int pixel) {
+	private void moveCameraRight(int pixelGap) {
 		final Point viewPosition = this.scrollPane.getViewport().getViewPosition();
-		viewPosition.setLocation(viewPosition.getX() + pixel, viewPosition.getY());
-
+		viewPosition.setLocation(viewPosition.getX() + pixelGap, viewPosition.getY());
 		CentralPanel.this.scrollPane.getViewport().setViewPosition(viewPosition);
 	}
 
-	private void moveCameraDown(int pixel) {
+	private void moveCameraDown(int pixelGap) {
 		final Point viewPosition = this.scrollPane.getViewport().getViewPosition();
-		viewPosition.setLocation(viewPosition.getX(), viewPosition.getY() + pixel);
+		viewPosition.setLocation(viewPosition.getX(), viewPosition.getY() + pixelGap);
 		CentralPanel.this.scrollPane.getViewport().setViewPosition(viewPosition);
 	}
 
