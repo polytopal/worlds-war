@@ -158,14 +158,16 @@ agent Environment {
 	 */
 	private def applyInfluences {
 		
-		var shuffledAgentBodies = new LinkedList(agentBodies.values)
-		Collections.shuffle(shuffledAgentBodies)
-		for(agentBody : shuffledAgentBodies) {
+		var shuffledUuids = new LinkedList(agentBodies.keySet)
+		Collections.shuffle(shuffledUuids)
+		for(uuid : shuffledUuids) {
 			// Currently, all of our agents are ants, so our influences apply to ants. 
 			// If we add other types of agents, the nature of the agent and the influences he can send will have to be determined.
-			val antBody = agentBody as AntBody
-			applyAntInfluence(antBody)
-			antBody.influence = null
+			val antBody = agentBodies.get(uuid) as AntBody
+			if(antBody !== null) {
+				applyAntInfluence(antBody)
+				antBody.influence = null
+			}
 		}
 	}
 	
