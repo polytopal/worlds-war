@@ -9,6 +9,13 @@ import fr.utbm.info.vi51.worldswar.^agent.^event.PerceptionEvent
 import fr.utbm.info.vi51.worldswar.controller.SimulationParameters
 import fr.utbm.info.vi51.worldswar.environment.envobject.AgentBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody
+import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill
+import fr.utbm.info.vi51.worldswar.environment.influence.BurrowInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.DropFoodInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.MeleeAttackInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.PheromoneAndMoveInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.PickFoodInfluence
 import fr.utbm.info.vi51.worldswar.simulator.SimulationStepEvent
 import fr.utbm.info.vi51.worldswar.simulator.StopSimulationEvent
 import fr.utbm.info.vi51.worldswar.utils.Grid
@@ -19,6 +26,8 @@ import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
 import io.sarl.util.Scopes
 import java.awt.Point
+import java.util.ArrayList
+import java.util.Collections
 import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
@@ -36,6 +45,8 @@ agent Environment {
 	private var listeners : List<SimulatorListener>
 	
 	var grid : Grid<EnvCell>
+	var antHills : List<AntHill>
+
 	var agentBodies : HashMap<UUID, AgentBody>
 	var influencesReceived : int
 
@@ -55,6 +66,8 @@ agent Environment {
 			this.grid = EnvironmentUtils.generateMap(simParameters)
 			
 			
+			this.antHills = new ArrayList
+			
 			info("Creating agents map...")
 			this.agentBodies = new HashMap(AGENTS_MAP_INITIAL_SIZE)
 			info("Map created")
@@ -62,11 +75,17 @@ agent Environment {
 			this.uninitializedAgents = new LinkedList
 			this.waitingAgentsInitialization = false
 			
+			
+			
 			//TODO for testing purpose, should be removed when we have ants spawners
 //			for(var i=0; i<500; i++) {
 //				spawnAnt(new Colony(Breed.DARK_ANTS), Caste.GATHERER, new Point(0,0))
 //			}
 //			info("Ants spawned")
+			
+//			var antHill = new AntHill(new Point(0,0), new Colony(Breed.DARK_ANTS));
+//			this.grid.get(0,0).addEnvObject(antHill);
+//			this.antHills += antHill;
 			
 			emit(new EnvironmentInitializedEvent)
 		}
@@ -112,8 +131,8 @@ agent Environment {
 		applyInfluences
 		
 		EnvironmentUtils.applyPheromoneDissipation(grid)
-		//TODO apply other world rules, ants spawns and ants dying of old age
-		
+		antsAging
+		spawnAntsInAntHills
 		
 		if(this.uninitializedAgents.size > 0) {
 			this.waitingAgentsInitialization = true
@@ -136,12 +155,35 @@ agent Environment {
 	 */
 	private def applyInfluences {
 		
-		//TODO implement
+		var shuffledUuids = new LinkedList(agentBodies.keySet)
+		Collections.shuffle(shuffledUuids)
+		for(uuid : shuffledUuids) {
+			// Currently, all of our agents are ants, so our influences apply to ants. 
+			// If we add other types of agents, the nature of the agent and the influences he can send will have to be determined.
+			val antBody = agentBodies.get(uuid) as AntBody
+			if(antBody !== null) {
+				applyAntInfluence(antBody)
+				antBody.influence = null
+			}
+		}
+	}
+	
+	private def applyAntInfluence(ant : AntBody) {
+		val influence = ant.influence
 		
-		
-		// Clear all the stored influences because we don't want them anymore
-		for(body : agentBodies.values()) {
-			body.influence = null
+		if(influence instanceof BurrowInfluence) {
+			EnvironmentUtils.burrow(ant, grid)
+		} else if(influence instanceof DropFoodInfluence) {
+			EnvironmentUtils.dropFood(ant, influence.droppedAmount, grid)
+		} else if(influence instanceof MeleeAttackInfluence) {
+			throw(new UnsupportedOperationException("No fights only farm pls"))
+		} else if(influence instanceof MoveInfluence) {
+			EnvironmentUtils.moveAnt(ant, influence.direction, grid)
+		} else if (influence instanceof PheromoneAndMoveInfluence) {
+			EnvironmentUtils.placePheromone(ant.colony, influence.pheromoneType, influence.pheromoneQty, ant.position, grid)
+			EnvironmentUtils.moveAnt(ant, influence.direction, grid)
+		} else if (influence instanceof PickFoodInfluence) {
+			EnvironmentUtils.pickFood(ant, influence.qty, grid)
 		}
 	}
 	
@@ -239,4 +281,39 @@ agent Environment {
 		}
 	}
 	
+	
+	////////////////////////////////////////
+	///            WORLD RULES           ///
+	////////////////////////////////////////
+	
+	/** To be called each step. Periodically spawn an ant inside each anthill */
+	private def spawnAntsInAntHills {
+		for(antHill : this.antHills) {
+			antHill.decrementSpawnCooldown
+			if(antHill.spawnCooldown === 0 && antHill.availableFood >= AntHill.SPAWN_COST) {
+				antHill.pickFood(AntHill.SPAWN_COST)
+				antHill.spawnCooldown = AntHill.SPAWN_COOLDOWN
+				//TODO spawn some other castes sometimes
+				//antsToSpawn += new SpawnAntCommand(antHill.colony, Caste.GATHERER, antHill.position)
+				this.spawnAnt(antHill.colony, Caste.GATHERER, antHill.position)
+				
+			}
+		}
+	}
+
+	/** Simulates ants aging, kill agents that are too old */
+	private def antsAging {
+		var toKill = new LinkedList<UUID>
+		for(body : this.agentBodies.values) {
+			if(body instanceof AntBody) {
+				body.decrementRemainingLifeTime
+				if(body.remainingLifeTime < 0) {
+					toKill += body.uuid
+				}
+			}
+		}
+		for(uuid : toKill) {
+			this.killAgent(uuid)
+		}
+	}
 }

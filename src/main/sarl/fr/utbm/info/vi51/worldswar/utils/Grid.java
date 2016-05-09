@@ -134,6 +134,23 @@ public class Grid<T> implements Iterable<T> {
 		this.grid.get(y + this.yOffset).set(x + this.xOffset, value);
 	}
 
+	/**
+	 * @param x
+	 * @param y
+	 * @return whether the position (x,y) is in the bounds of the grid
+	 */
+	public boolean containsPosition(int x, int y) {
+		return (x >= this.getXMin() && x <= this.getXMax() && y >= this.getYMin() && y <= this.getYMax());
+	}
+
+	/**
+	 * @param position
+	 * @return whether the specified position is in the bounds of the grid
+	 */
+	public boolean containsPosition(Point position) {
+		return this.containsPosition(position.x, position.y);
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder stringBuilder = new StringBuilder();

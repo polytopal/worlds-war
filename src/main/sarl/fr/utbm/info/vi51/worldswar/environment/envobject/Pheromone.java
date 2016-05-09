@@ -58,6 +58,15 @@ public class Pheromone extends StaticObject {
 		return true;
 	}
 
+	/**
+	 * Adds the specified qty of pheromone
+	 * 
+	 * @param qty
+	 */
+	public void addQty(float qty) {
+		this.qty += qty;
+	}
+
 	////////////////////////////////////////
 	////////// GETTERS & SETTERS ///////////
 	////////////////////////////////////////
