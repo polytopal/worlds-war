@@ -1,6 +1,7 @@
 package fr.utbm.info.vi51.worldswar.environment;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,6 +32,17 @@ public class EnvironmentUtils {
 		final int height = simulationParameters.getGridHeight();
 		final List<Colony> coloniesList = simulationParameters.getColoniesList();
 
+		// ant hills positions
+		final int nbColony = coloniesList.size();
+		float angle = (float) Math.PI;
+		final List<AntHill> antHillList = new ArrayList<>();
+		for (final Colony colony : coloniesList) {
+			final int x = (int) (width / 2 + (width / 3) * Math.cos(angle));
+			final int y = (int) (height / 2 + (height / 3) * Math.sin(angle));
+			antHillList.add(new AntHill(new Point(x, y), colony));
+			angle += 2 * Math.PI / nbColony;
+		}
+
 		final int octaveCount = 5;
 		final float max = 20;
 		final float min = -40;
@@ -42,43 +54,22 @@ public class EnvironmentUtils {
 			for (int y = 0; y < height; y++) {
 				final EnvCell envCell = new EnvCell();
 				grid.set(x, y, envCell);
-				final Point point = new Point(x, y);
+				final Point position = new Point(x, y);
 
-				// TODO add envObjects here
-
-				// --- used to test GUI ---
-
-				final float perlinHeight = randomFoodGrid.get(point);
-				if (perlinHeight > 0.0f) {
-					envCell.addEnvObject(new Food(point, (int) perlinHeight));
+				boolean antHillCell = false;
+				for (final AntHill antHill : antHillList) {
+					if (antHill.getPosition().equals(position)) {
+						envCell.addEnvObject(antHill);
+						antHillCell = true;
+					}
+				}
+				if (!antHillCell) {
+					final float perlinHeight = randomFoodGrid.get(position).floatValue();
+					if (perlinHeight > 0.0f) {
+						envCell.addEnvObject(new Food(position, (int) perlinHeight));
+					}
 				}
 
-				// if (x == 10 && y == 10) {
-				// envCell.addEnvObject(new AntHill(point,
-				// coloniesList.get(0)));
-				// }
-				// if (Math.random() > 0.9) {
-				// envCell.addEnvObject(new Food(point, (int) (Math.random() *
-				// 10) + 1));
-				// }
-				// if (Math.random() > 0.95) {
-				// Collections.shuffle(coloniesList);
-				// final List<Caste> castes = Arrays.asList(Caste.values());
-				// Collections.shuffle(castes);
-				// envCell.addEnvObject(new AntBody(point, new UUID(0, 0),
-				// coloniesList.get(0), castes.get(0)));
-				// }
-				// if (Math.random() > 0.3) {
-				// Collections.shuffle(coloniesList);
-				// final List<PheromoneType> pheromonesTypes =
-				// Arrays.asList(PheromoneType.values());
-				// Collections.shuffle(pheromonesTypes);
-				// envCell.addEnvObject(new Pheromone(point,
-				// coloniesList.get(0), pheromonesTypes.get(0),
-				// (float) Math.random() * 3));
-				// }
-
-				// ------------------------
 			}
 		}
 		return grid;
