@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import fr.utbm.info.vi51.worldswar.controller.Controller;
+import fr.utbm.info.vi51.worldswar.environment.PerceptionGrid;
 import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
 
 /**
@@ -18,14 +19,16 @@ import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
 public class Window extends JFrame implements SimulatorListener {
 	private static final long serialVersionUID = 3509021382819712013L;
 
-	private GuiActionsManager guiActionsManager;
+	private final GuiActionsManager guiActionsManager;
 
-	private InfoPanel infoPanel;
+	private final InfoPanel infoPanel;
 
 	private float stepsPerSecond;
 	private long lastStepStart;
 	private boolean simulationRunning;
 	private int stepNumber;
+
+	private final CentralPanel centralPanel;
 
 	/**
 	 * @param controller
@@ -38,8 +41,6 @@ public class Window extends JFrame implements SimulatorListener {
 
 		this.stepsPerSecond = 0;
 		this.lastStepStart = System.currentTimeMillis();
-
-		this.guiActionsManager = new GuiActionsManager(controller);
 
 		this.stepNumber = 0;
 		this.simulationRunning = false;
@@ -55,9 +56,13 @@ public class Window extends JFrame implements SimulatorListener {
 		});
 
 		this.getContentPane().setLayout(new BorderLayout());
-		this.setJMenuBar(new MenuBar(this.guiActionsManager));
 
-		this.getContentPane().add(new GridViewPanel(this), BorderLayout.CENTER);
+		this.centralPanel = new CentralPanel(this);
+		this.getContentPane().add(this.centralPanel, BorderLayout.CENTER);
+
+		this.guiActionsManager = new GuiActionsManager(controller, this.centralPanel);
+
+		this.setJMenuBar(new MenuBar(this.guiActionsManager));
 
 		this.infoPanel = new InfoPanel();
 		this.getContentPane().add(this.infoPanel, BorderLayout.SOUTH);
@@ -71,8 +76,8 @@ public class Window extends JFrame implements SimulatorListener {
 
 	@Override
 	public void simulationStepFired() {
-		long currentTime = System.currentTimeMillis();
-		long stepDuration = currentTime - this.lastStepStart;
+		final long currentTime = System.currentTimeMillis();
+		final long stepDuration = currentTime - this.lastStepStart;
 		this.lastStepStart = currentTime;
 		this.stepsPerSecond = 1000.f / stepDuration;
 
@@ -82,6 +87,11 @@ public class Window extends JFrame implements SimulatorListener {
 
 		this.stepNumber++;
 
+	}
+
+	@Override
+	public void environmentUpdated(PerceptionGrid perceptionGrid) {
+		this.centralPanel.updateGrid(perceptionGrid);
 	}
 
 	@Override

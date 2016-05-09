@@ -1,9 +1,13 @@
 package fr.utbm.info.vi51.worldswar.environment;
 
 import java.awt.Point;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
+import fr.utbm.info.vi51.worldswar.controller.SimulationParameters;
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody;
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill;
 import fr.utbm.info.vi51.worldswar.environment.envobject.EnvironmentObject;
@@ -24,6 +28,47 @@ public class EnvironmentUtils {
 	private EnvironmentUtils() {
 	}
 
+	public static Grid<EnvCell> generateMap(SimulationParameters simulationParameters) {
+
+		final int width = simulationParameters.getGridWidth();
+		final int height = simulationParameters.getGridHeight();
+		final List<Colony> coloniesList = simulationParameters.getColoniesList();
+
+		final Grid<EnvCell> grid = new Grid<>(0, width - 1, 0, height - 1);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				final EnvCell envCell = new EnvCell();
+				grid.set(x, y, envCell);
+				final Point point = new Point(x, y);
+
+				// TODO add envObjects here
+
+				// --- used to test GUI ---
+				if (x == 10 && y == 10) {
+					envCell.addEnvObject(new AntHill(point, coloniesList.get(0)));
+				}
+				if (Math.random() > 0.9) {
+					envCell.addEnvObject(new Food(point, (int) (Math.random() * 10) + 1));
+				}
+				if (Math.random() > 0.95) {
+					Collections.shuffle(coloniesList);
+					final List<Caste> castes = Arrays.asList(Caste.values());
+					Collections.shuffle(castes);
+					envCell.addEnvObject(new AntBody(point, new UUID(0, 0), coloniesList.get(0), castes.get(0)));
+				}
+				if (Math.random() > 0.3) {
+					Collections.shuffle(coloniesList);
+					final List<PheromoneType> pheromonesTypes = Arrays.asList(PheromoneType.values());
+					Collections.shuffle(pheromonesTypes);
+					envCell.addEnvObject(new Pheromone(point, coloniesList.get(0), pheromonesTypes.get(0),
+							(float) Math.random() * 3));
+				}
+				// ------------------------
+			}
+		}
+		return grid;
+	}
+
 	/**
 	 * Applies one step of {@link Pheromone} dissipation. If the pheromone
 	 * quantity reaches zero, the corresponding {@link EnvironmentObject} is
@@ -37,11 +82,11 @@ public class EnvironmentUtils {
 	 */
 	public static void applyPheromoneDissipation(Grid<EnvCell> grid) {
 
-		for (EnvCell c : grid) {
-			List<EnvironmentObject> toRemove = new LinkedList<>();
-			for (EnvironmentObject envObj : c.getEnvObjects()) {
+		for (final EnvCell c : grid) {
+			final List<EnvironmentObject> toRemove = new LinkedList<>();
+			for (final EnvironmentObject envObj : c.getEnvObjects()) {
 				if (envObj instanceof Pheromone) {
-					Pheromone p = (Pheromone) envObj;
+					final Pheromone p = (Pheromone) envObj;
 					p.dissipate();
 					if (p.getQty() <= 0) {
 						toRemove.add(p);
@@ -80,7 +125,7 @@ public class EnvironmentUtils {
 	 * @param grid
 	 */
 	public static void dropFood(AntBody ant, int qty, Grid<EnvCell> grid) {
-		int foodDropped = ant.pickFood(qty);
+		final int foodDropped = ant.pickFood(qty);
 		Food food = getFoodAt(ant.getPosition(), grid);
 		if (food == null) {
 			// If there was no food at this place, we have to create the
@@ -101,18 +146,18 @@ public class EnvironmentUtils {
 	 */
 	public static void pickFood(AntBody ant, int requestedQty, Grid<EnvCell> grid) {
 		// Prevent the ant to pick more food than it can carry
-		int qty = Math.min(requestedQty, ant.getCapacity() - ant.getFoodCarried());
+		final int qty = Math.min(requestedQty, ant.getCapacity() - ant.getFoodCarried());
 		if (qty <= 0) {
 			return;
 		}
 
-		Food food = getFoodAt(ant.getPosition(), grid);
+		final Food food = getFoodAt(ant.getPosition(), grid);
 		if (food == null) {
 			// Nothing to do if there is no food to pick
 			return;
 		}
 
-		int foodPicked = food.pick(qty);
+		final int foodPicked = food.pick(qty);
 		ant.giveFood(foodPicked);
 
 		// Remove food object from the map if it is empty
@@ -130,7 +175,8 @@ public class EnvironmentUtils {
 	 * @param grid
 	 */
 	public static void moveAnt(AntBody body, Direction direction, Grid<EnvCell> grid) {
-		Point target = new Point(body.getPosition().x + direction.getX(), body.getPosition().y + direction.getY());
+		final Point target = new Point(body.getPosition().x + direction.getX(),
+				body.getPosition().y + direction.getY());
 
 		// Prevents moving out of the map
 		if (!grid.containsPosition(target)) {
@@ -179,7 +225,7 @@ public class EnvironmentUtils {
 	 */
 	public static AntHill getAntHillAt(Point position, Grid<EnvCell> grid) {
 		AntHill antHill = null;
-		for (EnvironmentObject object : grid.get(position).getEnvObjects()) {
+		for (final EnvironmentObject object : grid.get(position).getEnvObjects()) {
 			if (object instanceof AntHill) {
 				antHill = (AntHill) object;
 			}
@@ -195,7 +241,7 @@ public class EnvironmentUtils {
 	 */
 	public static Food getFoodAt(Point position, Grid<EnvCell> grid) {
 		Food food = null;
-		for (EnvironmentObject object : grid.get(position).getEnvObjects()) {
+		for (final EnvironmentObject object : grid.get(position).getEnvObjects()) {
 			if (object instanceof Food) {
 				food = (Food) object;
 			}
@@ -214,9 +260,9 @@ public class EnvironmentUtils {
 	 */
 	private static Pheromone getPheromoneAt(Point position, Colony colony, PheromoneType type, Grid<EnvCell> grid) {
 		Pheromone validPheromone = null;
-		for (EnvironmentObject object : grid.get(position).getEnvObjects()) {
+		for (final EnvironmentObject object : grid.get(position).getEnvObjects()) {
 			if (object instanceof Pheromone) {
-				Pheromone pheromone = (Pheromone) object;
+				final Pheromone pheromone = (Pheromone) object;
 				if (pheromone.getColony() == colony && pheromone.getType() == type) {
 					validPheromone = pheromone;
 				}

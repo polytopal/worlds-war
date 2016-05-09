@@ -72,7 +72,7 @@ public class Grid<T> implements Iterable<T> {
 	}
 
 	/**
-	 * @return the height of the matrix
+	 * @return the height of the grid
 	 */
 	public int getHeight() {
 		return this.height;

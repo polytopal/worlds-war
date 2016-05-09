@@ -6,7 +6,8 @@ package fr.utbm.info.vi51.worldswar.simulator;
  */
 public enum SimulationSpeed {
 
-	SLOW("SimulationSpeed.slow", 500), NORMAL("SimulationSpeed.normal", 250), FAST("SimulationSpeed.fast", 100), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	SLOW("SimulationSpeed.slow", 500), NORMAL("SimulationSpeed.normal", //$NON-NLS-1$ //$NON-NLS-2$
+			250), FAST("SimulationSpeed.fast", 100), //$NON-NLS-1$
 	/**
 	 * No delay between steps means the simulation will run as fast as possible
 	 */
