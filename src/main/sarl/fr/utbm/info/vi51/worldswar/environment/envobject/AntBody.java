@@ -71,15 +71,9 @@ public class AntBody extends AgentBody {
 		this.burrowed = true;
 	}
 
-	private int computeStatistic(int baseStat, float multiplier) {
+	private static int computeStatistic(int baseStat, float multiplier) {
 		final float stat = baseStat * multiplier;
 		return Math.round(stat);
-	}
-
-	// TODO - to remove
-	public static void main(String[] args) {
-		final AntBody antBody = new AntBody(null, null, new Colony(Breed.DARK_ANTS), Caste.GATHERER);
-		System.out.println(antBody);
 	}
 
 	/** {@inheritDoc} **/
