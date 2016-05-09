@@ -10,6 +10,12 @@ import fr.utbm.info.vi51.worldswar.controller.SimulationParameters
 import fr.utbm.info.vi51.worldswar.environment.envobject.AgentBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill
+import fr.utbm.info.vi51.worldswar.environment.influence.BurrowInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.DropFoodInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.MeleeAttackInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.PheromoneAndMoveInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.PickFoodInfluence
 import fr.utbm.info.vi51.worldswar.simulator.SimulationStepEvent
 import fr.utbm.info.vi51.worldswar.simulator.StopSimulationEvent
 import fr.utbm.info.vi51.worldswar.utils.Grid
@@ -21,6 +27,7 @@ import io.sarl.core.Logging
 import io.sarl.util.Scopes
 import java.awt.Point
 import java.util.ArrayList
+import java.util.Collections
 import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
@@ -151,12 +158,35 @@ agent Environment {
 	 */
 	private def applyInfluences {
 		
-		//TODO implement
+		var shuffledUuids = new LinkedList(agentBodies.keySet)
+		Collections.shuffle(shuffledUuids)
+		for(uuid : shuffledUuids) {
+			// Currently, all of our agents are ants, so our influences apply to ants. 
+			// If we add other types of agents, the nature of the agent and the influences he can send will have to be determined.
+			val antBody = agentBodies.get(uuid) as AntBody
+			if(antBody !== null) {
+				applyAntInfluence(antBody)
+				antBody.influence = null
+			}
+		}
+	}
+	
+	private def applyAntInfluence(ant : AntBody) {
+		val influence = ant.influence
 		
-		
-		// Clear all the stored influences because we don't want them anymore
-		for(body : agentBodies.values()) {
-			body.influence = null
+		if(influence instanceof BurrowInfluence) {
+			EnvironmentUtils.burrow(ant, grid)
+		} else if(influence instanceof DropFoodInfluence) {
+			EnvironmentUtils.dropFood(ant, influence.droppedAmount, grid)
+		} else if(influence instanceof MeleeAttackInfluence) {
+			throw(new UnsupportedOperationException("No fights only farm pls"))
+		} else if(influence instanceof MoveInfluence) {
+			EnvironmentUtils.moveAnt(ant, influence.direction, grid)
+		} else if (influence instanceof PheromoneAndMoveInfluence) {
+			EnvironmentUtils.placePheromone(ant.colony, influence.pheromoneType, influence.pheromoneQty, ant.position, grid)
+			EnvironmentUtils.moveAnt(ant, influence.direction, grid)
+		} else if (influence instanceof PickFoodInfluence) {
+			EnvironmentUtils.pickFood(ant, influence.qty, grid)
 		}
 	}
 	

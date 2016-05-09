@@ -47,4 +47,17 @@ public class EnvCell {
 	public boolean removeAllEnvObjects(Collection<? extends EnvironmentObject> c) {
 		return this.envObjects.removeAll(c);
 	}
+
+	/**
+	 * @return whether the cell only contains traversable objects or not
+	 */
+	public boolean isTraversable() {
+		boolean traversable = true;
+		for (EnvironmentObject o : this.envObjects) {
+			if (!o.isTraversable()) {
+				traversable = false;
+			}
+		}
+		return traversable;
+	}
 }
