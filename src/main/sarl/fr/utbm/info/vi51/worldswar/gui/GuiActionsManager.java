@@ -42,8 +42,8 @@ public class GuiActionsManager {
 
 		this.noPheromoneFilterAction = new PheromoneFilterAction(centralPanel, null);
 		this.pheromoneFilterActionsMap = new HashMap<>();
-		for (final PheromoneType phero : PheromoneType.values()) {
-			this.pheromoneFilterActionsMap.put(phero, new PheromoneFilterAction(centralPanel, phero));
+		for (final PheromoneType pheromoneType : PheromoneType.values()) {
+			this.pheromoneFilterActionsMap.put(pheromoneType, new PheromoneFilterAction(centralPanel, pheromoneType));
 		}
 	}
 
@@ -149,11 +149,11 @@ public class GuiActionsManager {
 		private final CentralPanel centralPanel;
 		private final PheromoneType pheromoneType;
 
-		public PheromoneFilterAction(CentralPanel centralPanel, PheromoneType phero) {
-			super((phero != null) ? Messages.getString(phero.getPropertyKey())
+		public PheromoneFilterAction(CentralPanel centralPanel, PheromoneType pheromoneType) {
+			super((pheromoneType != null) ? Messages.getString(pheromoneType.getPropertyKey())
 					: Messages.getString("PheromoneType.noPheromone")); //$NON-NLS-1$
 			this.centralPanel = centralPanel;
-			this.pheromoneType = phero;
+			this.pheromoneType = pheromoneType;
 		}
 
 		@Override
