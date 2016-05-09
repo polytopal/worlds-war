@@ -27,4 +27,9 @@ public class Colony {
 		this.breed = breed;
 	}
 
+	@Override
+	public String toString() {
+		return "Colony [breed=" + breed + "]";
+	}
+
 }

@@ -3,6 +3,7 @@ package fr.utbm.info.vi51.worldswar.environment.envobject;
 import java.awt.Point;
 import java.util.UUID;
 
+import fr.utbm.info.vi51.worldswar.environment.Breed;
 import fr.utbm.info.vi51.worldswar.environment.Caste;
 import fr.utbm.info.vi51.worldswar.environment.Colony;
 import fr.utbm.info.vi51.worldswar.utils.Stock;
@@ -21,12 +22,17 @@ public class AntBody extends AgentBody {
 	/**
 	 * Number of food units currently carried by the ant
 	 */
-	private Stock foodCarried;
+	private final Stock foodCarried;
 
 	/**
 	 * Current health points
 	 */
-	private int health;
+	private final int health;
+
+	/**
+	 * The damages that will be done to the target in fight
+	 */
+	private final int attackDamage;
 
 	private boolean burrowed;
 
@@ -54,13 +60,26 @@ public class AntBody extends AgentBody {
 		this.colony = colony;
 		this.caste = caste;
 
-		// TODO placeholder constructor, stats will need to be calculated
-		// according to the ant's breed and caste
-		this.capacity = 10;
+		final Breed breed = colony.getBreed();
+		this.health = computeStatistic(caste.getMaxHealth(), breed.getHealthMultiplier());
+		this.attackDamage = computeStatistic(caste.getAttackDamage(), breed.getAttackDamageMultiplier());
+		this.capacity = computeStatistic(caste.getCapacity(), breed.getCapacityMultiplier());
+		this.remainingLifeTime = computeStatistic(caste.getLifeTime(), breed.getLifeTimeMultiplier());
+		this.perceptionRange = computeStatistic(caste.getPerceptionRange(), breed.getPerceptionRangeMultiplier());
+
 		this.foodCarried = new Stock(0);
 		this.burrowed = true;
-		this.health = 100;
-		this.remainingLifeTime = 150;
+	}
+
+	private int computeStatistic(int baseStat, float multiplier) {
+		final float stat = baseStat * multiplier;
+		return Math.round(stat);
+	}
+
+	// TODO - to remove
+	public static void main(String[] args) {
+		final AntBody antBody = new AntBody(null, null, new Colony(Breed.DARK_ANTS), Caste.GATHERER);
+		System.out.println(antBody);
 	}
 
 	/** {@inheritDoc} **/
@@ -88,6 +107,14 @@ public class AntBody extends AgentBody {
 	 */
 	public int getHealth() {
 		return this.health;
+	}
+
+	/**
+	 * 
+	 * @return the attack damage
+	 */
+	public int getAttackDamage() {
+		return this.attackDamage;
 	}
 
 	/**
@@ -163,6 +190,14 @@ public class AntBody extends AgentBody {
 	 */
 	public boolean carriesFood() {
 		return !(this.foodCarried.isEmpty());
+	}
+
+	@Override
+	public String toString() {
+		return "AntBody [capacity=" + this.capacity + ", foodCarried=" + this.foodCarried + ", health=" + this.health //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ ", attackDamage=" + this.attackDamage + ", burrowed=" + this.burrowed + ", remainingLifeTime=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ this.remainingLifeTime + ", caste=" + this.caste + ", colony=" + this.colony + ", perceptionRange=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ this.perceptionRange + ", position=" + this.position + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }
