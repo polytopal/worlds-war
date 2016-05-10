@@ -37,22 +37,41 @@ public enum Caste {
 		}
 	};
 
+	// All of theses methods return the default ant characteristics.
+	// They can be override for a specific Cast. After that, the Breed modifier
+	// will be applied
+
+	/**
+	 * @return the default max health of the ant
+	 */
 	public int getMaxHealth() {
 		return 100;
 	}
 
+	/**
+	 * @return the default attackDamage of the ant
+	 */
 	public int getAttackDamage() {
 		return 10;
 	}
 
+	/**
+	 * @return the default capacity of the ant
+	 */
 	public int getCapacity() {
 		return 10;
 	}
 
+	/**
+	 * @return the default initial life time of the ant
+	 */
 	public int getLifeTime() {
 		return 150;
 	}
 
+	/**
+	 * @return the default perception range of the ant
+	 */
 	public int getPerceptionRange() {
 		return 3;
 	}

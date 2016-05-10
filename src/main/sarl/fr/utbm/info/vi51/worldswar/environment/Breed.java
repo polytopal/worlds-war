@@ -8,7 +8,7 @@ import fr.utbm.info.vi51.worldswar.gui.Messages;
  */
 public enum Breed {
 	// TODO - all the stats have to be adjusted
-	DARK_ANTS("Breed.darkAnts", 1.0f, 1.0f, 1.0f, 1.0f, 1.0f), RED_ANTS("Breed.redAnts", 1.2f, 1.3f, 0.8f, 0.9f, 1.0f); //$NON-NLS-1$ //$NON-NLS-2$
+	DARK_ANTS("Breed.darkAnts", 1.0f, 1.0f, 1.0f, 1.0f, 1.0f), RED_ANTS("Breed.redAnts", 1.2f, 1.3f, 0.8f, 0.9f, 1.0f); //$NON-NLS-2$
 
 	private String propertyKey;
 
