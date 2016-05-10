@@ -43,9 +43,9 @@ public class EnvironmentUtils {
 			angle += 2 * Math.PI / nbColony;
 		}
 
-		final int octaveCount = 5;
-		final float max = 20;
-		final float min = -40;
+		final int octaveCount = 6;
+		final float max = 50;
+		final float min = -100;
 		final Grid<Float> randomFoodGrid = PerlinNoiseGenerator.generatePerlinNoiseHeightGrid(width, height,
 				octaveCount, min, max);
 

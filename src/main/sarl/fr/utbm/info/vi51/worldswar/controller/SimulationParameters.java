@@ -17,13 +17,13 @@ import fr.utbm.info.vi51.worldswar.environment.Colony;
  */
 public class SimulationParameters {
 
-	public static final int DEFAULT_WIDTH = 500;
-	public static final int MIN_WIDTH = 10;
-	public static final int MAX_WIDTH = 5000;
+	public static final int DEFAULT_WIDTH = 300;
+	public static final int MIN_WIDTH = 30;
+	public static final int MAX_WIDTH = 1000;
 
-	public static final int DEFAULT_HEIGHT = 500;
-	public static final int MIN_HEIGHT = 10;
-	public static final int MAX_HEIGHT = 5000;
+	public static final int DEFAULT_HEIGHT = 300;
+	public static final int MIN_HEIGHT = 30;
+	public static final int MAX_HEIGHT = 1000;
 
 	public static final Breed DEFAULT_BREED_ON_ADD = Breed.DARK_ANTS;
 	public static final Breed[] DEFAULT_BREED_LIST = { Breed.DARK_ANTS, Breed.RED_ANTS };
