@@ -1,7 +1,7 @@
 package fr.utbm.info.vi51.worldswar.environment
 
 import fr.utbm.info.vi51.worldswar.^agent.AntAgent
-import fr.utbm.info.vi51.worldswar.^agent.GathererAgent
+import fr.utbm.info.vi51.worldswar.^agent.BehaviourHandler
 import fr.utbm.info.vi51.worldswar.^agent.^event.AgentInitializedEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.InfluenceEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.KillAgentEvent
@@ -17,6 +17,7 @@ import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.PheromoneAndMoveInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.PickFoodInfluence
 import fr.utbm.info.vi51.worldswar.simulator.SimulationStepEvent
+import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener
 import fr.utbm.info.vi51.worldswar.simulator.StopSimulationEvent
 import fr.utbm.info.vi51.worldswar.utils.Grid
 import io.sarl.core.DefaultContextInteractions
@@ -32,7 +33,6 @@ import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
 import java.util.UUID
-import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener
 
 /**
  * While it does not appear obvious, this agent manages the environment.
@@ -44,6 +44,9 @@ agent Environment {
 	
 	private var listeners : List<SimulatorListener>
 	
+	/** an object that create the behaviours */
+	var behaviourHandler : BehaviourHandler
+	
 	var grid : Grid<EnvCell>
 	var antHills : List<AntHill>
 
@@ -54,19 +57,27 @@ agent Environment {
 	var uninitializedAgents : List<UUID>
 	/** True if and only if the environment is waiting one or more agents to finish their initialization before finishing its step. */
 	var waitingAgentsInitialization : boolean
+	
+	
 
 	on Initialize {
 		synchronized(this) {
 			var simParameters = occurrence.parameters.get(0) as SimulationParameters
 			this.listeners = occurrence.parameters.get(1) as List<SimulatorListener>
 			
-//			this.width = simParameters.gridWidth
-//			this.height = simParameters.gridHeight
+			this.behaviourHandler = new BehaviourHandler
 			
 			this.grid = EnvironmentUtils.generateMap(simParameters)
 			
 			
 			this.antHills = new ArrayList
+			
+			// ------ test -----
+//			var point = new Point(3, 3)
+//			var hill = new AntHill(point,new Colony(Breed.DARK_ANTS))
+//			grid.get(point).addEnvObject(hill)
+//			this.antHills.add(hill)
+			// -----------------
 			
 			info("Creating agents map...")
 			this.agentBodies = new HashMap(AGENTS_MAP_INITIAL_SIZE)
@@ -77,15 +88,6 @@ agent Environment {
 			
 			
 			
-			//TODO for testing purpose, should be removed when we have ants spawners
-//			for(var i=0; i<500; i++) {
-//				spawnAnt(new Colony(Breed.DARK_ANTS), Caste.GATHERER, new Point(0,0))
-//			}
-//			info("Ants spawned")
-			
-//			var antHill = new AntHill(new Point(0,0), new Colony(Breed.DARK_ANTS));
-//			this.grid.get(0,0).addEnvObject(antHill);
-//			this.antHills += antHill;
 			
 			emit(new EnvironmentInitializedEvent)
 		}
@@ -109,9 +111,6 @@ agent Environment {
 		synchronized(this) {
 			var perceptionGrid = PerceptionGrid.buildFromEnvObjectGrid(grid)
 
-//			info("perceptionGrid computed :")
-//			info(perceptionGrid)
-
 			for(l : this.listeners) {
 				l.environmentUpdated(perceptionGrid)
 			}
@@ -133,7 +132,6 @@ agent Environment {
 		EnvironmentUtils.applyPheromoneDissipation(grid)
 		antsAging
 		spawnAntsInAntHills
-		
 		if(this.uninitializedAgents.size > 0) {
 			this.waitingAgentsInitialization = true
 		}
@@ -214,17 +212,14 @@ agent Environment {
 	////////////////////////////////////////
 	
 	private def spawnAnt(colony : Colony, caste : Caste, position : Point) {
-		
-		//TODO determine the class depending on the caste of the ant to spawn
-		var agentClass : Class<? extends AntAgent> = typeof(GathererAgent)
-		
-		var antUuid : UUID = spawn(agentClass)
+		var antUuid : UUID = spawn(typeof(AntAgent), behaviourHandler.getStrategicBehaviour(caste))
 		var body : AntBody = new AntBody(position, antUuid, colony, caste)
 		
 		//Add the new body in the proper cell of the grid, and in the agentBodies table
 		this.grid.get(position).addEnvObject(body)
 		this.agentBodies.put(antUuid, body)
 		this.uninitializedAgents.add(antUuid)
+		info("spawnAnt end")
 	}
 	
 	private def killAgent(uuid : UUID) {
@@ -294,7 +289,6 @@ agent Environment {
 				antHill.pickFood(AntHill.SPAWN_COST)
 				antHill.spawnCooldown = AntHill.SPAWN_COOLDOWN
 				//TODO spawn some other castes sometimes
-				//antsToSpawn += new SpawnAntCommand(antHill.colony, Caste.GATHERER, antHill.position)
 				this.spawnAnt(antHill.colony, Caste.GATHERER, antHill.position)
 				
 			}
