@@ -2,7 +2,6 @@ package fr.utbm.info.vi51.worldswar.controller;
 
 import java.util.UUID;
 
-import fr.utbm.info.vi51.worldswar.environment.Environment;
 import fr.utbm.info.vi51.worldswar.simulator.SimulationSpeed;
 import fr.utbm.info.vi51.worldswar.simulator.Simulator;
 import io.sarl.lang.core.Address;

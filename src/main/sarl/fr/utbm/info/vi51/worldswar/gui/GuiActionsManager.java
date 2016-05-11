@@ -119,6 +119,7 @@ public class GuiActionsManager {
 			super(Messages.getString("MenuBar.pauseSimulation")); //$NON-NLS-1$
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
 			this.controller = controller;
+			this.setEnabled(false);
 		}
 
 		@Override
