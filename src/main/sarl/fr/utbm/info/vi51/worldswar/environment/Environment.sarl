@@ -212,6 +212,8 @@ agent Environment {
 	////////////////////////////////////////
 	
 	private def spawnAnt(colony : Colony, caste : Caste, position : Point) {
+		
+		// the ant behaviour is passed as a parameters
 		var antUuid : UUID = spawn(typeof(AntAgent), behaviourHandler.getStrategicBehaviour(caste))
 		var body : AntBody = new AntBody(position, antUuid, colony, caste)
 		
@@ -219,7 +221,6 @@ agent Environment {
 		this.grid.get(position).addEnvObject(body)
 		this.agentBodies.put(antUuid, body)
 		this.uninitializedAgents.add(antUuid)
-		info("spawnAnt end")
 	}
 	
 	private def killAgent(uuid : UUID) {

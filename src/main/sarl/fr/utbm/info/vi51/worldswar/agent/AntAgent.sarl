@@ -11,6 +11,8 @@ import io.sarl.util.Scopes
 import java.util.HashMap
 import io.sarl.core.Logging
 import fr.utbm.info.vi51.worldswar.^agent.^event.AgentInitializedEvent
+import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence
+import fr.utbm.info.vi51.worldswar.utils.Direction
 
 /**
  * Abstract agent inherited by every other ants agents
@@ -23,6 +25,7 @@ agent AntAgent {
 	
 	on Initialize{
 		synchronized(this) {
+			// the strategic behaviour is get from the parameters
 			this.behaviour = occurrence.parameters.get(0) as StrategicBehaviour
 			
 			emit(new AgentInitializedEvent)
@@ -40,11 +43,13 @@ agent AntAgent {
 			
 			val perceptionGrid = occurrence.perceptionGrid
 			if(behaviour !== null ){
+				
+				// The influence is computed by the behaviour
 				val influence = behaviour.computeInfluence(perceptionGrid, memory)
 				emit(new InfluenceEvent(this.getID(), influence),
 					Scopes.addresses(occurrence.callbackAddress))
 			}else{
-				error("ant agent does'nt have behaviour")
+				error("ant agent doesn't have behaviour")
 			}
 			
 		}

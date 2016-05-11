@@ -17,10 +17,11 @@ public class MoveToTargetOperationalBehaviour implements OperationalBehaviour {
 	public Influence computeInfluence(PerceptionGrid perceptionGrid, HashMap<String, Object> memory, Point Target) {
 		// TODO - implement function here
 
+		// return a move in a random direction while this behavior is not
+		// implemented
 		final List<Direction> list = Arrays.asList(Direction.values());
 		Collections.shuffle(list);
 		final Direction direction = list.get(0);
-
 		return new MoveInfluence(direction);
 	}
 

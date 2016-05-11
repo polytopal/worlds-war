@@ -16,12 +16,12 @@ public class GathererStrategicBehaviour implements StrategicBehaviour {
 			GoHomeTacticalBehaviour goHomeTacticalBehaviour) {
 		this.collectFood = collectFoodTacticalBehaviour;
 		this.goHome = goHomeTacticalBehaviour;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public Influence computeInfluence(PerceptionGrid perceptionGrid, HashMap<String, Object> memory) {
-		// TODO Auto-generated method stub
+		// TODO - implement the algo here to choose between tactical behaviours
+
 		return goHome.computeInfluence(perceptionGrid, memory);
 	}
 

@@ -7,31 +7,40 @@ import fr.utbm.info.vi51.worldswar.agent.tactical_behaviour.CollectFoodTacticalB
 import fr.utbm.info.vi51.worldswar.agent.tactical_behaviour.GoHomeTacticalBehaviour;
 import fr.utbm.info.vi51.worldswar.environment.Caste;
 
-// create the behaviour
+/**
+ * create all the behaviours
+ */
 public class BehaviourHandler {
 
 	private final GathererStrategicBehaviour gathererStrategicBehaviour;
 
 	public BehaviourHandler() {
 
-		// operational
+		// operational layer
 		final MoveToTargetOperationalBehaviour moveToTargetOperationalBehaviour = new MoveToTargetOperationalBehaviour();
 
-		// tactical
+		// tactical layer
 		final CollectFoodTacticalBehaviour collectFoodTacticalBehaviour = new CollectFoodTacticalBehaviour(
 				moveToTargetOperationalBehaviour);
 		final GoHomeTacticalBehaviour goHomeTacticalBehaviour = new GoHomeTacticalBehaviour(
 				moveToTargetOperationalBehaviour);
 
+		// strategic layer
 		this.gathererStrategicBehaviour = new GathererStrategicBehaviour(collectFoodTacticalBehaviour,
 				goHomeTacticalBehaviour);
 
 	}
 
+	/**
+	 * 
+	 * @param caste
+	 * @return the {@link StrategicBehaviour} related to the given caste
+	 */
 	public StrategicBehaviour getStrategicBehaviour(Caste caste) {
 		switch (caste) {
 		case GATHERER:
 			return this.gathererStrategicBehaviour;
+		// TODO - return a behaviour for the other castes
 		default:
 			return null;
 		}

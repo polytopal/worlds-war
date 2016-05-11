@@ -16,7 +16,7 @@ public class GoHomeTacticalBehaviour implements TacticalBehaviour {
 
 	@Override
 	public Influence computeInfluence(PerceptionGrid perceptionGrid, HashMap<String, Object> memory) {
-		// TODO - implement function here
+		// TODO - implement the algo here to find the best target
 
 		return this.moveToTarget.computeInfluence(perceptionGrid, memory, null);
 	}
