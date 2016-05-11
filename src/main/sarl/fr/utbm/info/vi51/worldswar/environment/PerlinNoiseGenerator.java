@@ -35,6 +35,13 @@ public class PerlinNoiseGenerator {
 		return grid;
 	}
 
+	/**
+	 * @param width
+	 *            the width of the map created
+	 * @param height
+	 *            the height of the map created
+	 * @return an array of arrays of random float from 0 to 1
+	 */
 	private static float[][] generateWhiteNoise(int width, int height) {
 		final float[][] noise = new float[width][height];
 		for (int y = 0; y < height; y++) {
@@ -45,10 +52,26 @@ public class PerlinNoiseGenerator {
 		return noise;
 	}
 
+	/**
+	 * @param x0
+	 * @param x1
+	 * @param alpha
+	 *            the weight of x1. Must be between 0 and 1
+	 * @return the linear interpolation between x0 and x1. If alpha=0 return x0,
+	 *         if alpha=1 return x1.
+	 */
 	private static float interpolate(float x0, float x1, float alpha) {
 		return x0 * (1 - alpha) + alpha * x1;
 	}
 
+	/**
+	 * From a base noise, realize an interpolation of each point with its
+	 * neighbors.
+	 * 
+	 * @param baseNoise
+	 * @param octave
+	 * @return
+	 */
 	private static float[][] generateSmoothNoise(float[][] baseNoise, int octave) {
 		final int width = baseNoise.length;
 		final int height = baseNoise[0].length;
@@ -71,6 +94,8 @@ public class PerlinNoiseGenerator {
 						horizontal_blend);
 				final float bottom = interpolate(baseNoise[sample_i0][sample_j1], baseNoise[sample_i1][sample_j1],
 						horizontal_blend);
+				// the cell height is the interpolation between top and bottom
+				// interpolations
 				smoothNoise[i][j] = interpolate(top, bottom, vertical_blend);
 			}
 		}
@@ -78,6 +103,14 @@ public class PerlinNoiseGenerator {
 		return smoothNoise;
 	}
 
+	/**
+	 * From a base noise, realize a Perlin noise by applying the function
+	 * generateSmoothNoise for each octave
+	 * 
+	 * @param baseNoise
+	 * @param octaveCount
+	 * @return
+	 */
 	private static float[][] generatePerlinNoise(float[][] baseNoise, int octaveCount) {
 		final int width = baseNoise.length;
 		final int height = baseNoise[0].length;
@@ -85,6 +118,8 @@ public class PerlinNoiseGenerator {
 		// an array of 2D arrays containing
 		final float persistance = 0.7f;
 
+		// call the function generateSmoothNoise for each octave and stock each
+		// generated map in an array
 		for (int i = 0; i < octaveCount; i++) {
 			smoothNoise[i] = generateSmoothNoise(baseNoise, i);
 		}
@@ -95,6 +130,7 @@ public class PerlinNoiseGenerator {
 		float amplitude = 1.0f;
 		float totalAmplitude = 0.0f;
 
+		// compute the Perlin noise by adding all the map previously computated
 		for (int octave = octaveCount - 1; octave >= 0; octave--) {
 			amplitude *= persistance;
 			totalAmplitude += amplitude;
@@ -106,6 +142,7 @@ public class PerlinNoiseGenerator {
 			}
 		}
 
+		// resize the height of each cell
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				perlinNoise[i][j] /= totalAmplitude;

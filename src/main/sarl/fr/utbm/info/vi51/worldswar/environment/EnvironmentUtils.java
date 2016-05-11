@@ -34,18 +34,30 @@ public class EnvironmentUtils {
 
 		// ant hills positions
 		final int nbColony = coloniesList.size();
+		// the initial angle, the first colony in near the left border
 		float angle = (float) Math.PI;
 		final List<AntHill> antHillList = new ArrayList<>();
 		for (final Colony colony : coloniesList) {
+			// the colonies are disposed on an oval shape
+			// center = (width/2, height/2)
+			// x radius = width/3, y radius = height/3
 			final int x = (int) (width / 2 + (width / 3) * Math.cos(angle));
 			final int y = (int) (height / 2 + (height / 3) * Math.sin(angle));
 			antHillList.add(new AntHill(new Point(x, y), colony));
 			angle += 2 * Math.PI / nbColony;
 		}
 
+		// allow to choose how the food is grouped in parcel
 		final int octaveCount = 6;
-		final float max = 50;
-		final float min = -100;
+		final float foodProportion = 0.3f; // must be between 0 and 1
+		final float max = 50; // !!! warning !!! represent the theoretically
+								// maximum food on a cell, but the real maximum
+								// food will be lower cause of the
+								// interpolations of the Perlin noise
+
+		// simple cross product
+		final float min = max * (1f - (1f / foodProportion));
+		// the value of each cell will be between min and max
 		final Grid<Float> randomFoodGrid = PerlinNoiseGenerator.generatePerlinNoiseHeightGrid(width, height,
 				octaveCount, min, max);
 
@@ -63,6 +75,8 @@ public class EnvironmentUtils {
 						antHillCell = true;
 					}
 				}
+				// if there is an ant hill, there is not other objects on the
+				// cell
 				if (!antHillCell) {
 					final float perlinHeight = randomFoodGrid.get(position).floatValue();
 					if (perlinHeight > 0.0f) {
