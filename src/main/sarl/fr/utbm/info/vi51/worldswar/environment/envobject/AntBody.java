@@ -41,6 +41,8 @@ public class AntBody extends AgentBody {
 	 */
 	private int remainingLifeTime;
 
+	private final int perceptionRange;
+
 	private final Caste caste;
 
 	private final Colony colony;
@@ -145,6 +147,14 @@ public class AntBody extends AgentBody {
 	 */
 	public void setBurrowed(boolean burrowed) {
 		this.burrowed = burrowed;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int getPerceptionRange() {
+		return this.perceptionRange;
 	}
 
 	////////////////////////////////////////
