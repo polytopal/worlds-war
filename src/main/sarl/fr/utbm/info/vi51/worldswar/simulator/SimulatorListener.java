@@ -18,9 +18,11 @@ public interface SimulatorListener {
 	 */
 	public void simulationStarted();
 	/**
-	 * 
-	 * @param simulationPaused : the boolean simulationPaused from the Simulator
-	 * Invoked when the simulation is paused/unpaused
+	 * Invoked when the simulation is paused
 	 */
-	public void simulationPaused(boolean simulationPaused);
+	public void simulationPaused();
+	/**
+	 * Invoked when the simulation is resumed
+	 */
+	public void simulationResumed();
 }

@@ -25,6 +25,7 @@ public class GuiActionsManager {
 	private final Action newSimulationAction;
 	private final Action stopSimulationAction;
 	private final Action pauseSimulationAction;
+	private final Action resumeSimulationAction;
 
 	private final Map<SimulationSpeed, Action> speedActionsMap;
 
@@ -32,6 +33,7 @@ public class GuiActionsManager {
 		this.newSimulationAction = new NewSimulationAction(controller);
 		this.stopSimulationAction = new StopSimulationAction(controller);
 		this.pauseSimulationAction = new PauseSimulationAction(controller);
+		this.resumeSimulationAction = new ResumeSimulationAction(controller);
 
 		this.speedActionsMap = new HashMap<>();
 		for (final SimulationSpeed simSpeed : SimulationSpeed.values()) {
@@ -56,6 +58,11 @@ public class GuiActionsManager {
 	public Action getPauseSimulationAction() {
 		return this.pauseSimulationAction;
 	}
+	
+	public Action getResumeSimulationAction() {
+		return this.resumeSimulationAction;
+	}
+
 
 	public Action getSpeedAction(SimulationSpeed simSpeed) {
 		return this.speedActionsMap.get(simSpeed);
@@ -108,8 +115,7 @@ public class GuiActionsManager {
 	}
 	
 	/**
-	 * 
-	 *         This action allows to pause/unpause the simulation
+	 *         This action allows to pause the simulation
 	 */
 	private class PauseSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
@@ -125,6 +131,25 @@ public class GuiActionsManager {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			this.controller.pauseSimulation();
+		}
+	}
+	/**
+	 *         This action allows to resume the simulation
+	 */
+	private class ResumeSimulationAction extends AbstractAction {
+		private static final long serialVersionUID = 2286692516797367038L;
+		private final Controller controller;
+
+		public ResumeSimulationAction(final Controller controller) {
+			super(Messages.getString("MenuBar.resumeSimulation")); //$NON-NLS-1$
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
+			this.controller = controller;
+			this.setEnabled(false);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			this.controller.resumeSimulation();
 		}
 	}
 

@@ -31,6 +31,10 @@ public class MenuBar extends JMenuBar {
 		
 		final JMenuItem pauseSimulationItem = new JMenuItem(guiActionsManager.getPauseSimulationAction());
 		simulationMenu.add(pauseSimulationItem);
+		
+		final JMenuItem resumeSimulationItem = new JMenuItem(guiActionsManager.getResumeSimulationAction());
+		simulationMenu.add(resumeSimulationItem);
+		
 		// -------- speed menu --------
 
 		final JMenu speedMenu = new JMenu(Messages.getString("MenuBar.Speed")); //$NON-NLS-1$

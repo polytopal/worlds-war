@@ -90,6 +90,7 @@ public class Window extends JFrame implements SimulatorListener {
 		this.simState = SimulationState.STOPPED;
 		this.infoPanel.setSimulationStateLabel(this.simState);
 		this.guiActionsManager.getPauseSimulationAction().setEnabled(false);
+		this.guiActionsManager.getResumeSimulationAction().setEnabled(false);
 	}
 
 	@Override
@@ -101,13 +102,19 @@ public class Window extends JFrame implements SimulatorListener {
 	}
 
 	@Override
-	public void simulationPaused(boolean simulationPaused) {
-		if (simulationPaused) {
-			this.simState = SimulationState.PAUSED;
-		} else {
-			this.simState = SimulationState.RUNNING;
-		}
+	public void simulationPaused() {
+		this.simState = SimulationState.PAUSED;
 		this.infoPanel.setSimulationStateLabel(this.simState);
+		this.guiActionsManager.getResumeSimulationAction().setEnabled(true);
+		this.guiActionsManager.getPauseSimulationAction().setEnabled(false);
+	}
+	
+	@Override
+	public void simulationResumed() {
+		this.simState = SimulationState.RUNNING;
+		this.infoPanel.setSimulationStateLabel(this.simState);
+		this.guiActionsManager.getPauseSimulationAction().setEnabled(true);
+		this.guiActionsManager.getResumeSimulationAction().setEnabled(false);
 	}
 
 }
