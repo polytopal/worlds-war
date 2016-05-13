@@ -1,11 +1,8 @@
 package fr.utbm.info.vi51.worldswar.environment;
 
 import java.awt.Point;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 import fr.utbm.info.vi51.worldswar.controller.SimulationParameters;
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody;
@@ -44,25 +41,30 @@ public class EnvironmentUtils {
 				// TODO add envObjects here
 
 				// --- used to test GUI ---
-				if (x == 10 && y == 10) {
-					envCell.addEnvObject(new AntHill(point, coloniesList.get(0)));
-				}
-				if (Math.random() > 0.9) {
-					envCell.addEnvObject(new Food(point, (int) (Math.random() * 10) + 1));
-				}
-				if (Math.random() > 0.95) {
-					Collections.shuffle(coloniesList);
-					final List<Caste> castes = Arrays.asList(Caste.values());
-					Collections.shuffle(castes);
-					envCell.addEnvObject(new AntBody(point, new UUID(0, 0), coloniesList.get(0), castes.get(0)));
-				}
-				if (Math.random() > 0.3) {
-					Collections.shuffle(coloniesList);
-					final List<PheromoneType> pheromonesTypes = Arrays.asList(PheromoneType.values());
-					Collections.shuffle(pheromonesTypes);
-					envCell.addEnvObject(new Pheromone(point, coloniesList.get(0), pheromonesTypes.get(0),
-							(float) Math.random() * 3));
-				}
+				// if (x == 10 && y == 10) {
+				// envCell.addEnvObject(new AntHill(point,
+				// coloniesList.get(0)));
+				// }
+				// if (Math.random() > 0.9) {
+				// envCell.addEnvObject(new Food(point, (int) (Math.random() *
+				// 10) + 1));
+				// }
+				// if (Math.random() > 0.95) {
+				// Collections.shuffle(coloniesList);
+				// final List<Caste> castes = Arrays.asList(Caste.values());
+				// Collections.shuffle(castes);
+				// envCell.addEnvObject(new AntBody(point, new UUID(0, 0),
+				// coloniesList.get(0), castes.get(0)));
+				// }
+				// if (Math.random() > 0.3) {
+				// Collections.shuffle(coloniesList);
+				// final List<PheromoneType> pheromonesTypes =
+				// Arrays.asList(PheromoneType.values());
+				// Collections.shuffle(pheromonesTypes);
+				// envCell.addEnvObject(new Pheromone(point,
+				// coloniesList.get(0), pheromonesTypes.get(0),
+				// (float) Math.random() * 3));
+				// }
 				// ------------------------
 			}
 		}
