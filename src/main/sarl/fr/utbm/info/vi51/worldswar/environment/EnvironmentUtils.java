@@ -83,7 +83,6 @@ public class EnvironmentUtils {
 						envCell.addEnvObject(new Food(position, (int) perlinHeight));
 					}
 				}
-
 			}
 		}
 		return grid;
