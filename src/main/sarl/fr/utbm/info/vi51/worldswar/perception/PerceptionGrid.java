@@ -1,10 +1,11 @@
-package fr.utbm.info.vi51.worldswar.environment;
+package fr.utbm.info.vi51.worldswar.perception;
 
 import java.awt.Point;
 import java.util.List;
 
 import javax.naming.directory.InvalidAttributesException;
 
+import fr.utbm.info.vi51.worldswar.environment.EnvCell;
 import fr.utbm.info.vi51.worldswar.environment.envobject.AgentBody;
 import fr.utbm.info.vi51.worldswar.environment.envobject.EnvironmentObject;
 import fr.utbm.info.vi51.worldswar.utils.Grid;

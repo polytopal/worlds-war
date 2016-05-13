@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 import fr.utbm.info.vi51.worldswar.agent.tactical_behaviour.CollectFoodTacticalBehaviour;
 import fr.utbm.info.vi51.worldswar.agent.tactical_behaviour.GoHomeTacticalBehaviour;
-import fr.utbm.info.vi51.worldswar.environment.PerceptionGrid;
 import fr.utbm.info.vi51.worldswar.environment.influence.Influence;
+import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
 public class GathererStrategicBehaviour implements StrategicBehaviour {
 

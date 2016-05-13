@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import fr.utbm.info.vi51.worldswar.environment.PerceptionGrid;
 import fr.utbm.info.vi51.worldswar.environment.influence.Influence;
 import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence;
+import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 import fr.utbm.info.vi51.worldswar.utils.Direction;
 
 public class MoveToTargetOperationalBehaviour implements OperationalBehaviour {

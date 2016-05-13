@@ -18,8 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
-import fr.utbm.info.vi51.worldswar.environment.PerceptionGrid;
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
+import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
 /**
  * @author Leo

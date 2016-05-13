@@ -3,8 +3,8 @@ package fr.utbm.info.vi51.worldswar.agent.strategic_behaviour;
 import java.util.HashMap;
 
 import fr.utbm.info.vi51.worldswar.agent.tactical_behaviour.TacticalBehaviour;
-import fr.utbm.info.vi51.worldswar.environment.PerceptionGrid;
 import fr.utbm.info.vi51.worldswar.environment.influence.Influence;
+import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
 /**
  * A strategic behaviour represent the general decision of the agent. Each ant

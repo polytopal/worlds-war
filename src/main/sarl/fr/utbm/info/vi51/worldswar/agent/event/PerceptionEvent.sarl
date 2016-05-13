@@ -2,7 +2,7 @@ package fr.utbm.info.vi51.worldswar.^agent.^event
 
 import fr.utbm.info.vi51.worldswar.^agent.AntAgent
 import fr.utbm.info.vi51.worldswar.environment.Environment
-import fr.utbm.info.vi51.worldswar.environment.PerceptionGrid
+import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid
 import io.sarl.lang.core.Address
 
 /**
