@@ -72,6 +72,7 @@ agent Environment {
 			
 			this.antHills = new ArrayList
 			
+			//TODO remove
 			// ------ test -----
 //			var point = new Point(3, 3)
 //			var hill = new AntHill(point,new Colony(Breed.DARK_ANTS))
