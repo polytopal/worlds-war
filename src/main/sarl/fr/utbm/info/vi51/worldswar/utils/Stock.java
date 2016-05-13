@@ -27,7 +27,7 @@ public class Stock {
 	 */
 	public int pick(int qty) {
 		if (qty > this.available) {
-			int r = this.available;
+			final int r = this.available;
 			this.available = 0;
 			return r;
 		}
@@ -54,6 +54,11 @@ public class Stock {
 	 */
 	public boolean isEmpty() {
 		return this.available == 0;
+	}
+
+	@Override
+	public String toString() {
+		return "Stock [available=" + available + "]";
 	}
 
 }

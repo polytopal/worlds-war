@@ -13,12 +13,6 @@ import io.sarl.lang.core.Agent;
 public abstract class AgentBody extends DynamicObject {
 
 	/**
-	 * The range used to compute agent perception
-	 */
-
-	public static final int PERCEPTION_RANGE = 4;
-
-	/**
 	 * The {@link Environment} stores here the {@link Influence} he received for
 	 * the current step
 	 */
@@ -39,6 +33,11 @@ public abstract class AgentBody extends DynamicObject {
 		super(position);
 		this.uuid = uuid;
 	}
+
+	/**
+	 * @return the perception range of the agent body
+	 */
+	public abstract int getPerceptionRange();
 
 	/**
 	 * @return the influence
