@@ -5,9 +5,9 @@ import java.util.HashMap;
 import fr.utbm.info.vi51.worldswar.agent.tactical_behaviour.CollectFoodTacticalBehaviour;
 import fr.utbm.info.vi51.worldswar.agent.tactical_behaviour.GoHomeTacticalBehaviour;
 import fr.utbm.info.vi51.worldswar.environment.influence.Influence;
-import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
+import fr.utbm.info.vi51.worldswar.perception.AntPerception;
 
-public class GathererStrategicBehaviour implements StrategicBehaviour {
+public class GathererStrategicBehaviour implements AntStrategicBehaviour {
 
 	private final CollectFoodTacticalBehaviour collectFood;
 	private final GoHomeTacticalBehaviour goHome;
@@ -19,10 +19,10 @@ public class GathererStrategicBehaviour implements StrategicBehaviour {
 	}
 
 	@Override
-	public Influence computeInfluence(PerceptionGrid perceptionGrid, HashMap<String, Object> memory) {
+	public Influence computeInfluence(AntPerception perception, HashMap<String, Object> memory) {
 		// TODO - implement the algo here to choose between tactical behaviours
 
-		return goHome.computeInfluence(perceptionGrid, memory);
+		return this.goHome.computeInfluence(perception, memory);
 	}
 
 }

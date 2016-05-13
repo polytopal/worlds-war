@@ -4,9 +4,9 @@ import java.util.HashMap;
 
 import fr.utbm.info.vi51.worldswar.agent.operational_behaviour.MoveToTargetOperationalBehaviour;
 import fr.utbm.info.vi51.worldswar.environment.influence.Influence;
-import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
+import fr.utbm.info.vi51.worldswar.perception.AntPerception;
 
-public class GoHomeTacticalBehaviour implements TacticalBehaviour {
+public class GoHomeTacticalBehaviour implements AntTacticalBehaviour {
 
 	MoveToTargetOperationalBehaviour moveToTarget;
 
@@ -15,10 +15,10 @@ public class GoHomeTacticalBehaviour implements TacticalBehaviour {
 	}
 
 	@Override
-	public Influence computeInfluence(PerceptionGrid perceptionGrid, HashMap<String, Object> memory) {
+	public Influence computeInfluence(AntPerception perception, HashMap<String, Object> memory) {
 		// TODO - implement the algo here to find the best target
 
-		return this.moveToTarget.computeInfluence(perceptionGrid, memory, null);
+		return this.moveToTarget.computeInfluence(perception, memory, null);
 	}
 
 }

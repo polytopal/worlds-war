@@ -2,7 +2,7 @@ package fr.utbm.info.vi51.worldswar.agent;
 
 import fr.utbm.info.vi51.worldswar.agent.operational_behaviour.MoveToTargetOperationalBehaviour;
 import fr.utbm.info.vi51.worldswar.agent.strategic_behaviour.GathererStrategicBehaviour;
-import fr.utbm.info.vi51.worldswar.agent.strategic_behaviour.StrategicBehaviour;
+import fr.utbm.info.vi51.worldswar.agent.strategic_behaviour.AntStrategicBehaviour;
 import fr.utbm.info.vi51.worldswar.agent.tactical_behaviour.CollectFoodTacticalBehaviour;
 import fr.utbm.info.vi51.worldswar.agent.tactical_behaviour.GoHomeTacticalBehaviour;
 import fr.utbm.info.vi51.worldswar.environment.Caste;
@@ -34,9 +34,9 @@ public class BehaviourHandler {
 	/**
 	 * 
 	 * @param caste
-	 * @return the {@link StrategicBehaviour} related to the given caste
+	 * @return the {@link AntStrategicBehaviour} related to the given caste
 	 */
-	public StrategicBehaviour getStrategicBehaviour(Caste caste) {
+	public AntStrategicBehaviour getStrategicBehaviour(Caste caste) {
 		switch (caste) {
 		case GATHERER:
 			return this.gathererStrategicBehaviour;

@@ -8,13 +8,13 @@ import java.util.List;
 
 import fr.utbm.info.vi51.worldswar.environment.influence.Influence;
 import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence;
-import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
+import fr.utbm.info.vi51.worldswar.perception.AntPerception;
 import fr.utbm.info.vi51.worldswar.utils.Direction;
 
-public class MoveToTargetOperationalBehaviour implements OperationalBehaviour {
+public class MoveToTargetOperationalBehaviour implements AntOperationalBehaviour {
 
 	@Override
-	public Influence computeInfluence(PerceptionGrid perceptionGrid, HashMap<String, Object> memory, Point Target) {
+	public Influence computeInfluence(AntPerception perception, HashMap<String, Object> memory, Point Target) {
 		// TODO - implement function here
 
 		// return a move in a random direction while this behavior is not
