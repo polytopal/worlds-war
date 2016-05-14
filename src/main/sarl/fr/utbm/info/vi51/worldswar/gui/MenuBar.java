@@ -6,6 +6,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 
+import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.simulator.SimulationSpeed;
 
 /**
@@ -51,6 +52,24 @@ public class MenuBar extends JMenuBar {
 			speedButtonsGroup.add(speedButton);
 			speedMenu.add(speedButton);
 		}
+
+		// pheromone filter menu
+
+		final JMenu pheromoneFilterMenu = new JMenu(Messages.getString("MenuBar.pheromoneFilter")); //$NON-NLS-1$
+		this.add(pheromoneFilterMenu);
+
+		final ButtonGroup pheromoneFilterButtonsGroup = new ButtonGroup();
+		final JRadioButtonMenuItem noFilterButton = new JRadioButtonMenuItem(
+				guiActionsManager.getPheromoneFilterActions(null));
+		pheromoneFilterButtonsGroup.add(noFilterButton);
+		pheromoneFilterMenu.add(noFilterButton);
+		for (final PheromoneType phero : PheromoneType.values()) {
+			final JRadioButtonMenuItem filterButton = new JRadioButtonMenuItem(
+					guiActionsManager.getPheromoneFilterActions(phero));
+			pheromoneFilterButtonsGroup.add(filterButton);
+			pheromoneFilterMenu.add(filterButton);
+		}
+		noFilterButton.setSelected(true);
 
 	}
 }

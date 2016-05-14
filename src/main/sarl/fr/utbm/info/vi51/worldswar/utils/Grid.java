@@ -56,7 +56,7 @@ public class Grid<T> implements Iterable<T> {
 		for (int y = yMin; y <= yMax; y++) {
 			// build each line
 			final List<T> line = new ArrayList<>(this.width);
-			for (int x = yMin; x <= xMax; x++) {
+			for (int x = xMin; x <= xMax; x++) {
 				line.add(null);
 			}
 			this.grid.add(line);
@@ -72,7 +72,7 @@ public class Grid<T> implements Iterable<T> {
 	}
 
 	/**
-	 * @return the height of the matrix
+	 * @return the height of the grid
 	 */
 	public int getHeight() {
 		return this.height;
@@ -132,6 +132,23 @@ public class Grid<T> implements Iterable<T> {
 	 */
 	public void set(int x, int y, T value) {
 		this.grid.get(y + this.yOffset).set(x + this.xOffset, value);
+	}
+
+	/**
+	 * @param x
+	 * @param y
+	 * @return whether the position (x,y) is in the bounds of the grid
+	 */
+	public boolean containsPosition(int x, int y) {
+		return (x >= this.getXMin() && x <= this.getXMax() && y >= this.getYMin() && y <= this.getYMax());
+	}
+
+	/**
+	 * @param position
+	 * @return whether the specified position is in the bounds of the grid
+	 */
+	public boolean containsPosition(Point position) {
+		return this.containsPosition(position.x, position.y);
 	}
 
 	@Override

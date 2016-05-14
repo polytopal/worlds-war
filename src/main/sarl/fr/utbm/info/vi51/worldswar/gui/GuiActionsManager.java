@@ -12,6 +12,7 @@ import javax.swing.KeyStroke;
 
 import fr.utbm.info.vi51.worldswar.controller.Controller;
 import fr.utbm.info.vi51.worldswar.controller.SimulationParameters;
+import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.simulator.SimulationSpeed;
 
 /**
@@ -30,8 +31,10 @@ public class GuiActionsManager {
 	
 	private final Map<SimulationSpeed, Action> speedActionsMap;
 
+	private final Action noPheromoneFilterAction;
+	private final Map<PheromoneType, Action> pheromoneFilterActionsMap;
 
-	GuiActionsManager(final Controller controller) {
+	GuiActionsManager(final Controller controller, final CentralPanel centralPanel) {
 		this.newSimulationAction = new NewSimulationAction(controller);
 		this.stopSimulationAction = new StopSimulationAction(controller);
 		this.pauseSimulationAction = new PauseSimulationAction(controller);
@@ -41,6 +44,12 @@ public class GuiActionsManager {
 		this.speedActionsMap = new HashMap<>();
 		for (final SimulationSpeed simSpeed : SimulationSpeed.values()) {
 			this.speedActionsMap.put(simSpeed, new SpeedSetterAction(controller, simSpeed));
+		}
+
+		this.noPheromoneFilterAction = new PheromoneFilterAction(centralPanel, null);
+		this.pheromoneFilterActionsMap = new HashMap<>();
+		for (final PheromoneType pheromoneType : PheromoneType.values()) {
+			this.pheromoneFilterActionsMap.put(pheromoneType, new PheromoneFilterAction(centralPanel, pheromoneType));
 		}
 	}
 
@@ -72,6 +81,13 @@ public class GuiActionsManager {
 	
 	public Action getSpeedAction(SimulationSpeed simSpeed) {
 		return this.speedActionsMap.get(simSpeed);
+	}
+
+	public Action getPheromoneFilterActions(PheromoneType pheromoneType) {
+		if (pheromoneType == null) {
+			return this.noPheromoneFilterAction;
+		}
+		return this.pheromoneFilterActionsMap.get(pheromoneType);
 	}
 
 	/**
@@ -200,6 +216,26 @@ public class GuiActionsManager {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			this.controller.setSimulationSpeed(this.speed);
+		}
+
+	}
+
+	private class PheromoneFilterAction extends AbstractAction {
+		private static final long serialVersionUID = -8482432665855856415L;
+
+		private final CentralPanel centralPanel;
+		private final PheromoneType pheromoneType;
+
+		public PheromoneFilterAction(CentralPanel centralPanel, PheromoneType pheromoneType) {
+			super((pheromoneType != null) ? Messages.getString(pheromoneType.getPropertyKey())
+					: Messages.getString("PheromoneType.noPheromone")); //$NON-NLS-1$
+			this.centralPanel = centralPanel;
+			this.pheromoneType = pheromoneType;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			this.centralPanel.setPheromoneFilter(this.pheromoneType);
 		}
 
 	}
