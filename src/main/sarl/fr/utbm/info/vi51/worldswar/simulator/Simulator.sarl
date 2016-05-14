@@ -22,6 +22,7 @@ import java.util.LinkedList
 import java.util.List
 import fr.utbm.info.vi51.worldswar.controller.PauseSimulationCommand
 import fr.utbm.info.vi51.worldswar.controller.ResumeSimulationCommand
+import fr.utbm.info.vi51.worldswar.controller.StepSimulationCommand
 
 /**
  * Main agent of the software.
@@ -189,6 +190,8 @@ agent Simulator {
 				pauseSimulation
 			} else if (occurrence.command instanceof ResumeSimulationCommand) {
 				resumeSimulation
+			} else if (occurrence.command instanceof StepSimulationCommand) {
+				stepSimulation
 			} else if (occurrence.command instanceof StopProgramCommand) {
 				closeProgram
 			}
@@ -216,6 +219,17 @@ agent Simulator {
 		this.stepTimerTask = in(this.simulationSpeed.milliseconds) [ setStepTimerReady ]
 		for(l : listeners) {
 			l.simulationResumed();
+		}
+	}
+	
+	private def stepSimulation() {
+		if(this.environmentReady) {
+			this.environmentReady = false
+			this.stepTimerReady = false
+			emit(new SimulationStepEvent)
+			for(l as SimulatorListener : this.listeners) {
+				l.simulationStepFired
+			}
 		}
 	}
 }

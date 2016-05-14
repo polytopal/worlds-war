@@ -26,14 +26,17 @@ public class GuiActionsManager {
 	private final Action stopSimulationAction;
 	private final Action pauseSimulationAction;
 	private final Action resumeSimulationAction;
-
+	private final Action stepSimulationAction;
+	
 	private final Map<SimulationSpeed, Action> speedActionsMap;
+
 
 	GuiActionsManager(final Controller controller) {
 		this.newSimulationAction = new NewSimulationAction(controller);
 		this.stopSimulationAction = new StopSimulationAction(controller);
 		this.pauseSimulationAction = new PauseSimulationAction(controller);
 		this.resumeSimulationAction = new ResumeSimulationAction(controller);
+		this.stepSimulationAction = new StepSimulationAction(controller);
 
 		this.speedActionsMap = new HashMap<>();
 		for (final SimulationSpeed simSpeed : SimulationSpeed.values()) {
@@ -63,7 +66,10 @@ public class GuiActionsManager {
 		return this.resumeSimulationAction;
 	}
 
-
+	public Action getStepSimulationAction() {
+		return this.stepSimulationAction;
+	}
+	
 	public Action getSpeedAction(SimulationSpeed simSpeed) {
 		return this.speedActionsMap.get(simSpeed);
 	}
@@ -150,6 +156,26 @@ public class GuiActionsManager {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			this.controller.resumeSimulation();
+		}
+	}
+	
+	/**
+	 *         This action allows to execute a step in the simulation when it is paused
+	 */
+	private class StepSimulationAction extends AbstractAction {
+		private static final long serialVersionUID = 2286692516797367038L;
+		private final Controller controller;
+
+		public StepSimulationAction(final Controller controller) {
+			super(Messages.getString("MenuBar.stepSimulation")); //$NON-NLS-1$
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, Event.CTRL_MASK));
+			this.controller = controller;
+			this.setEnabled(false);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			this.controller.stepSimulation();
 		}
 	}
 

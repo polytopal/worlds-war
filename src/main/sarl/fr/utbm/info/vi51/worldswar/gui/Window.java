@@ -107,6 +107,7 @@ public class Window extends JFrame implements SimulatorListener {
 		this.infoPanel.setSimulationStateLabel(this.simState);
 		this.guiActionsManager.getResumeSimulationAction().setEnabled(true);
 		this.guiActionsManager.getPauseSimulationAction().setEnabled(false);
+		this.guiActionsManager.getStepSimulationAction().setEnabled(true);
 	}
 	
 	@Override
@@ -115,6 +116,7 @@ public class Window extends JFrame implements SimulatorListener {
 		this.infoPanel.setSimulationStateLabel(this.simState);
 		this.guiActionsManager.getPauseSimulationAction().setEnabled(true);
 		this.guiActionsManager.getResumeSimulationAction().setEnabled(false);
+		this.guiActionsManager.getStepSimulationAction().setEnabled(false);
 	}
 
 }

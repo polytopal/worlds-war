@@ -76,6 +76,15 @@ public class Controller {
 		this.emitEvent(new ControllerCommandEvent(new ResumeSimulationCommand()));
 		System.out.println("resume simulation"); //$NON-NLS-1$
 	}
+	
+	/**
+	 * Execute a step in the current simulation
+	 */
+	public void stepSimulation() {
+		this.emitEvent(new ControllerCommandEvent(new StepSimulationCommand()));
+		System.out.println("step simulation"); //$NON-NLS-1$
+	}
+
 
 	/**
 	 * Closes the program
