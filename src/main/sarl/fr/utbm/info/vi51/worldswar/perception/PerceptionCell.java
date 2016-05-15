@@ -133,11 +133,13 @@ public class PerceptionCell {
 		return qty;
 	}
 
-	/**
-	 * remove the content of the cell
-	 */
-	public void clear() {
-		this.perceptionList.clear();
+	public boolean isTraversable() {
+		for (Perceivable p : this.perceptionList) {
+			if (!p.isTraversable()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
