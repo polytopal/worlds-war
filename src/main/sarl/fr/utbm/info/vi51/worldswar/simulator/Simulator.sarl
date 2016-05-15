@@ -119,13 +119,8 @@ agent Simulator {
 	 * and fire this new step if that's the case.
 	 */
 	private def fireSimulationStep {
-		if(this.stepTimerReady && this.environmentReady) {
-			this.environmentReady = false
-			this.stepTimerReady = false
-			emit(new SimulationStepEvent)
-			for(l as SimulatorListener : this.listeners) {
-				l.simulationStepFired
-			}
+		if(this.stepTimerReady) {
+			stepSimulation
 			this.stepTimerTask = in(this.simulationSpeed.milliseconds) [ setStepTimerReady ]
 		}
 	}

@@ -7,6 +7,7 @@ import fr.utbm.info.vi51.worldswar.simulator.Simulator;
 import io.sarl.lang.core.Address;
 import io.sarl.lang.core.EventSpace;
 import io.sarl.util.Scopes;
+//import fr.utbm.info.vi51.worldswar.environment.Environment;
 
 /**
  * 

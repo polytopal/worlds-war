@@ -34,7 +34,7 @@ public class InfoPanel extends JPanel{
 	}
 	
 	public void setSimulationStateLabel(SimulationState simState) {
-		this.labelSimulationState.setText(Messages.getString(simState.getPropertyKey()));
+		this.labelSimulationState.setText(Messages.getString(simState.getPropertyKey()) + " |"); //$NON-NLS-1$
 	}
 	
 	public void setStepNumberLabel(int stepNumber) {
