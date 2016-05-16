@@ -92,7 +92,7 @@ agent Simulator {
 			this.environmentExists = true
 			this.environmentReady = true
 			this.stepTimerReady = true
-			fireSimulationStep
+			simulationLoop
 		}
 	}
 	
@@ -103,7 +103,7 @@ agent Simulator {
 	on EnvironmentReadyEvent {
 		synchronized(this) {
 			this.environmentReady = true
-			fireSimulationStep
+			simulationLoop
 		}
 	}
 	
@@ -111,16 +111,17 @@ agent Simulator {
 		// Called from the scheduler, so needs to be synchronized too
 		synchronized(this) {
 			this.stepTimerReady = true
-			fireSimulationStep
+			simulationLoop
 		}
 	}
 	
-	/** Checks that both the step timer and the environment allow a new step to be fired, 
-	 * and fire this new step if that's the case.
+	/** 
+	 *	execute the next step in the simulation loop if the environment is ready and enough time
+	 * has passed since the last one.
 	 */
-	private def fireSimulationStep {
-		if(this.stepTimerReady) {
-			stepSimulation
+	private def simulationLoop {
+		if(this.stepTimerReady && this.environmentReady) {
+			executeStep
 			this.stepTimerTask = in(this.simulationSpeed.milliseconds) [ setStepTimerReady ]
 		}
 	}
@@ -219,12 +220,15 @@ agent Simulator {
 	
 	private def stepSimulation() {
 		if(this.environmentReady) {
-			this.environmentReady = false
-			this.stepTimerReady = false
-			emit(new SimulationStepEvent)
-			for(l as SimulatorListener : this.listeners) {
-				l.simulationStepFired
-			}
+			executeStep
+		}
+	}
+	private def executeStep() {
+		this.environmentReady = false
+		this.stepTimerReady = false
+		emit(new SimulationStepEvent)
+		for(l as SimulatorListener : this.listeners) {
+			l.simulationStepFired
 		}
 	}
 }
