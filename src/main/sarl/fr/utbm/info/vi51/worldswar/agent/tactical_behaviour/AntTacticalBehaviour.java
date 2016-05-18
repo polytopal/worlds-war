@@ -2,6 +2,7 @@ package fr.utbm.info.vi51.worldswar.agent.tactical_behaviour;
 
 import static fr.utbm.info.vi51.worldswar.perception.PerceptionGrid.MY_POSITION;
 
+import java.awt.Point;
 import java.util.HashMap;
 
 import fr.utbm.info.vi51.worldswar.agent.operational_behaviour.AntOperationalBehaviour;
@@ -27,8 +28,11 @@ public class AntTacticalBehaviour {
 			}
 			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getClosestAvailableFoodPos());
 		}
-		return this.operationalBehaviour.moveToTarget(perception, memory,
-				perception.getHighestPheromonePos(PheromoneType.FOOD));
+		Point highestPheromone = perception.getHighestPheromonePos(PheromoneType.FOOD);
+		if (highestPheromone != null) {
+			return this.operationalBehaviour.moveToTarget(perception, memory, highestPheromone);
+		}
+		return this.operationalBehaviour.wander(memory);
 	}
 
 	public Influence BringFoodHome(AntPerception perception, HashMap<String, Object> memory) {
@@ -47,7 +51,11 @@ public class AntTacticalBehaviour {
 			}
 			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getHomePos());
 		}
-		return this.operationalBehaviour.moveToTarget(perception, memory,
-				perception.getHighestPheromonePos(PheromoneType.HOME));
+
+		Point highestPheromone = perception.getHighestPheromonePos(PheromoneType.HOME);
+		if (highestPheromone != null) {
+			return this.operationalBehaviour.moveToTarget(perception, memory, highestPheromone);
+		}
+		return this.operationalBehaviour.wander(memory);
 	}
 }
