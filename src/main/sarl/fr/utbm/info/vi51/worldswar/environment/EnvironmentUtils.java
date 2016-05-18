@@ -2,6 +2,7 @@ package fr.utbm.info.vi51.worldswar.environment;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -86,6 +87,23 @@ public class EnvironmentUtils {
 			}
 		}
 		return grid;
+	}
+
+	public static List<AntHill> getAntHills(Grid<EnvCell> grid) {
+		final List<AntHill> list = new ArrayList<>();
+
+		final Iterator<EnvCell> it = grid.iterator();
+		while (it.hasNext()) {
+			final EnvCell cell = it.next();
+			final List<EnvironmentObject> envObjects = cell.getEnvObjects();
+			for (final EnvironmentObject environmentObject : envObjects) {
+				if (environmentObject instanceof AntHill) {
+					list.add((AntHill) environmentObject);
+				}
+			}
+		}
+
+		return list;
 	}
 
 	/**
