@@ -98,7 +98,7 @@ public class PerceptionGrid {
 	 * @return the {@link PerceptionCell} in the given position
 	 */
 	public PerceptionCell getCell(Point position) {
-		return this.getCell(position);
+		return this.getCell(position.x, position.y);
 	}
 
 	@Override
