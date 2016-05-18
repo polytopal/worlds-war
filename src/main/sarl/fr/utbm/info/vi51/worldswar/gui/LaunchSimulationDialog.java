@@ -11,7 +11,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -118,11 +120,8 @@ public class LaunchSimulationDialog extends JDialog {
 				SimulationParameters.DEFAULT_BREED_LIST);
 		coloniesTable.setModel(coloniesTableModel);
 		final TableColumn breedColumn = coloniesTable.getColumnModel().getColumn(0);
-		// TODO
-		// final DefaultCellEditor cellEditor = new DefaultCellEditor(new
-		// JComboBox<>(Breed.values()));
-		// breedColumn.setCellEditor(cellEditor);
-		breedColumn.setCellEditor(null);
+		final DefaultCellEditor cellEditor = new DefaultCellEditor(new JComboBox<>(Breed.values()));
+		breedColumn.setCellEditor(cellEditor);
 		coloniesScrollPane.setViewportView(coloniesTable);
 
 		// add colony button
