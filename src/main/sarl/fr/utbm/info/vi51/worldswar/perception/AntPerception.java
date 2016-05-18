@@ -97,7 +97,7 @@ public class AntPerception {
 		int distance;
 		for (int x = this.grid.getXMin(); x <= this.grid.getXMax(); x++) {
 			for (int y = this.grid.getYMin(); y <= this.grid.getYMax(); y++) {
-				if (this.grid.getCell(x, y).getFood() != null) {
+				if (this.grid.getCell(x, y).getFood() != null && this.isTraversable(x, y)) {
 					distance = Math.abs(x) + Math.abs(y);
 					if (distance < minDistance) {
 						minDistance = distance;
@@ -156,6 +156,16 @@ public class AntPerception {
 	 */
 	public boolean isTraversable(Point position) {
 		return this.grid.getCell(position).isTraversable();
+	}
+
+	/**
+	 * @param x
+	 * @param y
+	 * @return true if the position is free, i.e. there is no wall, no ant body,
+	 *         and no other blocking object on it.
+	 */
+	public boolean isTraversable(int x, int y) {
+		return this.isTraversable(new Point(x, y));
 	}
 
 	/**
