@@ -39,7 +39,7 @@ public class PerceptionGrid {
 
 	public PerceptionGrid computeAgentPerception(AgentBody agentBody) {
 		final Point position = agentBody.getPosition();
-		final int range = AgentBody.PERCEPTION_RANGE;
+		final int range = agentBody.getPerceptionRange();
 
 		try {
 			// coordinate system change

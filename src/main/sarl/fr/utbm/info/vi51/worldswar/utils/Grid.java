@@ -56,7 +56,7 @@ public class Grid<T> implements Iterable<T> {
 		for (int y = yMin; y <= yMax; y++) {
 			// build each line
 			final List<T> line = new ArrayList<>(this.width);
-			for (int x = yMin; x <= xMax; x++) {
+			for (int x = xMin; x <= xMax; x++) {
 				line.add(null);
 			}
 			this.grid.add(line);
