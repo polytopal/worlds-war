@@ -93,7 +93,7 @@ public class GuiActionsManager {
 	/**
 	 * @author Leo
 	 * 
-	 *         This action allow to start a new simulation
+	 *         This action allow to start a new simulation, by pressing ctrl+n
 	 */
 	private class NewSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 4958436812700297538L;
@@ -118,7 +118,7 @@ public class GuiActionsManager {
 	/**
 	 * @author Leo
 	 * 
-	 *         This action allow to stop the current simulation
+	 *         This action allow to stop the current simulation, by pressing ctrl+s
 	 */
 	private class StopSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
@@ -137,7 +137,7 @@ public class GuiActionsManager {
 	}
 	
 	/**
-	 *         This action allows to pause the simulation
+	 *         This action allows to pause the simulation, by pressing ctrl+p
 	 */
 	private class PauseSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
@@ -156,7 +156,7 @@ public class GuiActionsManager {
 		}
 	}
 	/**
-	 *         This action allows to resume the simulation
+	 *         This action allows to resume the simulation, by pressing ctrl+p
 	 */
 	private class ResumeSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
@@ -176,7 +176,8 @@ public class GuiActionsManager {
 	}
 	
 	/**
-	 *         This action allows to execute a step in the simulation when it is paused
+	 *         This action allows to execute a step in the simulation when it is paused,
+	 * by pressing the space bar.
 	 */
 	private class StepSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
@@ -184,7 +185,7 @@ public class GuiActionsManager {
 
 		public StepSimulationAction(final Controller controller) {
 			super(Messages.getString("MenuBar.stepSimulation")); //$NON-NLS-1$
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, Event.CTRL_MASK));
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0));
 			this.controller = controller;
 			this.setEnabled(false);
 		}

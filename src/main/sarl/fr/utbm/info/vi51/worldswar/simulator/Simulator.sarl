@@ -126,6 +126,14 @@ agent Simulator {
 		}
 	}
 	
+	private def executeStep() {
+		this.environmentReady = false
+		this.stepTimerReady = false
+		emit(new SimulationStepEvent)
+		for(l as SimulatorListener : this.listeners) {
+			l.simulationStepFired
+		}
+	}
 	
 	////////////////////////////////////////
 	///     STOP SIMULATION/PROGRAM      ///
@@ -223,12 +231,5 @@ agent Simulator {
 			executeStep
 		}
 	}
-	private def executeStep() {
-		this.environmentReady = false
-		this.stepTimerReady = false
-		emit(new SimulationStepEvent)
-		for(l as SimulatorListener : this.listeners) {
-			l.simulationStepFired
-		}
-	}
+
 }
