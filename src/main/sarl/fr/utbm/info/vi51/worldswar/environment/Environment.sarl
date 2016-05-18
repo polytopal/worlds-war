@@ -275,9 +275,12 @@ agent Environment {
 		for(agentBody : agentBodies.values()) {
 			
 			if(agentBody instanceof AntBody) {
-				val agentPerception = new AntPerception(new PerceivableAnt(agentBody), 
-										perceptionGrid.computeAgentPerception(agentBody))
-				emit(new PerceptionEvent(this.defaultAddress, agentPerception), Scopes.addresses(defaultSpace.getAddress(agentBody.uuid)))
+				val agentPerceptionGrid = perceptionGrid.computeAgentPerception(agentBody)
+				val agentPerception = new AntPerception(new PerceivableAnt(agentBody), agentPerceptionGrid)
+				
+				emit(new PerceptionEvent(this.defaultAddress, agentPerception), 
+					Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
+				)
 			} else {
 				error("Perceptions are unimplemented for non-ant agent bodies")
 			}
