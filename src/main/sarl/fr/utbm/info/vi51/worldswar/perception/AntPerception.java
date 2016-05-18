@@ -65,6 +65,18 @@ public class AntPerception {
 	}
 
 	/**
+	 * 
+	 * @param type
+	 * @return the position (in local coordinates) where there is the most
+	 *         pheromone of the given {@link PheromoneType} and the ant's own
+	 *         colony, or {@code null} if no relevant pheromone is perceived
+	 * @see AntPerception#getHighestPheromonePos(PheromoneType, Colony)
+	 */
+	public Point getHighestPheromonePos(PheromoneType type) {
+		return this.getHighestPheromonePos(type, this.myBody.getColony());
+	}
+
+	/**
 	 * Size of the list used in
 	 * {@link AntPerception#getClosestAvailableFoodPos()} to store the closest
 	 * positions containing food. Should be as small as possible, but big enough
@@ -170,5 +182,15 @@ public class AntPerception {
 			return 0;
 		}
 		return food.getAvailable();
+	}
+
+	/**
+	 * TODO javadoc
+	 * 
+	 * @return
+	 */
+	public boolean isAtHome() {
+		Point homePos = this.getHomePos();
+		return (homePos != null && homePos.equals(new Point(0, 0)));
 	}
 }
