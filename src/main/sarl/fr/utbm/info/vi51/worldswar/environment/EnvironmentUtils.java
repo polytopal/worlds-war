@@ -32,6 +32,7 @@ public class EnvironmentUtils {
 		final int width = simulationParameters.getGridWidth();
 		final int height = simulationParameters.getGridHeight();
 		final List<Colony> coloniesList = simulationParameters.getColoniesList();
+		final float foodProportion = simulationParameters.getFoodProportion();
 
 		// ant hills positions
 		final int nbColony = coloniesList.size();
@@ -50,7 +51,6 @@ public class EnvironmentUtils {
 
 		// allow to choose how the food is grouped in parcel
 		final int octaveCount = 6;
-		final float foodProportion = 0.3f; // must be between 0 and 1
 		final float max = 50; // !!! warning !!! represent the theoretically
 								// maximum food on a cell, but the real maximum
 								// food will be lower cause of the

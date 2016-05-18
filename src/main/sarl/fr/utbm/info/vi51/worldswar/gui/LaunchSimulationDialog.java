@@ -1,6 +1,7 @@
 package fr.utbm.info.vi51.worldswar.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,17 +11,18 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -41,7 +43,7 @@ public class LaunchSimulationDialog extends JDialog {
 		setTitle(Messages.getString("LaunchSimulation.newSimulation")); //$NON-NLS-1$
 		this.setModal(true);
 		this.setResizable(false);
-		setBounds(100, 100, 400, 285);
+		setBounds(100, 100, 400, 300);
 
 		this.simulationParameters = null;
 
@@ -51,7 +53,7 @@ public class LaunchSimulationDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		final GridBagLayout gbl_contentPanel = new GridBagLayout();
 		gbl_contentPanel.rowHeights = new int[] { 30, 100, 30 };
-		gbl_contentPanel.columnWidths = new int[] { 100, 120, 0, 120 };
+		gbl_contentPanel.columnWidths = new int[] { 100, 120, 0, 90, 30 };
 		contentPanel.setLayout(gbl_contentPanel);
 
 		// --------- Grid size ---------
@@ -84,6 +86,7 @@ public class LaunchSimulationDialog extends JDialog {
 		final JSpinner heightSpinner = new JSpinner(new SpinnerNumberModel(SimulationParameters.DEFAULT_HEIGHT,
 				SimulationParameters.MIN_HEIGHT, SimulationParameters.MAX_HEIGHT, SPINNER_STEP));
 		final GridBagConstraints gbc_heighFormattedTextField = new GridBagConstraints();
+		gbc_heighFormattedTextField.gridwidth = 2;
 		gbc_heighFormattedTextField.insets = new Insets(5, 0, 5, 5);
 		gbc_heighFormattedTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_heighFormattedTextField.gridx = 3;
@@ -95,7 +98,7 @@ public class LaunchSimulationDialog extends JDialog {
 		final JLabel lblColonies = new JLabel(String.format("%s :", Messages.getString("LaunchSimulation.colonies"))); //$NON-NLS-1$ //$NON-NLS-2$
 		final GridBagConstraints gbc_lblColonies = new GridBagConstraints();
 		gbc_lblColonies.anchor = GridBagConstraints.EAST;
-		gbc_lblColonies.insets = new Insets(0, 0, 5, 5);
+		gbc_lblColonies.insets = new Insets(0, 5, 5, 5);
 		gbc_lblColonies.gridx = 0;
 		gbc_lblColonies.gridy = 1;
 		contentPanel.add(lblColonies, gbc_lblColonies);
@@ -103,7 +106,7 @@ public class LaunchSimulationDialog extends JDialog {
 		final JScrollPane coloniesScrollPane = new JScrollPane();
 		final GridBagConstraints gbc_coloniesScrollPane = new GridBagConstraints();
 		gbc_coloniesScrollPane.fill = GridBagConstraints.BOTH;
-		gbc_coloniesScrollPane.gridwidth = 3;
+		gbc_coloniesScrollPane.gridwidth = 4;
 		gbc_coloniesScrollPane.insets = new Insets(0, 0, 5, 5);
 		gbc_coloniesScrollPane.gridx = 1;
 		gbc_coloniesScrollPane.gridy = 1;
@@ -115,7 +118,11 @@ public class LaunchSimulationDialog extends JDialog {
 				SimulationParameters.DEFAULT_BREED_LIST);
 		coloniesTable.setModel(coloniesTableModel);
 		final TableColumn breedColumn = coloniesTable.getColumnModel().getColumn(0);
-		breedColumn.setCellEditor(new DefaultCellEditor(new JComboBox<>(Breed.values())));
+		// TODO
+		// final DefaultCellEditor cellEditor = new DefaultCellEditor(new
+		// JComboBox<>(Breed.values()));
+		// breedColumn.setCellEditor(cellEditor);
+		breedColumn.setCellEditor(null);
 		coloniesScrollPane.setViewportView(coloniesTable);
 
 		// add colony button
@@ -136,6 +143,7 @@ public class LaunchSimulationDialog extends JDialog {
 		// remove colony button
 		final JButton btnRemoveColony = new JButton(Messages.getString("LaunchSimulation.removeColony")); //$NON-NLS-1$
 		final GridBagConstraints gbc_btnRemoveColony = new GridBagConstraints();
+		gbc_btnRemoveColony.gridwidth = 2;
 		gbc_btnRemoveColony.insets = new Insets(0, 0, 5, 5);
 		gbc_btnRemoveColony.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnRemoveColony.gridx = 3;
@@ -156,6 +164,43 @@ public class LaunchSimulationDialog extends JDialog {
 				final int nbElement = coloniesTableModel.getDataVector().size();
 				btnRemoveColony.setEnabled(nbElement > SimulationParameters.MIN_COLONY_NUMBER);
 				btnAddColony.setEnabled(nbElement < SimulationParameters.MAX_COLONY_NUMBER);
+			}
+		});
+
+		// --------- Food Proportion ---------
+
+		final JLabel foodProportionLabel = new JLabel(
+				String.format("%s :", Messages.getString("LaunchSimulation.foodProportion"))); //$NON-NLS-1$ //$NON-NLS-2$
+		final GridBagConstraints gbc_foodProportionLabel = new GridBagConstraints();
+		gbc_foodProportionLabel.insets = new Insets(0, 5, 0, 5);
+		gbc_foodProportionLabel.anchor = GridBagConstraints.EAST;
+		gbc_foodProportionLabel.gridx = 0;
+		gbc_foodProportionLabel.gridy = 3;
+		contentPanel.add(foodProportionLabel, gbc_foodProportionLabel);
+
+		final JSlider foodSlider = new JSlider(SimulationParameters.MIN_FOOD_PROPORTION,
+				SimulationParameters.MAX_FOOD_PROPORTION, SimulationParameters.DEFAULT_FOOD_PROPORTION);
+		final GridBagConstraints gbc_slider = new GridBagConstraints();
+		gbc_slider.gridwidth = 3;
+		gbc_slider.fill = GridBagConstraints.HORIZONTAL;
+		gbc_slider.insets = new Insets(0, 0, 0, 5);
+		gbc_slider.gridx = 1;
+		gbc_slider.gridy = 3;
+		contentPanel.add(foodSlider, gbc_slider);
+
+		final JLabel foodProportionDisplayer = new JLabel(SimulationParameters.DEFAULT_FOOD_PROPORTION + "%"); //$NON-NLS-1$
+		foodProportionDisplayer.setMinimumSize(new Dimension(30, 14));
+		foodProportionDisplayer.setPreferredSize(new Dimension(30, 14));
+		final GridBagConstraints gbc_foodProportionDisplayer = new GridBagConstraints();
+		gbc_foodProportionDisplayer.insets = new Insets(0, 0, 5, 5);
+		gbc_foodProportionDisplayer.gridx = 4;
+		gbc_foodProportionDisplayer.gridy = 3;
+		contentPanel.add(foodProportionDisplayer, gbc_foodProportionDisplayer);
+
+		foodSlider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				foodProportionDisplayer.setText(foodSlider.getValue() + "%"); //$NON-NLS-1$
 			}
 		});
 
@@ -183,7 +228,11 @@ public class LaunchSimulationDialog extends JDialog {
 					coloniesList.add(new Colony(breed));
 				}
 
-				LaunchSimulationDialog.this.simulationParameters = new SimulationParameters(gridWidth, gridHeight, coloniesList);
+				// Conversion from percent to float
+				final float foodProportion = foodSlider.getValue() / 100.0f;
+
+				LaunchSimulationDialog.this.simulationParameters = new SimulationParameters(gridWidth, gridHeight,
+						coloniesList, foodProportion);
 
 				dispose();
 			}
