@@ -1,9 +1,9 @@
 package fr.utbm.info.vi51.worldswar.agent;
 
-import fr.utbm.info.vi51.worldswar.agent.operational_behaviour.AntOperationalBehaviour;
-import fr.utbm.info.vi51.worldswar.agent.strategic_behaviour.AntStrategicBehaviour;
-import fr.utbm.info.vi51.worldswar.agent.strategic_behaviour.GathererStrategicBehaviour;
-import fr.utbm.info.vi51.worldswar.agent.tactical_behaviour.AntTacticalBehaviour;
+import fr.utbm.info.vi51.worldswar.agent.behaviour.operational.AntOperationalBehaviour;
+import fr.utbm.info.vi51.worldswar.agent.behaviour.strategic.AntStrategicBehaviour;
+import fr.utbm.info.vi51.worldswar.agent.behaviour.strategic.GathererStrategicBehaviour;
+import fr.utbm.info.vi51.worldswar.agent.behaviour.tactical.AntTacticalBehaviour;
 import fr.utbm.info.vi51.worldswar.environment.Caste;
 
 /**

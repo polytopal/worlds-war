@@ -1,8 +1,8 @@
-package fr.utbm.info.vi51.worldswar.agent.strategic_behaviour;
+package fr.utbm.info.vi51.worldswar.agent.behaviour.strategic;
 
 import java.util.HashMap;
 
-import fr.utbm.info.vi51.worldswar.agent.tactical_behaviour.AntTacticalBehaviour;
+import fr.utbm.info.vi51.worldswar.agent.behaviour.tactical.AntTacticalBehaviour;
 import fr.utbm.info.vi51.worldswar.environment.influence.Influence;
 import fr.utbm.info.vi51.worldswar.perception.AntPerception;
 

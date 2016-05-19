@@ -1,11 +1,11 @@
-package fr.utbm.info.vi51.worldswar.agent.tactical_behaviour;
+package fr.utbm.info.vi51.worldswar.agent.behaviour.tactical;
 
 import static fr.utbm.info.vi51.worldswar.perception.PerceptionGrid.MY_POSITION;
 
 import java.awt.Point;
 import java.util.HashMap;
 
-import fr.utbm.info.vi51.worldswar.agent.operational_behaviour.AntOperationalBehaviour;
+import fr.utbm.info.vi51.worldswar.agent.behaviour.operational.AntOperationalBehaviour;
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.environment.influence.DoNothingInfluence;
 import fr.utbm.info.vi51.worldswar.environment.influence.Influence;

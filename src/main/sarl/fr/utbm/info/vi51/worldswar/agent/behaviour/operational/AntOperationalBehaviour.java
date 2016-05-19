@@ -1,4 +1,4 @@
-package fr.utbm.info.vi51.worldswar.agent.operational_behaviour;
+package fr.utbm.info.vi51.worldswar.agent.behaviour.operational;
 
 import static fr.utbm.info.vi51.worldswar.perception.PerceptionGrid.MY_POSITION;
 
