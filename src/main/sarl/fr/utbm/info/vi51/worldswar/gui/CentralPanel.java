@@ -32,7 +32,7 @@ public class CentralPanel extends JPanel {
 
 	private static final int CAMERA_MOVE_SPEED = 10;
 	private static final int CELL_SIZE_MIN = 2;
-	private static final int CELL_SIZE_MAX = 20;
+	private static final int CELL_SIZE_MAX = 30;
 
 	private int width;
 	private int height;
@@ -65,7 +65,7 @@ public class CentralPanel extends JPanel {
 				this.setPreferredSize(new Dimension(CentralPanel.this.cellSize * CentralPanel.this.height,
 						CentralPanel.this.cellSize * CentralPanel.this.width));
 
-				g.setColor(Color.WHITE);
+				g.setColor(Color.LIGHT_GRAY);
 				g.fillRect(0, 0, this.getWidth(), this.getHeight());
 				synchronized (CentralPanel.this.panelTable) {
 					for (int x = 0; x < CentralPanel.this.width; x++) {

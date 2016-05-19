@@ -1,6 +1,8 @@
 package fr.utbm.info.vi51.worldswar.environment;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,45 +32,78 @@ public class EnvironmentUtils {
 		final int width = simulationParameters.getGridWidth();
 		final int height = simulationParameters.getGridHeight();
 		final List<Colony> coloniesList = simulationParameters.getColoniesList();
+		final float foodProportion = simulationParameters.getFoodProportion();
+
+		// ant hills positions
+		final int nbColony = coloniesList.size();
+		// the initial angle, the first colony in near the left border
+		float angle = (float) Math.PI;
+		final List<AntHill> antHillList = new ArrayList<>();
+		for (final Colony colony : coloniesList) {
+			// the colonies are disposed on an oval shape
+			// center = (width/2, height/2)
+			// x radius = width/3, y radius = height/3
+			final int x = (int) (width / 2 + (width / 3) * Math.cos(angle));
+			final int y = (int) (height / 2 + (height / 3) * Math.sin(angle));
+			antHillList.add(new AntHill(new Point(x, y), colony));
+			angle += 2 * Math.PI / nbColony;
+		}
+
+		// allow to choose how the food is grouped in parcel
+		final int octaveCount = 6;
+		final float max = 50; // !!! warning !!! represent the theoretically
+								// maximum food on a cell, but the real maximum
+								// food will be lower cause of the
+								// interpolations of the Perlin noise
+
+		// simple cross product
+		final float min = max * (1f - (1f / foodProportion));
+		// the value of each cell will be between min and max
+		final Grid<Float> randomFoodGrid = PerlinNoiseGenerator.generatePerlinNoiseHeightGrid(width, height,
+				octaveCount, min, max);
 
 		final Grid<EnvCell> grid = new Grid<>(0, width - 1, 0, height - 1);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				final EnvCell envCell = new EnvCell();
 				grid.set(x, y, envCell);
-				final Point point = new Point(x, y);
+				final Point position = new Point(x, y);
 
-				// TODO add envObjects here
-
-				// --- used to test GUI ---
-				// if (x == 10 && y == 10) {
-				// envCell.addEnvObject(new AntHill(point,
-				// coloniesList.get(0)));
-				// }
-				// if (Math.random() > 0.9) {
-				// envCell.addEnvObject(new Food(point, (int) (Math.random() *
-				// 10) + 1));
-				// }
-				// if (Math.random() > 0.95) {
-				// Collections.shuffle(coloniesList);
-				// final List<Caste> castes = Arrays.asList(Caste.values());
-				// Collections.shuffle(castes);
-				// envCell.addEnvObject(new AntBody(point, new UUID(0, 0),
-				// coloniesList.get(0), castes.get(0)));
-				// }
-				// if (Math.random() > 0.3) {
-				// Collections.shuffle(coloniesList);
-				// final List<PheromoneType> pheromonesTypes =
-				// Arrays.asList(PheromoneType.values());
-				// Collections.shuffle(pheromonesTypes);
-				// envCell.addEnvObject(new Pheromone(point,
-				// coloniesList.get(0), pheromonesTypes.get(0),
-				// (float) Math.random() * 3));
-				// }
-				// ------------------------
+				boolean antHillCell = false;
+				for (final AntHill antHill : antHillList) {
+					if (antHill.getPosition().equals(position)) {
+						envCell.addEnvObject(antHill);
+						antHillCell = true;
+					}
+				}
+				// if there is an ant hill, there is not other objects on the
+				// cell
+				if (!antHillCell) {
+					final float perlinHeight = randomFoodGrid.get(position).floatValue();
+					if (perlinHeight > 0.0f) {
+						envCell.addEnvObject(new Food(position, (int) perlinHeight));
+					}
+				}
 			}
 		}
 		return grid;
+	}
+
+	public static List<AntHill> getAntHills(Grid<EnvCell> grid) {
+		final List<AntHill> list = new ArrayList<>();
+
+		final Iterator<EnvCell> it = grid.iterator();
+		while (it.hasNext()) {
+			final EnvCell cell = it.next();
+			final List<EnvironmentObject> envObjects = cell.getEnvObjects();
+			for (final EnvironmentObject environmentObject : envObjects) {
+				if (environmentObject instanceof AntHill) {
+					list.add((AntHill) environmentObject);
+				}
+			}
+		}
+
+		return list;
 	}
 
 	/**

@@ -54,10 +54,12 @@ public class AntPerception {
 		float currentValue = 0;
 		for (int x = this.grid.getXMin(); x <= this.grid.getXMax(); x++) {
 			for (int y = this.grid.getYMin(); y <= this.grid.getYMax(); y++) {
-				currentValue = this.grid.getCell(x, y).getPheromoneQuantity(type, colony);
-				if (currentValue > highestValue) {
-					highestValue = currentValue;
-					highestPos = new Point(x, y);
+				if (this.grid.getCell(x, y) != null) {
+					currentValue = this.grid.getCell(x, y).getPheromoneQuantity(type, colony);
+					if (currentValue > highestValue) {
+						highestValue = currentValue;
+						highestPos = new Point(x, y);
+					}
 				}
 			}
 		}
@@ -109,7 +111,8 @@ public class AntPerception {
 		int distance;
 		for (int x = this.grid.getXMin(); x <= this.grid.getXMax(); x++) {
 			for (int y = this.grid.getYMin(); y <= this.grid.getYMax(); y++) {
-				if (this.grid.getCell(x, y).getFood() != null) {
+				if (this.grid.getCell(x, y) != null && this.grid.getCell(x, y).getFood() != null
+						&& this.isTraversable(x, y)) {
 					distance = Math.abs(x) + Math.abs(y);
 					if (distance < minDistance) {
 						minDistance = distance;
@@ -151,9 +154,11 @@ public class AntPerception {
 		PerceivableAntHill antHill;
 		for (int x = this.grid.getXMin(); x <= this.grid.getXMax(); x++) {
 			for (int y = this.grid.getYMin(); y <= this.grid.getYMax(); y++) {
-				antHill = this.grid.getCell(x, y).getAntHill();
-				if (antHill != null && antHill.getColony() == this.myBody.getColony()) {
-					return new Point(x, y);
+				if (this.grid.getCell(x, y) != null) {
+					antHill = this.grid.getCell(x, y).getAntHill();
+					if (antHill != null && antHill.getColony() == this.myBody.getColony()) {
+						return new Point(x, y);
+					}
 				}
 			}
 		}
@@ -168,6 +173,16 @@ public class AntPerception {
 	 */
 	public boolean isTraversable(Point position) {
 		return this.grid.getCell(position).isTraversable();
+	}
+
+	/**
+	 * @param x
+	 * @param y
+	 * @return true if the position is free, i.e. there is no wall, no ant body,
+	 *         and no other blocking object on it.
+	 */
+	public boolean isTraversable(int x, int y) {
+		return this.isTraversable(new Point(x, y));
 	}
 
 	/**
