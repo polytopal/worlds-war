@@ -16,6 +16,9 @@ import fr.utbm.info.vi51.worldswar.environment.influence.MeleeAttackInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.PheromoneAndMoveInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.PickFoodInfluence
+import fr.utbm.info.vi51.worldswar.perception.AntPerception
+import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid
+import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableAnt
 import fr.utbm.info.vi51.worldswar.simulator.SimulationStepEvent
 import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener
 import fr.utbm.info.vi51.worldswar.simulator.StopSimulationEvent
@@ -271,10 +274,17 @@ agent Environment {
 		
 		for(agentBody : agentBodies.values()) {
 			
-			val agentPerception = perceptionGrid.computeAgentPerception(agentBody)
+			if(agentBody instanceof AntBody) {
+				val agentPerceptionGrid = perceptionGrid.computeAgentPerception(agentBody)
+				val agentPerception = new AntPerception(new PerceivableAnt(agentBody), agentPerceptionGrid)
+				
+				emit(new PerceptionEvent(this.defaultAddress, agentPerception), 
+					Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
+				)
+			} else {
+				error("Perceptions are unimplemented for non-ant agent bodies")
+			}
 			
-			emit(new PerceptionEvent(this.defaultAddress, agentPerception), Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
-			)
 		}
 	}
 	

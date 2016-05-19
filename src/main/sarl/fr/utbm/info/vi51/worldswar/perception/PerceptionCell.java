@@ -1,20 +1,22 @@
-package fr.utbm.info.vi51.worldswar.environment;
+package fr.utbm.info.vi51.worldswar.perception;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.utbm.info.vi51.worldswar.environment.Colony;
+import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody;
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill;
 import fr.utbm.info.vi51.worldswar.environment.envobject.EnvironmentObject;
 import fr.utbm.info.vi51.worldswar.environment.envobject.Food;
 import fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone;
 import fr.utbm.info.vi51.worldswar.environment.envobject.Wall;
-import fr.utbm.info.vi51.worldswar.environment.perceivable.Perceivable;
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableAnt;
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableAntHill;
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableFood;
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivablePheromone;
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableWall;
+import fr.utbm.info.vi51.worldswar.perception.perceivable.Perceivable;
+import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableAnt;
+import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableAntHill;
+import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableFood;
+import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivablePheromone;
+import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableWall;
 
 public class PerceptionCell {
 
@@ -131,11 +133,13 @@ public class PerceptionCell {
 		return qty;
 	}
 
-	/**
-	 * remove the content of the cell
-	 */
-	public void clear() {
-		this.perceptionList.clear();
+	public boolean isTraversable() {
+		for (Perceivable p : this.perceptionList) {
+			if (!p.isTraversable()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override

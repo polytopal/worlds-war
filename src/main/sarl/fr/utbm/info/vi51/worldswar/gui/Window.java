@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import fr.utbm.info.vi51.worldswar.controller.Controller;
-import fr.utbm.info.vi51.worldswar.environment.PerceptionGrid;
+import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
 
 /**

@@ -1,4 +1,4 @@
-package fr.utbm.info.vi51.worldswar.environment.perceivable;
+package fr.utbm.info.vi51.worldswar.perception.perceivable;
 
 import fr.utbm.info.vi51.worldswar.environment.envobject.Food;
 
