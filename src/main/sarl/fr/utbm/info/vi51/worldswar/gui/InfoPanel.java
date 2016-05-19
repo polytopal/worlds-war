@@ -33,12 +33,8 @@ public class InfoPanel extends JPanel{
 		this.labelStepPerSecond.setText(String.format("%.2f %s", new Float(nbSPS), Messages.getString("InfoPanel.stepsPerSecond"))+" |");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
-	public void setSimulationStateLabel(boolean simulationRunning) {
-		if (simulationRunning) {
-			this.labelSimulationState.setText(Messages.getString("InfoPanel.simulationRunning")+" |"); //$NON-NLS-1$ //$NON-NLS-2$
-		} else {
-			this.labelSimulationState.setText(Messages.getString("InfoPanel.simulationStopped")+" |"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+	public void setSimulationStateLabel(SimulationState simState) {
+		this.labelSimulationState.setText(Messages.getString(simState.getPropertyKey()) + " |"); //$NON-NLS-1$
 	}
 	
 	public void setStepNumberLabel(int stepNumber) {

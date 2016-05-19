@@ -25,7 +25,10 @@ public class GuiActionsManager {
 
 	private final Action newSimulationAction;
 	private final Action stopSimulationAction;
-
+	private final Action pauseSimulationAction;
+	private final Action resumeSimulationAction;
+	private final Action stepSimulationAction;
+	
 	private final Map<SimulationSpeed, Action> speedActionsMap;
 
 	private final Action noPheromoneFilterAction;
@@ -34,6 +37,9 @@ public class GuiActionsManager {
 	GuiActionsManager(final Controller controller, final CentralPanel centralPanel) {
 		this.newSimulationAction = new NewSimulationAction(controller);
 		this.stopSimulationAction = new StopSimulationAction(controller);
+		this.pauseSimulationAction = new PauseSimulationAction(controller);
+		this.resumeSimulationAction = new ResumeSimulationAction(controller);
+		this.stepSimulationAction = new StepSimulationAction(controller);
 
 		this.speedActionsMap = new HashMap<>();
 		for (final SimulationSpeed simSpeed : SimulationSpeed.values()) {
@@ -60,7 +66,19 @@ public class GuiActionsManager {
 	public Action getStopSimulationAction() {
 		return this.stopSimulationAction;
 	}
+	
+	public Action getPauseSimulationAction() {
+		return this.pauseSimulationAction;
+	}
+	
+	public Action getResumeSimulationAction() {
+		return this.resumeSimulationAction;
+	}
 
+	public Action getStepSimulationAction() {
+		return this.stepSimulationAction;
+	}
+	
 	public Action getSpeedAction(SimulationSpeed simSpeed) {
 		return this.speedActionsMap.get(simSpeed);
 	}
@@ -75,7 +93,7 @@ public class GuiActionsManager {
 	/**
 	 * @author Leo
 	 * 
-	 *         This action allow to start a new simulation
+	 *         This action allow to start a new simulation, by pressing ctrl+n
 	 */
 	private class NewSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 4958436812700297538L;
@@ -100,7 +118,7 @@ public class GuiActionsManager {
 	/**
 	 * @author Leo
 	 * 
-	 *         This action allow to stop the current simulation
+	 *         This action allow to stop the current simulation, by pressing ctrl+s
 	 */
 	private class StopSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
@@ -115,6 +133,66 @@ public class GuiActionsManager {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			this.controller.stopSimulation();
+		}
+	}
+	
+	/**
+	 *         This action allows to pause the simulation, by pressing ctrl+p
+	 */
+	private class PauseSimulationAction extends AbstractAction {
+		private static final long serialVersionUID = 2286692516797367038L;
+		private final Controller controller;
+
+		public PauseSimulationAction(final Controller controller) {
+			super(Messages.getString("MenuBar.pauseSimulation")); //$NON-NLS-1$
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
+			this.controller = controller;
+			this.setEnabled(false);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			this.controller.pauseSimulation();
+		}
+	}
+	/**
+	 *         This action allows to resume the simulation, by pressing ctrl+p
+	 */
+	private class ResumeSimulationAction extends AbstractAction {
+		private static final long serialVersionUID = 2286692516797367038L;
+		private final Controller controller;
+
+		public ResumeSimulationAction(final Controller controller) {
+			super(Messages.getString("MenuBar.resumeSimulation")); //$NON-NLS-1$
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
+			this.controller = controller;
+			this.setEnabled(false);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			this.controller.resumeSimulation();
+		}
+	}
+	
+	/**
+	 *         This action allows to execute a step in the simulation when it is paused,
+	 * by pressing the space bar.
+	 */
+	private class StepSimulationAction extends AbstractAction {
+		private static final long serialVersionUID = 2286692516797367038L;
+		private final Controller controller;
+
+		public StepSimulationAction(final Controller controller) {
+			super(Messages.getString("MenuBar.stepSimulation")); //$NON-NLS-1$
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0));
+			this.controller = controller;
+			this.setEnabled(false);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			this.controller.stepSimulation();
 		}
 	}
 
