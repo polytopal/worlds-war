@@ -1,18 +1,16 @@
 package fr.utbm.info.vi51.worldswar.^agent
 
+import fr.utbm.info.vi51.worldswar.^agent.behaviour.strategic.AntStrategicBehaviour
+import fr.utbm.info.vi51.worldswar.^agent.^event.AgentInitializedEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.InfluenceEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.KillAgentEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.PerceptionEvent
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
+import io.sarl.core.Logging
 import io.sarl.util.Scopes
 import java.util.HashMap
-import io.sarl.core.Logging
-import fr.utbm.info.vi51.worldswar.^agent.^event.AgentInitializedEvent
-import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence
-import fr.utbm.info.vi51.worldswar.utils.Direction
-import fr.utbm.info.vi51.worldswar.^agent.strategic_behaviour.AntStrategicBehaviour
 
 /**
  * Abstract agent inherited by every other ants agents
