@@ -30,7 +30,6 @@ import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
 import io.sarl.util.Scopes
 import java.awt.Point
-import java.util.ArrayList
 import java.util.Collections
 import java.util.HashMap
 import java.util.LinkedList
@@ -72,16 +71,8 @@ agent Environment {
 			
 			this.grid = EnvironmentUtils.generateMap(simParameters)
 			
+			this.antHills = EnvironmentUtils.getAntHills(this.grid)
 			
-			this.antHills = new ArrayList
-			
-			//TODO remove
-			// ------ test -----
-//			var point = new Point(3, 3)
-//			var hill = new AntHill(point,new Colony(Breed.DARK_ANTS))
-//			grid.get(point).addEnvObject(hill)
-//			this.antHills.add(hill)
-			// -----------------
 			
 			info("Creating agents map...")
 			this.agentBodies = new HashMap(AGENTS_MAP_INITIAL_SIZE)

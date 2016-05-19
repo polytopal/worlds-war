@@ -10,18 +10,17 @@ import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableFood;
 
 public class GUIUtils {
 
-	private static Color ANT_HILL_COLOR = Color.YELLOW;
+	private static Color ANT_HILL_COLOR = new Color(255, 0, 0);
 
-	private static Color DARK_ANT_COLOR = new Color((float) 0.2, (float) 0.2, (float) 0.2);
-	private static Color RED_ANT_COLOR = new Color((float) 0.7, (float) 0.2, (float) 0.2);
+	private static Color DARK_ANT_COLOR = new Color(51, 25, 0);
+	private static Color RED_ANT_COLOR = new Color(153, 0, 0);
 
-	private static Color FOOD_LITTLE_QTY_COLOR = new Color((float) 0.5, (float) 1.0, (float) 0.5);
-	private static Color FOOD_BIG_QTY_COLOR = new Color((float) 0.4, (float) 0.8, (float) 0.4);
-	private static int FOOD_BIG_QTY_LIMIT = 5;
+	private static Color FOOD_LITTLE_QTY_COLOR = new Color(128, 255, 128);
+	private static Color FOOD_BIG_QTY_COLOR = new Color(102, 204, 102);
+	private static int FOOD_BIG_QTY_LIMIT = 15;
 
 	private static Color EMPTY_CELL_COLOR = Color.WHITE;
 
-	// TODO - to adjust
 	private static float PHEROMONE_VISIBILITY_COEFFICIENT = 1.8f;
 	private static Color PHEROMONE_DANGER_COLOR = new Color(180, 80, 255);
 	private static Color PHEROMONE_FOOD_COLOR = new Color(153, 255, 255);
