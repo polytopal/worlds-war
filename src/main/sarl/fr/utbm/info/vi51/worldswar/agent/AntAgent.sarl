@@ -3,7 +3,6 @@ package fr.utbm.info.vi51.worldswar.^agent
 import fr.utbm.info.vi51.worldswar.^agent.^event.InfluenceEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.KillAgentEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.PerceptionEvent
-import fr.utbm.info.vi51.worldswar.^agent.strategic_behaviour.StrategicBehaviour
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
@@ -13,6 +12,7 @@ import io.sarl.core.Logging
 import fr.utbm.info.vi51.worldswar.^agent.^event.AgentInitializedEvent
 import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence
 import fr.utbm.info.vi51.worldswar.utils.Direction
+import fr.utbm.info.vi51.worldswar.^agent.strategic_behaviour.AntStrategicBehaviour
 
 /**
  * Abstract agent inherited by every other ants agents
@@ -21,12 +21,12 @@ agent AntAgent {
 	uses Lifecycle, DefaultContextInteractions, Logging
 	
 	val memory : HashMap<String, Object> = new HashMap()
-	var behaviour : StrategicBehaviour
+	var behaviour : AntStrategicBehaviour
 	
 	on Initialize{
 		synchronized(this) {
 			// the strategic behaviour is get from the parameters
-			this.behaviour = occurrence.parameters.get(0) as StrategicBehaviour
+			this.behaviour = occurrence.parameters.get(0) as AntStrategicBehaviour
 			
 			emit(new AgentInitializedEvent)
 		}
@@ -41,11 +41,11 @@ agent AntAgent {
 	on PerceptionEvent {
 		synchronized(this) {
 			
-			val perceptionGrid = occurrence.perceptionGrid
+			val perception = occurrence.perception
 			if(behaviour !== null ){
 				
 				// The influence is computed by the behaviour
-				val influence = behaviour.computeInfluence(perceptionGrid, memory)
+				val influence = behaviour.computeInfluence(perception, memory)
 				emit(new InfluenceEvent(this.getID(), influence),
 					Scopes.addresses(occurrence.callbackAddress))
 			}else{

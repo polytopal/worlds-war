@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import fr.utbm.info.vi51.worldswar.controller.Controller;
-import fr.utbm.info.vi51.worldswar.environment.PerceptionGrid;
+import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
 
 /**
@@ -25,7 +25,7 @@ public class Window extends JFrame implements SimulatorListener {
 
 	private float stepsPerSecond;
 	private long lastStepStart;
-	private boolean simulationRunning;
+	private SimulationState simState;
 	private int stepNumber;
 
 	private final CentralPanel centralPanel;
@@ -33,7 +33,7 @@ public class Window extends JFrame implements SimulatorListener {
 	/**
 	 * @param controller
 	 * 
-	 *            a Java class that can emit SARL evenments to the simulation
+	 *            a Java class that can emit SARL events to the simulation
 	 */
 	public Window(final Controller controller) {
 
@@ -43,7 +43,7 @@ public class Window extends JFrame implements SimulatorListener {
 		this.lastStepStart = System.currentTimeMillis();
 
 		this.stepNumber = 0;
-		this.simulationRunning = false;
+		this.simState = SimulationState.STOPPED;
 
 		// Window initialization
 		this.setTitle(Messages.getString("Window.title")); //$NON-NLS-1$
@@ -81,7 +81,7 @@ public class Window extends JFrame implements SimulatorListener {
 		this.lastStepStart = currentTime;
 		this.stepsPerSecond = 1000.f / stepDuration;
 
-		this.infoPanel.setSimulationStateLabel(this.simulationRunning);
+		this.infoPanel.setSimulationStateLabel(this.simState);
 		this.infoPanel.setStepPerSecondLabel(this.stepsPerSecond);
 		this.infoPanel.setStepNumberLabel(this.stepNumber);
 
@@ -96,15 +96,37 @@ public class Window extends JFrame implements SimulatorListener {
 
 	@Override
 	public void simulationTerminated() {
-		this.simulationRunning = false;
-		this.infoPanel.setSimulationStateLabel(this.simulationRunning);
+
+		this.simState = SimulationState.STOPPED;
+		this.infoPanel.setSimulationStateLabel(this.simState);
+		this.guiActionsManager.getPauseSimulationAction().setEnabled(false);
+		this.guiActionsManager.getResumeSimulationAction().setEnabled(false);
 	}
 
 	@Override
 	public void simulationStarted() {
-		this.simulationRunning = true;
-		this.infoPanel.setSimulationStateLabel(this.simulationRunning);
 		this.stepNumber = 0;
+		this.simState = SimulationState.RUNNING;
+		this.infoPanel.setSimulationStateLabel(this.simState);
+		this.guiActionsManager.getPauseSimulationAction().setEnabled(true);
+	}
+
+	@Override
+	public void simulationPaused() {
+		this.simState = SimulationState.PAUSED;
+		this.infoPanel.setSimulationStateLabel(this.simState);
+		this.guiActionsManager.getResumeSimulationAction().setEnabled(true);
+		this.guiActionsManager.getPauseSimulationAction().setEnabled(false);
+		this.guiActionsManager.getStepSimulationAction().setEnabled(true);
+	}
+	
+	@Override
+	public void simulationResumed() {
+		this.simState = SimulationState.RUNNING;
+		this.infoPanel.setSimulationStateLabel(this.simState);
+		this.guiActionsManager.getPauseSimulationAction().setEnabled(true);
+		this.guiActionsManager.getResumeSimulationAction().setEnabled(false);
+		this.guiActionsManager.getStepSimulationAction().setEnabled(false);
 	}
 
 }

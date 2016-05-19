@@ -3,10 +3,10 @@ package fr.utbm.info.vi51.worldswar.gui;
 import java.awt.Color;
 
 import fr.utbm.info.vi51.worldswar.environment.Breed;
-import fr.utbm.info.vi51.worldswar.environment.PerceptionCell;
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableAnt;
-import fr.utbm.info.vi51.worldswar.environment.perceivable.PerceivableFood;
+import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
+import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableAnt;
+import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableFood;
 
 public class GUIUtils {
 

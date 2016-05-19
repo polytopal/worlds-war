@@ -1,10 +1,11 @@
-package fr.utbm.info.vi51.worldswar.environment;
+package fr.utbm.info.vi51.worldswar.perception;
 
 import java.awt.Point;
 import java.util.List;
 
 import javax.naming.directory.InvalidAttributesException;
 
+import fr.utbm.info.vi51.worldswar.environment.EnvCell;
 import fr.utbm.info.vi51.worldswar.environment.envobject.AgentBody;
 import fr.utbm.info.vi51.worldswar.environment.envobject.EnvironmentObject;
 import fr.utbm.info.vi51.worldswar.utils.Grid;
@@ -83,13 +84,58 @@ public class PerceptionGrid {
 		return this.perceptionCellGrid.getHeight();
 	}
 
+	/**
+	 * @param x
+	 * @param y
+	 * @return the {@link PerceptionCell} in position (x,y)
+	 */
 	public PerceptionCell getCell(int x, int y) {
 		return this.perceptionCellGrid.get(x, y);
+	}
+
+	/**
+	 * @param position
+	 * @return the {@link PerceptionCell} in the given position
+	 */
+	public PerceptionCell getCell(Point position) {
+		return this.getCell(position.x, position.y);
 	}
 
 	@Override
 	public String toString() {
 		return this.perceptionCellGrid.toString();
+	}
+
+	/**
+	 * @return
+	 * @see fr.utbm.info.vi51.worldswar.utils.Grid#getXMin()
+	 */
+	public int getXMin() {
+		return this.perceptionCellGrid.getXMin();
+	}
+
+	/**
+	 * @return
+	 * @see fr.utbm.info.vi51.worldswar.utils.Grid#getYMin()
+	 */
+	public int getYMin() {
+		return this.perceptionCellGrid.getYMin();
+	}
+
+	/**
+	 * @return
+	 * @see fr.utbm.info.vi51.worldswar.utils.Grid#getXMax()
+	 */
+	public int getXMax() {
+		return this.perceptionCellGrid.getXMax();
+	}
+
+	/**
+	 * @return
+	 * @see fr.utbm.info.vi51.worldswar.utils.Grid#getYMax()
+	 */
+	public int getYMax() {
+		return this.perceptionCellGrid.getYMax();
 	}
 
 }

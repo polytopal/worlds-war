@@ -1,6 +1,6 @@
 package fr.utbm.info.vi51.worldswar.simulator;
 
-import fr.utbm.info.vi51.worldswar.environment.PerceptionGrid;
+import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
 /**
  * Listener interface about a {@link Simulator}
@@ -21,6 +21,16 @@ public interface SimulatorListener {
 	 * Invoked when the simulation start
 	 */
 	public void simulationStarted();
+	
+	/**
+	 * Invoked when the simulation is paused
+	 */
+	public void simulationPaused();
+	
+	/**
+	 * Invoked when the simulation is resumed
+	 */
+	public void simulationResumed();
 
 	/**
 	 * Invoked by the environment when it is updated
