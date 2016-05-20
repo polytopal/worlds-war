@@ -23,8 +23,8 @@ import fr.utbm.info.vi51.worldswar.utils.Direction;
 @SuppressWarnings("static-method")
 public class AntOperationalBehaviour {
 
-	private static final float MAX_PHEROMONE = 10;
-	private static final float PHEROMONE_DECAY = 0.05f;
+	private static final float MAX_PHEROMONE = 15;
+	private static final float PHEROMONE_DECAY = 0.08f;
 
 	private static final int MAX_PHEROMONE_DISTANCE = (int) (MAX_PHEROMONE / PHEROMONE_DECAY);
 

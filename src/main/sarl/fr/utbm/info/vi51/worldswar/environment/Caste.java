@@ -11,7 +11,7 @@ public enum Caste {
 	GATHERER {
 		@Override
 		public int getCapacity() {
-			return 30;
+			return 5;
 		}
 	},
 	EXPLORER {
@@ -33,7 +33,7 @@ public enum Caste {
 
 		@Override
 		public int getCapacity() {
-			return 5;
+			return 1;
 		}
 	};
 
@@ -59,7 +59,7 @@ public enum Caste {
 	 * @return the default capacity of the ant
 	 */
 	public int getCapacity() {
-		return 10;
+		return 2;
 	}
 
 	/**
