@@ -1,5 +1,7 @@
 package fr.utbm.info.vi51.worldswar.perception;
 
+import static fr.utbm.info.vi51.worldswar.perception.PerceptionGrid.MY_POSITION;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -206,6 +208,6 @@ public class AntPerception {
 	 */
 	public boolean isAtHome() {
 		Point homePos = this.getHomePos();
-		return (homePos != null && homePos.equals(new Point(0, 0)));
+		return (homePos != null && homePos.equals(MY_POSITION));
 	}
 }

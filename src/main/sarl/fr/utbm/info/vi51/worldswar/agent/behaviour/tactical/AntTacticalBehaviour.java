@@ -28,9 +28,9 @@ public class AntTacticalBehaviour {
 			}
 			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getClosestAvailableFoodPos());
 		}
-		Point highestPheromone = perception.getHighestPheromonePos(PheromoneType.FOOD);
-		if (highestPheromone != null) {
-			return this.operationalBehaviour.moveToTarget(perception, memory, highestPheromone);
+		Point highestFoodPheromonePos = perception.getHighestPheromonePos(PheromoneType.FOOD);
+		if (highestFoodPheromonePos != null) {
+			return this.operationalBehaviour.moveToTarget(perception, memory, highestFoodPheromonePos);
 		}
 		return this.operationalBehaviour.wander(memory);
 	}
@@ -52,9 +52,9 @@ public class AntTacticalBehaviour {
 			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getHomePos());
 		}
 
-		Point highestPheromone = perception.getHighestPheromonePos(PheromoneType.HOME);
-		if (highestPheromone != null) {
-			return this.operationalBehaviour.moveToTarget(perception, memory, highestPheromone);
+		Point highestAntPheromonePos = perception.getHighestPheromonePos(PheromoneType.HOME);
+		if (highestAntPheromonePos != null) {
+			return this.operationalBehaviour.moveToTarget(perception, memory, highestAntPheromonePos);
 		}
 		return this.operationalBehaviour.wander(memory);
 	}
