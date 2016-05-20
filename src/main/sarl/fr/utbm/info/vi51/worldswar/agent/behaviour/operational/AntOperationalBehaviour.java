@@ -17,6 +17,10 @@ import fr.utbm.info.vi51.worldswar.environment.influence.PickFoodInfluence;
 import fr.utbm.info.vi51.worldswar.perception.AntPerception;
 import fr.utbm.info.vi51.worldswar.utils.Direction;
 
+/**
+ * Defines basic operational behaviours for ants.
+ */
+@SuppressWarnings("static-method")
 public class AntOperationalBehaviour {
 
 	private static final float MAX_PHEROMONE = 10;
@@ -85,7 +89,7 @@ public class AntOperationalBehaviour {
 		if (memory.containsKey("pheromoneType") && memory.containsKey("pheromoneDistance")) {
 			// Retrieve pheromone to put from memory
 			PheromoneType pheromoneType = (PheromoneType) (memory.get("pheromoneType"));
-			int pheromoneDistance = (int) memory.get("pheromoneDistance");
+			int pheromoneDistance = ((Integer) memory.get("pheromoneDistance")).intValue();
 			float pheromoneQty = MAX_PHEROMONE - (pheromoneDistance * PHEROMONE_DECAY);
 
 			// Update memory
@@ -93,7 +97,7 @@ public class AntOperationalBehaviour {
 				memory.remove("pheromoneType");
 				memory.remove("pheromoneDistance");
 			} else {
-				memory.put("pheromoneDistance", pheromoneDistance + 1);
+				memory.put("pheromoneDistance", new Integer(pheromoneDistance + 1));
 			}
 
 			return new PheromoneAndMoveInfluence(pheromoneType, pheromoneQty, d);
