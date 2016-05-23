@@ -49,51 +49,38 @@ public class AntOperationalBehaviour {
 		 */
 		ArrayList<Direction> alternativeDirections = new ArrayList<>(3);
 
+		/*
+		 * Right now, succession of if (max 4). Might be optimized by packing the target's coords in [(-1,-1),(1,1)]
+		 */
 		if (target.x < 0){
 			if (target.y < 0) {			//(-1,-1)
 				primaryDirection = Direction.NORTH_WEST;
-				alternativeDirections.add(Direction.WEST);
-				alternativeDirections.add(Direction.NORTH);
 			} else if (target.y > 0) {	//(-1,1)
 				primaryDirection = Direction.SOUTH_WEST;
-				alternativeDirections.add(Direction.SOUTH);
-				alternativeDirections.add(Direction.WEST);
 
 			} else {					//(-1,0)
 				primaryDirection = Direction.WEST;
-				alternativeDirections.add(Direction.NORTH_WEST);
-				alternativeDirections.add(Direction.SOUTH_WEST);
 
 			}
 		}
 		else if (target.x > 0){
 			if (target.y < 0) {			//(1,-1)
 				primaryDirection = Direction.NORTH_EAST;
-				alternativeDirections.add(Direction.NORTH);
-				alternativeDirections.add(Direction.EAST);
 
 			} else if (target.y > 0) {	//(1,1)
 				primaryDirection = Direction.SOUTH_EAST;
-				alternativeDirections.add(Direction.SOUTH);
-				alternativeDirections.add(Direction.EAST);
 
 			} else {					//(1,0)
 				primaryDirection = Direction.EAST;
-				alternativeDirections.add(Direction.NORTH_EAST);
-				alternativeDirections.add(Direction.SOUTH_EAST);
 
 			}
 		}
 		else if (target.y < 0) {		//(0,-1)
 			primaryDirection = Direction.NORTH;
-			alternativeDirections.add(Direction.NORTH_WEST);
-			alternativeDirections.add(Direction.NORTH_EAST);
 
 		}
 		else if (target.y > 0) {		//(0,1)
 			primaryDirection = Direction.SOUTH;
-			alternativeDirections.add(Direction.SOUTH_WEST);
-			alternativeDirections.add(Direction.SOUTH_EAST);
 
 		}
 
@@ -102,6 +89,8 @@ public class AntOperationalBehaviour {
 			// Target is (0,0), this means we already reached it
 			return new DoNothingInfluence();
 		}
+		// If the target isn't null, compute
+		alternativeDirections = primaryDirection.adjacentDirections();
 
 		// If the target is free (<=> traversable), generates the Influence corresponding to the direction
 		if (perception.isTraversable(target)){

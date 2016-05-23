@@ -1,5 +1,7 @@
 package fr.utbm.info.vi51.worldswar.utils;
 
+import java.util.ArrayList;
+
 /**
  * Cardinal directions, with getters on the X and Y components of the
  * corresponding unit vector
@@ -45,4 +47,51 @@ public enum Direction {
 		return this.y;
 	}
 
+	/**
+	 * For each direction of the enum, computes the 2 adjacent directions and stores it in an ArrayList
+	 * 
+	 * @return ArrayList<{@link Direction}>
+	 */
+	public ArrayList<Direction> adjacentDirections() {
+		ArrayList<Direction> adjacentDirections = new ArrayList<>();
+
+		switch(this){
+		case NORTH_WEST :
+			adjacentDirections.add(Direction.WEST);
+			adjacentDirections.add(Direction.NORTH);
+			break;
+		case NORTH :
+			adjacentDirections.add(Direction.NORTH_WEST);
+			adjacentDirections.add(Direction.NORTH_EAST);
+			break;
+		case NORTH_EAST :
+			adjacentDirections.add(Direction.NORTH);
+			adjacentDirections.add(Direction.EAST);
+			break;
+		case EAST :
+			adjacentDirections.add(Direction.NORTH_EAST);
+			adjacentDirections.add(Direction.SOUTH_EAST);
+			break;
+		case SOUTH_EAST :
+			adjacentDirections.add(Direction.SOUTH);
+			adjacentDirections.add(Direction.EAST);
+			break;
+		case SOUTH :
+			adjacentDirections.add(Direction.SOUTH_WEST);
+			adjacentDirections.add(Direction.SOUTH_EAST);
+			break;
+		case SOUTH_WEST :
+			adjacentDirections.add(Direction.SOUTH);
+			adjacentDirections.add(Direction.WEST);
+			break;
+		case WEST :
+			adjacentDirections.add(Direction.NORTH_WEST);
+			adjacentDirections.add(Direction.SOUTH_WEST);
+			break;
+		default :
+			break;
+		}
+
+		return adjacentDirections;
+	}
 }
