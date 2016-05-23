@@ -34,7 +34,8 @@ public class AntOperationalBehaviour {
 	 * @param perception
 	 * @param memory
 	 * @param target
-	 * @return
+	 * @return a {@link PheromoneAndMoveInfluence} or a {@link MoveInfluence}
+	 *         with a direction to the target
 	 */
 	public Influence moveToTarget(AntPerception perception, HashMap<String, Object> memory, Point target) {
 		ArrayList<Direction> viableDirections = new ArrayList<>(2);
@@ -57,10 +58,22 @@ public class AntOperationalBehaviour {
 		return this.move(viableDirections.get(new Random().nextInt(viableDirections.size())), memory);
 	}
 
+	/**
+	 * Picks as much food as possible from the ground
+	 * 
+	 * @param perception
+	 * @return a {@link PickFoodInfluence}
+	 */
 	public Influence pickFood(AntPerception perception) {
 		return new PickFoodInfluence(perception.getFoodAt(MY_POSITION));
 	}
 
+	/**
+	 * Drops as much food as possible to the ground
+	 * 
+	 * @param perception
+	 * @return a {@link DropFoodInfluence}
+	 */
 	public Influence dropFood(AntPerception perception) {
 		return new DropFoodInfluence(perception.getMyBody().getFoodCarried());
 	}
@@ -69,7 +82,8 @@ public class AntOperationalBehaviour {
 	 * Move in a random direction
 	 * 
 	 * @param memory
-	 * @return
+	 * @return a {@link PheromoneAndMoveInfluence} or a {@link MoveInfluence}
+	 *         with a random direction
 	 */
 	public Influence wander(HashMap<String, Object> memory) {
 		final Direction d = Direction.values()[new Random().nextInt(Direction.values().length)];
@@ -83,7 +97,8 @@ public class AntOperationalBehaviour {
 	 * 
 	 * @param d
 	 * @param memory
-	 * @return
+	 * @return a {@link PheromoneAndMoveInfluence} or a {@link MoveInfluence}
+	 *         with the specified direction
 	 */
 	private Influence move(Direction d, HashMap<String, Object> memory) {
 		if (memory.containsKey("pheromoneType") && memory.containsKey("pheromoneDistance")) {
