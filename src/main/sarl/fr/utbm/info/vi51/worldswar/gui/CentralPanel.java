@@ -10,8 +10,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,6 +17,8 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
+import fr.utbm.info.vi51.worldswar.gui.layer.GuiLayer;
+import fr.utbm.info.vi51.worldswar.gui.layer.MapLayer;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
 /**
@@ -39,12 +39,13 @@ public class CentralPanel extends JPanel {
 
 	private int cellSize = 8;
 
-	private PheromoneType pheromoneFilter;
+	// TODO remove
+	// private final PheromoneType pheromoneFilter;
 
 	private final JScrollPane scrollPane;
 	private final JPanel gridPanel;
 
-	private final List<List<Color>> panelTable;
+	private final GuiLayer baseLayer;
 
 	/**
 	 * @param SimulatorController
@@ -67,22 +68,15 @@ public class CentralPanel extends JPanel {
 
 				g.setColor(Color.LIGHT_GRAY);
 				g.fillRect(0, 0, this.getWidth(), this.getHeight());
-				synchronized (CentralPanel.this.panelTable) {
-					for (int x = 0; x < CentralPanel.this.width; x++) {
-						for (int y = 0; y < CentralPanel.this.height; y++) {
-							g.setColor(CentralPanel.this.panelTable.get(x).get(y));
-							g.fillRect(x * CentralPanel.this.cellSize, y * CentralPanel.this.cellSize,
-									CentralPanel.this.cellSize, CentralPanel.this.cellSize);
-						}
-					}
-				}
+
+				CentralPanel.this.baseLayer.paintLayer(g, CentralPanel.this.cellSize);
 			}
 		};
 
-		this.panelTable = new ArrayList<>(0);
+		this.baseLayer = new MapLayer();
+
 		this.width = 0;
 		this.height = 0;
-		this.pheromoneFilter = null;
 
 		this.scrollPane = new JScrollPane(this.gridPanel);
 		this.scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -140,42 +134,17 @@ public class CentralPanel extends JPanel {
 	}
 
 	public void updateGrid(PerceptionGrid perceptionGrid) {
-		synchronized (CentralPanel.this.panelTable) {
-			if (this.width != perceptionGrid.getWidth() || this.height != perceptionGrid.getHeight()) {
-				resizeGrid(perceptionGrid.getWidth(), perceptionGrid.getHeight());
-			}
-			for (int x = 0; x < this.width; x++) {
-				for (int y = 0; y < this.height; y++) {
-					final Color cellColor = GUIUtils.computeCellColor(perceptionGrid.getCell(x, y),
-							this.pheromoneFilter);
-					this.panelTable.get(x).set(y, cellColor);
-				}
-			}
-		}
+
+		this.width = perceptionGrid.getWidth();
+		this.height = perceptionGrid.getHeight();
+
+		this.baseLayer.update(perceptionGrid);
+
 		this.gridPanel.repaint();
 	}
 
 	public void setPheromoneFilter(PheromoneType pheromoneType) {
-		synchronized (CentralPanel.this.panelTable) {
-			this.pheromoneFilter = pheromoneType;
-		}
-	}
-
-	/**
-	 * Methods used only when a new environment with a different size of the
-	 * older environment
-	 */
-	private void resizeGrid(int w, int h) {
-		this.width = w;
-		this.height = h;
-		this.panelTable.clear();
-		for (int x = 0; x < this.width; x++) {
-			final ArrayList<Color> column = new ArrayList<>(h);
-			for (int y = 0; y < this.height; y++) {
-				column.add(Color.WHITE);
-			}
-			this.panelTable.add(column);
-		}
+		// TODO - modify this method
 	}
 
 	private void zoomIn() {
