@@ -24,7 +24,7 @@ import fr.utbm.info.vi51.worldswar.utils.Direction;
 public class AntOperationalBehaviour {
 
 	private static final float MAX_PHEROMONE = 15;
-	private static final float PHEROMONE_DECAY = 0.08f;
+	private static final float PHEROMONE_DECAY = 0.1f;
 
 	private static final int MAX_PHEROMONE_DISTANCE = (int) (MAX_PHEROMONE / PHEROMONE_DECAY);
 
@@ -55,7 +55,7 @@ public class AntOperationalBehaviour {
 			return new DoNothingInfluence();
 		}
 		// Pick a random direction from the list
-		return this.move(viableDirections.get(new Random().nextInt(viableDirections.size())), memory);
+		return this.move(perception, viableDirections.get(new Random().nextInt(viableDirections.size())), memory);
 	}
 
 	/**
@@ -81,13 +81,14 @@ public class AntOperationalBehaviour {
 	/**
 	 * Move in a random direction
 	 * 
+	 * @param perception
 	 * @param memory
 	 * @return a {@link PheromoneAndMoveInfluence} or a {@link MoveInfluence}
 	 *         with a random direction
 	 */
-	public Influence wander(HashMap<String, Object> memory) {
+	public Influence wander(AntPerception perception, HashMap<String, Object> memory) {
 		final Direction d = Direction.values()[new Random().nextInt(Direction.values().length)];
-		return this.move(d, memory);
+		return this.move(perception, d, memory);
 	}
 
 	/**
@@ -100,7 +101,7 @@ public class AntOperationalBehaviour {
 	 * @return a {@link PheromoneAndMoveInfluence} or a {@link MoveInfluence}
 	 *         with the specified direction
 	 */
-	private Influence move(Direction d, HashMap<String, Object> memory) {
+	private Influence move(AntPerception perception, Direction d, HashMap<String, Object> memory) {
 		if (memory.containsKey("pheromoneType") && memory.containsKey("pheromoneDistance")) {
 			// Retrieve pheromone to put from memory
 			PheromoneType pheromoneType = (PheromoneType) (memory.get("pheromoneType"));
@@ -114,6 +115,12 @@ public class AntOperationalBehaviour {
 			} else {
 				memory.put("pheromoneDistance", new Integer(pheromoneDistance + 1));
 			}
+
+			// Prevents ants from stacking pheromones by traversing the same
+			// cell multiple times
+			final float qtyOnGround = perception.getPheromoneQtyAt(MY_POSITION, pheromoneType,
+					perception.getMyBody().getColony());
+			pheromoneQty = Math.max(pheromoneQty, qtyOnGround);
 
 			return new PheromoneAndMoveInfluence(pheromoneType, pheromoneQty, d);
 		}

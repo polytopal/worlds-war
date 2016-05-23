@@ -45,6 +45,8 @@ public class AntPerception {
 	}
 
 	/**
+	 * @param type
+	 * @param colony
 	 * @return the position (in local coordinates) where there is the most
 	 *         pheromone of the given {@link PheromoneType} and {@link Colony},
 	 *         or {@code null} if no relevant pheromone is perceived
@@ -202,9 +204,17 @@ public class AntPerception {
 	}
 
 	/**
-	 * TODO javadoc
-	 * 
-	 * @return
+	 * @param position
+	 * @param type
+	 * @param colony
+	 * @return the quantity of specified pheromone at the given location
+	 */
+	public float getPheromoneQtyAt(Point position, PheromoneType type, Colony colony) {
+		return this.grid.getCell(position).getPheromoneQuantity(type, colony);
+	}
+
+	/**
+	 * @return {@code true} if the ant is at home
 	 */
 	public boolean isAtHome() {
 		Point homePos = this.getHomePos();

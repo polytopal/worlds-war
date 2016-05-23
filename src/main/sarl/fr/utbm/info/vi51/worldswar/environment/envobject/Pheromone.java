@@ -14,12 +14,12 @@ public class Pheromone extends StaticObject {
 	/**
 	 * Flat amount of qty lost each step
 	 */
-	public static final float FLAT_DISSIPATION = 0.01f;
+	public static final float FLAT_DISSIPATION = 0.03f;
 
 	/**
 	 * Ratio of the qty lost each step
 	 */
-	public static final float SCALING_DISSIPATION = 0.01f;
+	public static final float SCALING_DISSIPATION = 0.001f;
 
 	private float qty;
 	private PheromoneType type;

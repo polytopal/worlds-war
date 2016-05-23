@@ -51,7 +51,7 @@ public class AntTacticalBehaviour {
 		if (highestFoodPheromonePos != null) {
 			return this.operationalBehaviour.moveToTarget(perception, memory, highestFoodPheromonePos);
 		}
-		return this.operationalBehaviour.wander(memory);
+		return this.operationalBehaviour.wander(perception, memory);
 	}
 
 	/**
@@ -88,6 +88,6 @@ public class AntTacticalBehaviour {
 		if (highestAntPheromonePos != null) {
 			return this.operationalBehaviour.moveToTarget(perception, memory, highestAntPheromonePos);
 		}
-		return this.operationalBehaviour.wander(memory);
+		return this.operationalBehaviour.wander(perception, memory);
 	}
 }
