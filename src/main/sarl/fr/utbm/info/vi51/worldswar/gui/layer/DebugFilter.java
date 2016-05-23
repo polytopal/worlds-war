@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
@@ -39,16 +38,19 @@ public class DebugFilter implements GuiLayer {
 			return String.format("f:%d", foodCarried); //$NON-NLS-1$
 		}
 
-		float maxPheroQty = 0;
-		for (final PheromoneType pheromoneType : PheromoneType.values()) {
-			final float totalPheromoneQuantity = cell.getTotalPheromoneQuantity(pheromoneType);
-			if (totalPheromoneQuantity > maxPheroQty) {
-				maxPheroQty = totalPheromoneQuantity;
-			}
-		}
-		if (maxPheroQty > 0) {
-			return String.format("p:%.1f", maxPheroQty); //$NON-NLS-1$
-		}
+		// uncomment this to show pheromone quantity
+
+		// float maxPheroQty = 0;
+		// for (final PheromoneType pheromoneType : PheromoneType.values()) {
+		// final float totalPheromoneQuantity =
+		// cell.getTotalPheromoneQuantity(pheromoneType);
+		// if (totalPheromoneQuantity > maxPheroQty) {
+		// maxPheroQty = totalPheromoneQuantity;
+		// }
+		// }
+		// if (maxPheroQty > 0) {
+		// return String.format("p:%.1f", maxPheroQty); //$NON-NLS-1$
+		// }
 
 		return null;
 	}
