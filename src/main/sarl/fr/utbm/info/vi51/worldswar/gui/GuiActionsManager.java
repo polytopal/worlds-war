@@ -235,7 +235,6 @@ public class GuiActionsManager {
 		public void actionPerformed(ActionEvent ae) {
 			if (ae.getSource() instanceof JCheckBoxMenuItem) {
 				final boolean seleted = ((JCheckBoxMenuItem) ae.getSource()).isSelected();
-				System.out.println(seleted);
 				this.centralPanel.setPheromoneFilterEnabled(this.pheromoneType, seleted);
 			}
 		}

@@ -6,6 +6,9 @@ import fr.utbm.info.vi51.worldswar.environment.Breed;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableAnt;
 
+/**
+ * This layer show the ants. Each ant is represented by a colored square
+ */
 public class AntLayer extends DefaultColorLayer {
 
 	private static Color DARK_ANT_COLOR = new Color(51, 25, 0);

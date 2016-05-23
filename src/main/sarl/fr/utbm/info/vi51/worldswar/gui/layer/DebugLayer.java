@@ -8,6 +8,10 @@ import java.util.List;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
+/**
+ * This layer add text to the cells. The text is visible only if the user zoom
+ * on the cell
+ */
 public class DebugLayer implements GuiLayer {
 
 	private static final Color FONT_COLOR = Color.ORANGE;

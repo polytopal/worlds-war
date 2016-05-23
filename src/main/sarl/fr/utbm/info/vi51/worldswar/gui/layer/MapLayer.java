@@ -5,6 +5,10 @@ import java.awt.Color;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableFood;
 
+/**
+ * This layer show the antHills and the food
+ *
+ */
 public class MapLayer extends DefaultColorLayer {
 
 	private static Color ANT_HILL_COLOR = new Color(255, 0, 0);
@@ -18,11 +22,6 @@ public class MapLayer extends DefaultColorLayer {
 	public MapLayer() {
 		super();
 		this.enabled = true;
-	}
-
-	@Override
-	public void setEnabled(boolean b) {
-		// DO NOTHING : this layer is always enabled
 	}
 
 	@Override

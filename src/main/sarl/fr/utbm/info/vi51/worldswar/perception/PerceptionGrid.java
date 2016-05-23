@@ -48,8 +48,6 @@ public class PerceptionGrid {
 			// coordinate system change
 			final Grid<PerceptionCell> localCellGrid = this.perceptionCellGrid.getSubGrid(position, range);
 
-			// System.out.println("localCellGrid : \n" + localCellGrid);
-
 			// circle with Manhattan distance
 			for (int x = localCellGrid.getXMin(); x <= localCellGrid.getXMax(); x++) {
 				for (int y = localCellGrid.getYMin(); y <= localCellGrid.getYMax(); y++) {
@@ -61,8 +59,6 @@ public class PerceptionGrid {
 					}
 				}
 			}
-
-			// System.out.println("after manhattan : \n" + localCellGrid);
 
 			return new PerceptionGrid(localCellGrid);
 		} catch (final InvalidAttributesException e) {
