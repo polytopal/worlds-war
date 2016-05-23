@@ -1,5 +1,6 @@
 package fr.utbm.info.vi51.worldswar.utils;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 /**
@@ -45,6 +46,13 @@ public enum Direction {
 	 */
 	public int getY() {
 		return this.y;
+	}
+
+	/**
+	 * @return the point corresponding to the direction
+	 */
+	public Point getPoint() {
+		return new Point(this.x, this.y);
 	}
 
 	/**

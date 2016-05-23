@@ -89,14 +89,21 @@ public class AntOperationalBehaviour {
 			// Target is (0,0), this means we already reached it
 			return new DoNothingInfluence();
 		}
-		// If the target isn't null, compute
+		// If the primaryDirection isn't null, compute
 		alternativeDirections = primaryDirection.adjacentDirections();
 
-		// If the target is free (<=> traversable), generates the Influence corresponding to the direction
-		if (perception.isTraversable(target)){
+		/*
+		 *  If the cell targeted by the primaryDirection is free (<=> traversable), generates the
+		 *  Influence corresponding to the direction
+		 */
+		if (perception.isTraversable(primaryDirection.getPoint())){
 			return this.move(perception, primaryDirection, memory);
 		}
-		// If not, uses one of the 2 alternative directions to generate the influence. This direction might not be traversable either.
+
+		/*
+		 *  If not, uses one of the 2 alternative directions to generate the influence.
+		 *  This direction might not be traversable either.
+		 */
 		return this.move(perception, alternativeDirections.get(new Random().nextInt(alternativeDirections.size())), memory);
 
 	}
