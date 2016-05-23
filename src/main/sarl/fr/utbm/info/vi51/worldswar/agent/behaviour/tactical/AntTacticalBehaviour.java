@@ -37,12 +37,12 @@ public class AntTacticalBehaviour {
 	public Influence collectFood(AntPerception perception, HashMap<String, Object> memory) {
 		if (perception.isAtHome()) {
 			memory.put("pheromoneType", PheromoneType.HOME);
-			memory.put("pheromoneDistance", 0);
+			memory.put("pheromoneDistance", new Integer(0));
 		}
 		if (perception.isFoodInSight()) {
 			if (perception.getFoodAt(MY_POSITION) > 0) {
 				memory.put("pheromoneType", PheromoneType.FOOD);
-				memory.put("pheromoneDistance", 0);
+				memory.put("pheromoneDistance", new Integer(0));
 				return this.operationalBehaviour.pickFood(perception);
 			}
 			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getClosestAvailableFoodPos());
