@@ -54,16 +54,23 @@ public class MenuBar extends JMenuBar {
 			speedMenu.add(speedButton);
 		}
 
-		// pheromone filter menu
+		// ----- pheromone filters menu -----
 
-		final JMenu pheromoneFilterMenu = new JMenu(Messages.getString("MenuBar.pheromoneFilter")); //$NON-NLS-1$
-		this.add(pheromoneFilterMenu);
+		final JMenu pheromoneFiltersMenu = new JMenu(Messages.getString("MenuBar.pheromoneFilter")); //$NON-NLS-1$
+		this.add(pheromoneFiltersMenu);
 
 		for (final PheromoneType phero : PheromoneType.values()) {
 			final JCheckBoxMenuItem filterButton = new JCheckBoxMenuItem(
 					guiActionsManager.getPheromoneFilterActions(phero));
-			pheromoneFilterMenu.add(filterButton);
+			pheromoneFiltersMenu.add(filterButton);
 		}
 
+		// ----- other Filters menu -----
+
+		final JMenu otherFiltersMenu = new JMenu(Messages.getString("MenuBar.otherFilters")); //$NON-NLS-1$
+		this.add(otherFiltersMenu);
+
+		final JCheckBoxMenuItem debugFilterButton = new JCheckBoxMenuItem(guiActionsManager.getDebugFilterAction());
+		otherFiltersMenu.add(debugFilterButton);
 	}
 }

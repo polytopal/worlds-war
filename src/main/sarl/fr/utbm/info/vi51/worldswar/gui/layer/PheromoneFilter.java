@@ -5,7 +5,7 @@ import java.awt.Color;
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 
-public class PheromoneLayer extends DefaultColorLayer {
+public class PheromoneFilter extends DefaultColorLayer {
 
 	private static float PHEROMONE_VISIBILITY_COEFFICIENT = 10f;
 	private static Color PHEROMONE_DANGER_COLOR = new Color(255, 102, 255);
@@ -16,7 +16,7 @@ public class PheromoneLayer extends DefaultColorLayer {
 
 	private final Color PheromoneColor;
 
-	public PheromoneLayer(PheromoneType pheromoneType) {
+	public PheromoneFilter(PheromoneType pheromoneType) {
 		this.pheromoneType = pheromoneType;
 		switch (pheromoneType) {
 		case DANGER:

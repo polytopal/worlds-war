@@ -34,6 +34,8 @@ public class GuiActionsManager {
 
 	private final Map<PheromoneType, Action> pheromoneFilterActionsMap;
 
+	private final Action debugFilterAction;
+
 	GuiActionsManager(final Controller controller, final CentralPanel centralPanel) {
 		this.newSimulationAction = new NewSimulationAction(controller);
 		this.stopSimulationAction = new StopSimulationAction(controller);
@@ -50,6 +52,8 @@ public class GuiActionsManager {
 		for (final PheromoneType pheromoneType : PheromoneType.values()) {
 			this.pheromoneFilterActionsMap.put(pheromoneType, new PheromoneFilterAction(centralPanel, pheromoneType));
 		}
+
+		this.debugFilterAction = new DebugFilterAction(centralPanel);
 	}
 
 	/**
@@ -84,6 +88,10 @@ public class GuiActionsManager {
 
 	public Action getPheromoneFilterActions(PheromoneType pheromoneType) {
 		return this.pheromoneFilterActionsMap.get(pheromoneType);
+	}
+
+	public Action getDebugFilterAction() {
+		return this.debugFilterAction;
 	}
 
 	/**
@@ -234,8 +242,28 @@ public class GuiActionsManager {
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			if (ae.getSource() instanceof JCheckBoxMenuItem) {
-				final boolean seleted = ((JCheckBoxMenuItem) ae.getSource()).isSelected();
-				this.centralPanel.setPheromoneFilterEnabled(this.pheromoneType, seleted);
+				final boolean selected = ((JCheckBoxMenuItem) ae.getSource()).isSelected();
+				this.centralPanel.setPheromoneFilterEnabled(this.pheromoneType, selected);
+			}
+		}
+
+	}
+
+	private class DebugFilterAction extends AbstractAction {
+		private static final long serialVersionUID = 4726271442253782449L;
+
+		private final CentralPanel centralPanel;
+
+		public DebugFilterAction(CentralPanel centralPanel) {
+			super(Messages.getString("MenuBar.debugFilter")); //$NON-NLS-1$
+			this.centralPanel = centralPanel;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			if (ae.getSource() instanceof JCheckBoxMenuItem) {
+				final boolean selected = ((JCheckBoxMenuItem) ae.getSource()).isSelected();
+				this.centralPanel.setDebugFilterEnabled(selected);
 			}
 		}
 

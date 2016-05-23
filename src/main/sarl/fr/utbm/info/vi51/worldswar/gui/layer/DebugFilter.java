@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
@@ -12,7 +13,7 @@ import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
  * This layer add text to the cells. The text is visible only if the user zoom
  * on the cell
  */
-public class DebugLayer implements GuiLayer {
+public class DebugFilter implements GuiLayer {
 
 	private static final Color FONT_COLOR = Color.ORANGE;
 	private static final int CELL_SIZE_LIMIT = 20;
@@ -21,11 +22,35 @@ public class DebugLayer implements GuiLayer {
 	protected final List<List<String>> panelTable;
 	protected boolean enabled;
 
-	public DebugLayer() {
+	public DebugFilter() {
 		this.panelTable = new ArrayList<>(0);
 		this.width = 0;
 		this.height = 0;
-		this.enabled = true;
+		this.enabled = false;
+	}
+
+	private static String computeString(PerceptionCell cell) {
+		if (cell.getAntHill() != null) {
+			final int availableFood = cell.getAntHill().getAvailableFood();
+			return String.format("f:%d", availableFood); //$NON-NLS-1$
+		}
+		if (cell.getAnt() != null) {
+			final int foodCarried = cell.getAnt().getFoodCarried();
+			return String.format("f:%d", foodCarried); //$NON-NLS-1$
+		}
+
+		float maxPheroQty = 0;
+		for (final PheromoneType pheromoneType : PheromoneType.values()) {
+			final float totalPheromoneQuantity = cell.getTotalPheromoneQuantity(pheromoneType);
+			if (totalPheromoneQuantity > maxPheroQty) {
+				maxPheroQty = totalPheromoneQuantity;
+			}
+		}
+		if (maxPheroQty > 0) {
+			return String.format("p:%.1f", maxPheroQty); //$NON-NLS-1$
+		}
+
+		return null;
 	}
 
 	@Override
@@ -49,19 +74,6 @@ public class DebugLayer implements GuiLayer {
 				this.panelTable.get(x).set(y, s);
 			}
 		}
-	}
-
-	private static String computeString(PerceptionCell cell) {
-		if (cell.getAntHill() != null) {
-			final int availableFood = cell.getAntHill().getAvailableFood();
-			return String.format("f:%d", availableFood); //$NON-NLS-1$
-		}
-		if (cell.getAnt() != null) {
-			final int foodCarried = cell.getAnt().getFoodCarried();
-			return String.format("f:%d", foodCarried); //$NON-NLS-1$
-		}
-
-		return null;
 	}
 
 	@Override

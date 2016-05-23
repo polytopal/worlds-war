@@ -20,10 +20,10 @@ import javax.swing.ScrollPaneConstants;
 
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.gui.layer.AntLayer;
-import fr.utbm.info.vi51.worldswar.gui.layer.DebugLayer;
+import fr.utbm.info.vi51.worldswar.gui.layer.DebugFilter;
 import fr.utbm.info.vi51.worldswar.gui.layer.GuiLayer;
 import fr.utbm.info.vi51.worldswar.gui.layer.MapLayer;
-import fr.utbm.info.vi51.worldswar.gui.layer.PheromoneLayer;
+import fr.utbm.info.vi51.worldswar.gui.layer.PheromoneFilter;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
 /**
@@ -84,10 +84,10 @@ public class CentralPanel extends JPanel {
 		// !! the order is important
 		this.layers.add(new MapLayer());
 		this.layers.add(new AntLayer());
-		this.layers.add(new DebugLayer());
 		for (final PheromoneType pheromoneType : PheromoneType.values()) {
-			this.layers.add(new PheromoneLayer(pheromoneType));
+			this.layers.add(new PheromoneFilter(pheromoneType));
 		}
+		this.layers.add(new DebugFilter());
 
 		this.width = 0;
 		this.height = 0;
@@ -159,11 +159,19 @@ public class CentralPanel extends JPanel {
 		this.gridPanel.repaint();
 	}
 
-	public void setPheromoneFilterEnabled(PheromoneType pheromoneType, boolean seleted) {
+	public void setPheromoneFilterEnabled(PheromoneType pheromoneType, boolean selected) {
 		for (final GuiLayer guiLayer : this.layers) {
-			if (guiLayer instanceof PheromoneLayer
-					&& ((PheromoneLayer) guiLayer).getPheromoneType().equals(pheromoneType)) {
-				guiLayer.setEnabled(seleted);
+			if (guiLayer instanceof PheromoneFilter
+					&& ((PheromoneFilter) guiLayer).getPheromoneType().equals(pheromoneType)) {
+				guiLayer.setEnabled(selected);
+			}
+		}
+	}
+
+	public void setDebugFilterEnabled(boolean selected) {
+		for (final GuiLayer guiLayer : this.layers) {
+			if (guiLayer instanceof DebugFilter) {
+				guiLayer.setEnabled(selected);
 			}
 		}
 	}
