@@ -12,7 +12,7 @@ import fr.utbm.info.vi51.worldswar.utils.Stock;
 public class AntHill extends StaticObject {
 
 	/** Number of steps between the spawn of two ants in the anthill */
-	public static final int SPAWN_COOLDOWN = 5;
+	public static final int SPAWN_COOLDOWN = 15;
 	/** Food consumed by the spawn of a new ant */
 	public static final int SPAWN_COST = 25;
 

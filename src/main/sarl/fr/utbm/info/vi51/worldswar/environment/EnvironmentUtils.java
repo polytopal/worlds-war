@@ -81,12 +81,12 @@ public class EnvironmentUtils {
 						antHillCell = true;
 					}
 				}
-				// if there is an ant hill, there is not other objects on the
-				// cell
+				// if there is an ant hill, there should not be any other
+				// objects on the cell
 				if (!antHillCell) {
-					final float perlinHeight = randomFoodGrid.get(position).floatValue();
-					if (perlinHeight > 0.0f) {
-						envCell.addEnvObject(new Food(position, (int) perlinHeight));
+					final int perlinHeight = randomFoodGrid.get(position).intValue();
+					if (perlinHeight > 0) {
+						envCell.addEnvObject(new Food(position, perlinHeight));
 					}
 				}
 			}

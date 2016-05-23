@@ -39,12 +39,12 @@ public class AntTacticalBehaviour {
 			memory.put("pheromoneType", PheromoneType.HOME);
 			memory.put("pheromoneDistance", new Integer(0));
 		}
-		if (perception.isFoodInSight()) {
-			if (perception.getFoodAt(MY_POSITION) > 0) {
-				memory.put("pheromoneType", PheromoneType.FOOD);
-				memory.put("pheromoneDistance", new Integer(0));
-				return this.operationalBehaviour.pickFood(perception);
-			}
+		if (perception.getFoodAt(MY_POSITION) > 0) {
+			memory.put("pheromoneType", PheromoneType.FOOD);
+			memory.put("pheromoneDistance", new Integer(0));
+			return this.operationalBehaviour.pickFood(perception);
+		}
+		if (perception.isAvailableFoodInSight()) {
 			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getClosestAvailableFoodPos());
 		}
 		Point highestFoodPheromonePos = perception.getHighestPheromonePos(PheromoneType.FOOD);
