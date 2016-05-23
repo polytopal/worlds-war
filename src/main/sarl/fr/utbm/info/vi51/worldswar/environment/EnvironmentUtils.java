@@ -27,6 +27,11 @@ public class EnvironmentUtils {
 	private EnvironmentUtils() {
 	}
 
+	/**
+	 * @param simulationParameters
+	 * @return a map randomly generated, following the specified simulation
+	 *         parameters
+	 */
 	public static Grid<EnvCell> generateMap(SimulationParameters simulationParameters) {
 
 		final int width = simulationParameters.getGridWidth();
@@ -89,6 +94,10 @@ public class EnvironmentUtils {
 		return grid;
 	}
 
+	/**
+	 * @param grid
+	 * @return a list of all the {@link AntHill}s in the given grid
+	 */
 	public static List<AntHill> getAntHills(Grid<EnvCell> grid) {
 		final List<AntHill> list = new ArrayList<>();
 
