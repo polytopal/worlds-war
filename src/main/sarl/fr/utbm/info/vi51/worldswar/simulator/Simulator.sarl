@@ -105,8 +105,8 @@ agent Simulator {
 	
 	on EnvironmentReadyEvent {
 		synchronized(this) {
-				this.environmentReady = true
-				simulationLoop
+			this.environmentReady = true
+			simulationLoop
 		}
 	}
 	
