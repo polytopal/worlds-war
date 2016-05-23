@@ -13,6 +13,8 @@ public interface GuiLayer {
 	 */
 	void setEnabled(boolean b);
 
+	boolean isEnabled();
+
 	/**
 	 * update the layer
 	 * 

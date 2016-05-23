@@ -1,22 +1,13 @@
 package fr.utbm.info.vi51.worldswar.gui.layer;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.util.ArrayList;
-import java.util.List;
 
-import fr.utbm.info.vi51.worldswar.environment.Breed;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
-import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
-import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableAnt;
 import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableFood;
 
-public class MapLayer implements GuiLayer {
+public class MapLayer extends DefaultColorLayer {
 
 	private static Color ANT_HILL_COLOR = new Color(255, 0, 0);
-
-	private static Color DARK_ANT_COLOR = new Color(51, 25, 0);
-	private static Color RED_ANT_COLOR = new Color(153, 0, 0);
 
 	private static Color FOOD_LITTLE_QTY_COLOR = new Color(128, 255, 128);
 	private static Color FOOD_BIG_QTY_COLOR = new Color(102, 204, 102);
@@ -29,14 +20,9 @@ public class MapLayer implements GuiLayer {
 	private static Color PHEROMONE_FOOD_COLOR = new Color(153, 255, 255);
 	private static Color PHEROMONE_HOME_COLOR = new Color(255, 204, 153);
 
-	private int width;
-	private int height;
-	private final List<List<Color>> panelTable;
-
 	public MapLayer() {
-		this.panelTable = new ArrayList<>(0);
-		this.width = 0;
-		this.height = 0;
+		super();
+		this.enabled = true;
 	}
 
 	@Override
@@ -45,90 +31,23 @@ public class MapLayer implements GuiLayer {
 	}
 
 	@Override
-	public void update(PerceptionGrid perceptionGrid) {
-		if (this.width != perceptionGrid.getWidth() || this.height != perceptionGrid.getHeight()) {
-			resizeGrid(perceptionGrid.getWidth(), perceptionGrid.getHeight());
-		}
-		for (int x = 0; x < this.width; x++) {
-			for (int y = 0; y < this.height; y++) {
-				final Color cellColor = computeCellColor(perceptionGrid.getCell(x, y));
-				this.panelTable.get(x).set(y, cellColor);
-			}
-		}
-
-	}
-
-	/**
-	 * Methods used only when a new environment with a different size of the
-	 * older environment
-	 */
-	private void resizeGrid(int w, int h) {
-		this.width = w;
-		this.height = h;
-		this.panelTable.clear();
-		for (int x = 0; x < this.width; x++) {
-			final ArrayList<Color> column = new ArrayList<>(h);
-			for (int y = 0; y < this.height; y++) {
-				column.add(Color.WHITE);
-			}
-			this.panelTable.add(column);
-		}
-	}
-
-	@Override
-	public void paintLayer(Graphics g, int cellSize) {
-
-		for (int x = 0; x < this.width; x++) {
-			for (int y = 0; y < this.height; y++) {
-				g.setColor(this.panelTable.get(x).get(y));
-				g.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-			}
-		}
-
-	}
-
-	/**
-	 * Compute the color of a cell
-	 * 
-	 * @param cell
-	 * @param pheromoneFilter
-	 *            a filter to show a specific pheromone, doesn't show any
-	 *            pheromone if = null
-	 * @return the color of the cell
-	 */
-	public static Color computeCellColor(PerceptionCell cell) {
+	protected Color computeCellColor(PerceptionCell cell) {
 
 		Color c = null;
 		if (cell.getAntHill() != null) {
 			c = ANT_HILL_COLOR;
 		} else { // no ant hill
-			final PerceivableAnt ant = cell.getAnt();
-			if (ant != null) {
-				final Breed breed = ant.getColony().getBreed();
-				switch (breed) {
-				case DARK_ANTS:
-					c = DARK_ANT_COLOR;
-					break;
-				case RED_ANTS:
-					c = RED_ANT_COLOR;
-					break;
-				default:
-					c = Color.BLACK;
-					break;
+			final PerceivableFood food = cell.getFood();
+			if (food != null) {
+				// the color is darker when there is more food
+				final int qty = food.getAvailable();
+				if (qty > FOOD_BIG_QTY_LIMIT) {
+					c = FOOD_BIG_QTY_COLOR;
+				} else {
+					c = FOOD_LITTLE_QTY_COLOR;
 				}
-			} else { // no ant
-				final PerceivableFood food = cell.getFood();
-				if (food != null) {
-					// the color is darker when there is more food
-					final int qty = food.getAvailable();
-					if (qty > FOOD_BIG_QTY_LIMIT) {
-						c = FOOD_BIG_QTY_COLOR;
-					} else {
-						c = FOOD_LITTLE_QTY_COLOR;
-					}
-				} else { // no food
-					c = EMPTY_CELL_COLOR;
-				}
+			} else { // no food
+				c = EMPTY_CELL_COLOR;
 			}
 		}
 

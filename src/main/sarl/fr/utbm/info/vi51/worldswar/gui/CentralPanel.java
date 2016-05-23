@@ -10,6 +10,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -17,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
+import fr.utbm.info.vi51.worldswar.gui.layer.AntLayer;
 import fr.utbm.info.vi51.worldswar.gui.layer.GuiLayer;
 import fr.utbm.info.vi51.worldswar.gui.layer.MapLayer;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
@@ -45,7 +48,7 @@ public class CentralPanel extends JPanel {
 	private final JScrollPane scrollPane;
 	private final JPanel gridPanel;
 
-	private final GuiLayer baseLayer;
+	private final List<GuiLayer> layers;
 
 	/**
 	 * @param SimulatorController
@@ -69,11 +72,19 @@ public class CentralPanel extends JPanel {
 				g.setColor(Color.LIGHT_GRAY);
 				g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-				CentralPanel.this.baseLayer.paintLayer(g, CentralPanel.this.cellSize);
+				for (final GuiLayer layer : CentralPanel.this.layers) {
+					if (layer.isEnabled()) {
+						layer.paintLayer(g, CentralPanel.this.cellSize);
+					}
+				}
 			}
 		};
 
-		this.baseLayer = new MapLayer();
+		this.layers = new ArrayList<>();
+
+		// !! the order is important
+		this.layers.add(new MapLayer());
+		this.layers.add(new AntLayer());
 
 		this.width = 0;
 		this.height = 0;
@@ -138,7 +149,9 @@ public class CentralPanel extends JPanel {
 		this.width = perceptionGrid.getWidth();
 		this.height = perceptionGrid.getHeight();
 
-		this.baseLayer.update(perceptionGrid);
+		for (final GuiLayer guiLayer : this.layers) {
+			guiLayer.update(perceptionGrid);
+		}
 
 		this.gridPanel.repaint();
 	}
