@@ -70,7 +70,7 @@ public class AntBody extends AgentBody {
 		this.perceptionRange = computeStatistic(caste.getPerceptionRange(), breed.getPerceptionRangeMultiplier());
 
 		this.foodCarried = new Stock(0);
-		this.burrowed = true;
+		this.burrowed = false;
 	}
 
 	private static int computeStatistic(int baseStat, float multiplier) {

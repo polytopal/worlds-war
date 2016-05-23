@@ -27,6 +27,14 @@ public class PerceivableAnt extends Perceivable {
 
 	/**
 	 * @return
+	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.AntBody#getCapacity()
+	 */
+	public int getCapacity() {
+		return this.ant.getCapacity();
+	}
+
+	/**
+	 * @return
 	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.AntBody#getHealth()
 	 */
 	public int getHealth() {

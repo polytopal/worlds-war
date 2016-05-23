@@ -12,6 +12,8 @@ import fr.utbm.info.vi51.worldswar.utils.Grid;
 
 public class PerceptionGrid {
 
+	public static final Point MY_POSITION = new Point(0, 0);
+
 	private final Grid<PerceptionCell> perceptionCellGrid;
 
 	public PerceptionGrid(Grid<PerceptionCell> perceptionCellGrid) {

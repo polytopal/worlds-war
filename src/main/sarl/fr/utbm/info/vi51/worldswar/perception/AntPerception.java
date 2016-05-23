@@ -1,5 +1,7 @@
 package fr.utbm.info.vi51.worldswar.perception;
 
+import static fr.utbm.info.vi51.worldswar.perception.PerceptionGrid.MY_POSITION;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,8 @@ public class AntPerception {
 	}
 
 	/**
+	 * @param type
+	 * @param colony
 	 * @return the position (in local coordinates) where there is the most
 	 *         pheromone of the given {@link PheromoneType} and {@link Colony},
 	 *         or {@code null} if no relevant pheromone is perceived
@@ -64,6 +68,18 @@ public class AntPerception {
 			}
 		}
 		return highestPos;
+	}
+
+	/**
+	 * 
+	 * @param type
+	 * @return the position (in local coordinates) where there is the most
+	 *         pheromone of the given {@link PheromoneType} and the ant's own
+	 *         colony, or {@code null} if no relevant pheromone is perceived
+	 * @see AntPerception#getHighestPheromonePos(PheromoneType, Colony)
+	 */
+	public Point getHighestPheromonePos(PheromoneType type) {
+		return this.getHighestPheromonePos(type, this.myBody.getColony());
 	}
 
 	/**
@@ -185,5 +201,23 @@ public class AntPerception {
 			return 0;
 		}
 		return food.getAvailable();
+	}
+
+	/**
+	 * @param position
+	 * @param type
+	 * @param colony
+	 * @return the quantity of specified pheromone at the given location
+	 */
+	public float getPheromoneQtyAt(Point position, PheromoneType type, Colony colony) {
+		return this.grid.getCell(position).getPheromoneQuantity(type, colony);
+	}
+
+	/**
+	 * @return {@code true} if the ant is at home
+	 */
+	public boolean isAtHome() {
+		Point homePos = this.getHomePos();
+		return (homePos != null && homePos.equals(MY_POSITION));
 	}
 }

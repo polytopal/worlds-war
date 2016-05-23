@@ -14,12 +14,12 @@ public class Pheromone extends StaticObject {
 	/**
 	 * Flat amount of qty lost each step
 	 */
-	public static final float FLAT_DISSIPATION = 0.02f;
+	public static final float FLAT_DISSIPATION = 0.03f;
 
 	/**
 	 * Ratio of the qty lost each step
 	 */
-	public static final float SCALING_DISSIPATION = 0.02f;
+	public static final float SCALING_DISSIPATION = 0.001f;
 
 	private float qty;
 	private PheromoneType type;
@@ -64,7 +64,7 @@ public class Pheromone extends StaticObject {
 	 * @param qty
 	 */
 	public void addQty(float qty) {
-		this.qty += qty;
+		this.qty = Math.max(qty, this.qty);
 	}
 
 	////////////////////////////////////////
