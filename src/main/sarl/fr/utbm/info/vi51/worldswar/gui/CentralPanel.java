@@ -20,6 +20,7 @@ import javax.swing.ScrollPaneConstants;
 
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.gui.layer.AntLayer;
+import fr.utbm.info.vi51.worldswar.gui.layer.DebugLayer;
 import fr.utbm.info.vi51.worldswar.gui.layer.GuiLayer;
 import fr.utbm.info.vi51.worldswar.gui.layer.MapLayer;
 import fr.utbm.info.vi51.worldswar.gui.layer.PheromoneLayer;
@@ -34,9 +35,9 @@ import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 public class CentralPanel extends JPanel {
 	private static final long serialVersionUID = -8443885607526578507L;
 
-	private static final int CAMERA_MOVE_SPEED = 10;
+	private static final int CAMERA_MOVE_SPEED = 20;
 	private static final int CELL_SIZE_MIN = 2;
-	private static final int CELL_SIZE_MAX = 30;
+	private static final int CELL_SIZE_MAX = 70;
 
 	private int width;
 	private int height;
@@ -83,6 +84,7 @@ public class CentralPanel extends JPanel {
 		// !! the order is important
 		this.layers.add(new MapLayer());
 		this.layers.add(new AntLayer());
+		this.layers.add(new DebugLayer());
 		for (final PheromoneType pheromoneType : PheromoneType.values()) {
 			this.layers.add(new PheromoneLayer(pheromoneType));
 		}

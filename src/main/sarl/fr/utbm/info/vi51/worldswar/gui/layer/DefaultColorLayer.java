@@ -19,7 +19,7 @@ public abstract class DefaultColorLayer implements GuiLayer {
 		this.panelTable = new ArrayList<>(0);
 		this.width = 0;
 		this.height = 0;
-		setEnabled(true);
+		this.enabled = true;
 	}
 
 	@Override

@@ -8,9 +8,9 @@ import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 public class PheromoneLayer extends DefaultColorLayer {
 
 	private static float PHEROMONE_VISIBILITY_COEFFICIENT = 10f;
-	private static Color PHEROMONE_DANGER_COLOR = new Color(180, 80, 255);
-	private static Color PHEROMONE_FOOD_COLOR = new Color(153, 255, 255);
-	private static Color PHEROMONE_HOME_COLOR = new Color(255, 204, 153);
+	private static Color PHEROMONE_DANGER_COLOR = new Color(255, 102, 255);
+	private static Color PHEROMONE_FOOD_COLOR = new Color(102, 255, 255);
+	private static Color PHEROMONE_HOME_COLOR = new Color(255, 178, 102);
 
 	private final PheromoneType pheromoneType;
 
