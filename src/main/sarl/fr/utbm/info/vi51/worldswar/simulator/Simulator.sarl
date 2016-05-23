@@ -154,7 +154,7 @@ agent Simulator {
 		for(l : listeners) {
 			l.simulationTerminated
 		}
-		pausePending = true
+		this.pausePending = true
 		emit(new StopSimulationEvent)
 	}
 	
