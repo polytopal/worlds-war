@@ -27,6 +27,11 @@ public class EnvironmentUtils {
 	private EnvironmentUtils() {
 	}
 
+	/**
+	 * @param simulationParameters
+	 * @return a map randomly generated, following the specified simulation
+	 *         parameters
+	 */
 	public static Grid<EnvCell> generateMap(SimulationParameters simulationParameters) {
 
 		final int width = simulationParameters.getGridWidth();
@@ -89,6 +94,10 @@ public class EnvironmentUtils {
 		return grid;
 	}
 
+	/**
+	 * @param grid
+	 * @return a list of all the {@link AntHill}s in the given grid
+	 */
 	public static List<AntHill> getAntHills(Grid<EnvCell> grid) {
 		final List<AntHill> list = new ArrayList<>();
 
@@ -154,28 +163,37 @@ public class EnvironmentUtils {
 	}
 
 	/**
-	 * Drops the given qty of food from the ant's inventory to the ground under
-	 * its feet.
+	 * Drops the given qty of food from the ant's inventory to the ground or
+	 * anthill under its feet
 	 * 
 	 * @param ant
 	 * @param qty
 	 * @param grid
 	 */
 	public static void dropFood(AntBody ant, int qty, Grid<EnvCell> grid) {
+		// Ensure we do not drop more food than what the ant currently holds
 		final int foodDropped = ant.pickFood(qty);
-		Food food = getFoodAt(ant.getPosition(), grid);
-		if (food == null) {
-			// If there was no food at this place, we have to create the
-			// envobject
-			food = new Food(ant.getPosition(), foodDropped);
-			grid.get(ant.getPosition()).addEnvObject(food);
+
+		// If there is an anthill, the food is dropped in it
+		final AntHill antHill = getAntHillAt(ant.getPosition(), grid);
+		if (antHill != null) {
+			antHill.dropFood(foodDropped);
 		} else {
-			food.drop(foodDropped);
+			// Dispose food on the ground
+			Food food = getFoodAt(ant.getPosition(), grid);
+			if (food == null) {
+				// If there was no food at this place, we have to create the
+				// envobject
+				food = new Food(ant.getPosition(), foodDropped);
+				grid.get(ant.getPosition()).addEnvObject(food);
+			} else {
+				food.drop(foodDropped);
+			}
 		}
 	}
 
 	/**
-	 * Picks food from the ground to the ant's inventory.
+	 * Picks food from the ground or the anthill to the ant's inventory.
 	 * 
 	 * @param ant
 	 * @param requestedQty
@@ -188,18 +206,20 @@ public class EnvironmentUtils {
 			return;
 		}
 
-		final Food food = getFoodAt(ant.getPosition(), grid);
-		if (food == null) {
-			// Nothing to do if there is no food to pick
-			return;
-		}
-
-		final int foodPicked = food.pick(qty);
-		ant.giveFood(foodPicked);
-
-		// Remove food object from the map if it is empty
-		if (food.isEmpty()) {
-			grid.get(ant.getPosition()).removeEnvObject(food);
+		final AntHill antHill = getAntHillAt(ant.getPosition(), grid);
+		if (antHill != null) {
+			// Picks the food from the ant hill
+			ant.giveFood(antHill.pickFood(qty));
+		} else {
+			// Picks the food from the ground (if there is food to pick)
+			final Food food = getFoodAt(ant.getPosition(), grid);
+			if (food != null) {
+				ant.giveFood(food.pick(qty));
+				// Remove food object from the map if it is empty
+				if (food.isEmpty()) {
+					grid.get(ant.getPosition()).removeEnvObject(food);
+				}
+			}
 		}
 	}
 
