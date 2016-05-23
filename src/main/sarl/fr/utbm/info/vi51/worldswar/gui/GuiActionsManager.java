@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.KeyStroke;
 
 import fr.utbm.info.vi51.worldswar.controller.Controller;
@@ -28,10 +29,9 @@ public class GuiActionsManager {
 	private final Action pauseSimulationAction;
 	private final Action resumeSimulationAction;
 	private final Action stepSimulationAction;
-	
+
 	private final Map<SimulationSpeed, Action> speedActionsMap;
 
-	private final Action noPheromoneFilterAction;
 	private final Map<PheromoneType, Action> pheromoneFilterActionsMap;
 
 	GuiActionsManager(final Controller controller, final CentralPanel centralPanel) {
@@ -46,7 +46,6 @@ public class GuiActionsManager {
 			this.speedActionsMap.put(simSpeed, new SpeedSetterAction(controller, simSpeed));
 		}
 
-		this.noPheromoneFilterAction = new PheromoneFilterAction(centralPanel, null);
 		this.pheromoneFilterActionsMap = new HashMap<>();
 		for (final PheromoneType pheromoneType : PheromoneType.values()) {
 			this.pheromoneFilterActionsMap.put(pheromoneType, new PheromoneFilterAction(centralPanel, pheromoneType));
@@ -66,11 +65,11 @@ public class GuiActionsManager {
 	public Action getStopSimulationAction() {
 		return this.stopSimulationAction;
 	}
-	
+
 	public Action getPauseSimulationAction() {
 		return this.pauseSimulationAction;
 	}
-	
+
 	public Action getResumeSimulationAction() {
 		return this.resumeSimulationAction;
 	}
@@ -78,15 +77,12 @@ public class GuiActionsManager {
 	public Action getStepSimulationAction() {
 		return this.stepSimulationAction;
 	}
-	
+
 	public Action getSpeedAction(SimulationSpeed simSpeed) {
 		return this.speedActionsMap.get(simSpeed);
 	}
 
 	public Action getPheromoneFilterActions(PheromoneType pheromoneType) {
-		if (pheromoneType == null) {
-			return this.noPheromoneFilterAction;
-		}
 		return this.pheromoneFilterActionsMap.get(pheromoneType);
 	}
 
@@ -118,7 +114,8 @@ public class GuiActionsManager {
 	/**
 	 * @author Leo
 	 * 
-	 *         This action allow to stop the current simulation, by pressing ctrl+s
+	 *         This action allow to stop the current simulation, by pressing
+	 *         ctrl+s
 	 */
 	private class StopSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
@@ -135,9 +132,9 @@ public class GuiActionsManager {
 			this.controller.stopSimulation();
 		}
 	}
-	
+
 	/**
-	 *         This action allows to pause the simulation, by pressing ctrl+p
+	 * This action allows to pause the simulation, by pressing ctrl+p
 	 */
 	private class PauseSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
@@ -155,8 +152,9 @@ public class GuiActionsManager {
 			this.controller.pauseSimulation();
 		}
 	}
+
 	/**
-	 *         This action allows to resume the simulation, by pressing ctrl+p
+	 * This action allows to resume the simulation, by pressing ctrl+p
 	 */
 	private class ResumeSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
@@ -174,9 +172,9 @@ public class GuiActionsManager {
 			this.controller.resumeSimulation();
 		}
 	}
-	
+
 	/**
-	 *         This action allows to execute a step in the simulation when it is paused,
+	 * This action allows to execute a step in the simulation when it is paused,
 	 * by pressing the space bar.
 	 */
 	private class StepSimulationAction extends AbstractAction {
@@ -228,15 +226,18 @@ public class GuiActionsManager {
 		private final PheromoneType pheromoneType;
 
 		public PheromoneFilterAction(CentralPanel centralPanel, PheromoneType pheromoneType) {
-			super((pheromoneType != null) ? Messages.getString(pheromoneType.getPropertyKey())
-					: Messages.getString("PheromoneType.noPheromone")); //$NON-NLS-1$
+			super(Messages.getString(pheromoneType.getPropertyKey()));
 			this.centralPanel = centralPanel;
 			this.pheromoneType = pheromoneType;
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			this.centralPanel.setPheromoneFilter(this.pheromoneType);
+		public void actionPerformed(ActionEvent ae) {
+			if (ae.getSource() instanceof JCheckBoxMenuItem) {
+				final boolean seleted = ((JCheckBoxMenuItem) ae.getSource()).isSelected();
+				System.out.println(seleted);
+				this.centralPanel.setPheromoneFilterEnabled(this.pheromoneType, seleted);
+			}
 		}
 
 	}

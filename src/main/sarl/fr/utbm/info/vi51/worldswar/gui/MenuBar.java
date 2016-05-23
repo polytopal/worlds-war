@@ -1,6 +1,7 @@
 package fr.utbm.info.vi51.worldswar.gui;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -29,16 +30,16 @@ public class MenuBar extends JMenuBar {
 
 		final JMenuItem stopSimulationItem = new JMenuItem(guiActionsManager.getStopSimulationAction());
 		simulationMenu.add(stopSimulationItem);
-		
+
 		final JMenuItem pauseSimulationItem = new JMenuItem(guiActionsManager.getPauseSimulationAction());
 		simulationMenu.add(pauseSimulationItem);
-		
+
 		final JMenuItem resumeSimulationItem = new JMenuItem(guiActionsManager.getResumeSimulationAction());
 		simulationMenu.add(resumeSimulationItem);
-		
+
 		final JMenuItem stepSimulationItem = new JMenuItem(guiActionsManager.getStepSimulationAction());
 		simulationMenu.add(stepSimulationItem);
-		
+
 		// -------- speed menu --------
 
 		final JMenu speedMenu = new JMenu(Messages.getString("MenuBar.Speed")); //$NON-NLS-1$
@@ -58,18 +59,11 @@ public class MenuBar extends JMenuBar {
 		final JMenu pheromoneFilterMenu = new JMenu(Messages.getString("MenuBar.pheromoneFilter")); //$NON-NLS-1$
 		this.add(pheromoneFilterMenu);
 
-		final ButtonGroup pheromoneFilterButtonsGroup = new ButtonGroup();
-		final JRadioButtonMenuItem noFilterButton = new JRadioButtonMenuItem(
-				guiActionsManager.getPheromoneFilterActions(null));
-		pheromoneFilterButtonsGroup.add(noFilterButton);
-		pheromoneFilterMenu.add(noFilterButton);
 		for (final PheromoneType phero : PheromoneType.values()) {
-			final JRadioButtonMenuItem filterButton = new JRadioButtonMenuItem(
+			final JCheckBoxMenuItem filterButton = new JCheckBoxMenuItem(
 					guiActionsManager.getPheromoneFilterActions(phero));
-			pheromoneFilterButtonsGroup.add(filterButton);
 			pheromoneFilterMenu.add(filterButton);
 		}
-		noFilterButton.setSelected(true);
 
 	}
 }

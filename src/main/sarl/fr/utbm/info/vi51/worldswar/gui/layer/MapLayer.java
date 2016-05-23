@@ -15,11 +15,6 @@ public class MapLayer extends DefaultColorLayer {
 
 	private static Color EMPTY_CELL_COLOR = Color.WHITE;
 
-	private static float PHEROMONE_VISIBILITY_COEFFICIENT = 1.8f;
-	private static Color PHEROMONE_DANGER_COLOR = new Color(180, 80, 255);
-	private static Color PHEROMONE_FOOD_COLOR = new Color(153, 255, 255);
-	private static Color PHEROMONE_HOME_COLOR = new Color(255, 204, 153);
-
 	public MapLayer() {
 		super();
 		this.enabled = true;
@@ -50,39 +45,6 @@ public class MapLayer extends DefaultColorLayer {
 				c = EMPTY_CELL_COLOR;
 			}
 		}
-
-		// TODO - remove
-		// if (pheromoneFilter != null) {
-		// // TODO doit dépendre d'une colonie
-		// Color pheromoneColor;
-		// switch (pheromoneFilter) {
-		// case DANGER:
-		// pheromoneColor = PHEROMONE_DANGER_COLOR;
-		// break;
-		// case FOOD:
-		// pheromoneColor = PHEROMONE_FOOD_COLOR;
-		// break;
-		// case HOME:
-		// pheromoneColor = PHEROMONE_HOME_COLOR;
-		// break;
-		// default:
-		// pheromoneColor = Color.BLACK;
-		// break;
-		// }
-		//
-		// final float qty = cell.getTotalPheromoneQuantity(pheromoneFilter) *
-		// PHEROMONE_VISIBILITY_COEFFICIENT;
-		// if (qty > 0) {
-		// // for each color component (rgb), we calculate the average
-		// // between the previously computed color and the pheromone
-		// // color. The avarage is balanced by the quantity of the
-		// // pheromone
-		// c = new Color((int) ((c.getRed() + pheromoneColor.getRed() * qty) /
-		// (qty + 1)),
-		// (int) ((c.getGreen() + pheromoneColor.getGreen() * qty) / (qty + 1)),
-		// (int) ((c.getBlue() + pheromoneColor.getBlue() * qty) / (qty + 1)));
-		// }
-		// }
 
 		return c;
 	}

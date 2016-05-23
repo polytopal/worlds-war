@@ -22,6 +22,7 @@ import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -46,6 +47,7 @@ public class LaunchSimulationDialog extends JDialog {
 		this.setModal(true);
 		this.setResizable(false);
 		setBounds(100, 100, 400, 300);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		this.simulationParameters = null;
 

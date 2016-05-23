@@ -22,6 +22,7 @@ import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.gui.layer.AntLayer;
 import fr.utbm.info.vi51.worldswar.gui.layer.GuiLayer;
 import fr.utbm.info.vi51.worldswar.gui.layer.MapLayer;
+import fr.utbm.info.vi51.worldswar.gui.layer.PheromoneLayer;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
 /**
@@ -41,9 +42,6 @@ public class CentralPanel extends JPanel {
 	private int height;
 
 	private int cellSize = 8;
-
-	// TODO remove
-	// private final PheromoneType pheromoneFilter;
 
 	private final JScrollPane scrollPane;
 	private final JPanel gridPanel;
@@ -85,6 +83,9 @@ public class CentralPanel extends JPanel {
 		// !! the order is important
 		this.layers.add(new MapLayer());
 		this.layers.add(new AntLayer());
+		for (final PheromoneType pheromoneType : PheromoneType.values()) {
+			this.layers.add(new PheromoneLayer(pheromoneType));
+		}
 
 		this.width = 0;
 		this.height = 0;
@@ -156,8 +157,13 @@ public class CentralPanel extends JPanel {
 		this.gridPanel.repaint();
 	}
 
-	public void setPheromoneFilter(PheromoneType pheromoneType) {
-		// TODO - modify this method
+	public void setPheromoneFilterEnabled(PheromoneType pheromoneType, boolean seleted) {
+		for (final GuiLayer guiLayer : this.layers) {
+			if (guiLayer instanceof PheromoneLayer
+					&& ((PheromoneLayer) guiLayer).getPheromoneType().equals(pheromoneType)) {
+				guiLayer.setEnabled(seleted);
+			}
+		}
 	}
 
 	private void zoomIn() {
