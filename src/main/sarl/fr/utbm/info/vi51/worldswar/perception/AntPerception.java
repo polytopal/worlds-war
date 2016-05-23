@@ -137,9 +137,9 @@ public class AntPerception {
 	/**
 	 * @return {@code true} if there is available food in the ant's field of
 	 *         perception
-	 * @see AntPerception#getNearestAvailableFoodPos
+	 * @see AntPerception#getClosestAvailableFoodPos
 	 */
-	public boolean isFoodInSight() {
+	public boolean isAvailableFoodInSight() {
 		return this.getClosestAvailableFoodPos() != null;
 	}
 
