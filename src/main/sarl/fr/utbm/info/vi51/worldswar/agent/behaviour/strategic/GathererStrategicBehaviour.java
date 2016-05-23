@@ -23,7 +23,7 @@ public class GathererStrategicBehaviour implements AntStrategicBehaviour {
 
 	@Override
 	public Influence computeInfluence(AntPerception perception, HashMap<String, Object> memory) {
-		if (perception.getMyBody().getFoodCarried() >= perception.getMyBody().getCapacity()) {
+		if (perception.getMyBody().getFoodCarried() > 0) {
 			return this.tacticalBehaviour.BringFoodHome(perception, memory);
 		}
 		return this.tacticalBehaviour.collectFood(perception, memory);
