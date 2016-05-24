@@ -5,6 +5,7 @@ import static fr.utbm.info.vi51.worldswar.perception.PerceptionGrid.MY_POSITION;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
@@ -29,8 +30,14 @@ public class AntOperationalBehaviour {
 	private static final int MAX_PHEROMONE_DISTANCE = (int) (MAX_PHEROMONE / PHEROMONE_DECAY);
 
 	/**
-	 * Move in a direction to the target : either directly to the target (primary direction), either using an
-	 * alternative direction.
+	 * Chances that a wandering ant will choose a new direction instead of going
+	 * forward
+	 */
+	private static final float WANDER_TURN_FREQUENCY = 0.2f;
+
+	/**
+	 * Move in a direction to the target : either directly to the target
+	 * (primary direction), either using an alternative direction.
 	 * 
 	 * @param perception
 	 * @param memory
@@ -44,46 +51,43 @@ public class AntOperationalBehaviour {
 		 */
 		Direction primaryDirection = null;
 		/*
-		 * The directions directly next to the primary direction, that can be used if the primary target
-		 * can't be reached
+		 * The directions directly next to the primary direction, that can be
+		 * used if the primary target can't be reached
 		 */
 		ArrayList<Direction> alternativeDirections = new ArrayList<>(3);
 
 		/*
-		 * Right now, succession of if (max 4). Might be optimized by packing the target's coords in [(-1,-1),(1,1)]
+		 * Right now, succession of if (max 4). Might be optimized by packing
+		 * the target's coords in [(-1,-1),(1,1)]
 		 */
-		if (target.x < 0){
-			if (target.y < 0) {			//(-1,-1)
+		if (target.x < 0) {
+			if (target.y < 0) { // (-1,-1)
 				primaryDirection = Direction.NORTH_WEST;
-			} else if (target.y > 0) {	//(-1,1)
+			} else if (target.y > 0) { // (-1,1)
 				primaryDirection = Direction.SOUTH_WEST;
 
-			} else {					//(-1,0)
+			} else { // (-1,0)
 				primaryDirection = Direction.WEST;
 
 			}
-		}
-		else if (target.x > 0){
-			if (target.y < 0) {			//(1,-1)
+		} else if (target.x > 0) {
+			if (target.y < 0) { // (1,-1)
 				primaryDirection = Direction.NORTH_EAST;
 
-			} else if (target.y > 0) {	//(1,1)
+			} else if (target.y > 0) { // (1,1)
 				primaryDirection = Direction.SOUTH_EAST;
 
-			} else {					//(1,0)
+			} else { // (1,0)
 				primaryDirection = Direction.EAST;
 
 			}
-		}
-		else if (target.y < 0) {		//(0,-1)
+		} else if (target.y < 0) { // (0,-1)
 			primaryDirection = Direction.NORTH;
 
-		}
-		else if (target.y > 0) {		//(0,1)
+		} else if (target.y > 0) { // (0,1)
 			primaryDirection = Direction.SOUTH;
 
 		}
-
 
 		if (primaryDirection == null) {
 			// Target is (0,0), this means we already reached it
@@ -93,18 +97,19 @@ public class AntOperationalBehaviour {
 		alternativeDirections = primaryDirection.adjacentDirections();
 
 		/*
-		 *  If the cell targeted by the primaryDirection is free (<=> traversable), generates the
-		 *  Influence corresponding to the direction
+		 * If the cell targeted by the primaryDirection is free (<=>
+		 * traversable), generates the Influence corresponding to the direction
 		 */
-		if (perception.isTraversable(primaryDirection.getPoint())){
+		if (perception.isTraversable(primaryDirection.getPoint())) {
 			return this.move(perception, primaryDirection, memory);
 		}
 
 		/*
-		 *  If not, uses one of the 2 alternative directions to generate the influence.
-		 *  This direction might not be traversable either.
+		 * If not, uses one of the 2 alternative directions to generate the
+		 * influence. This direction might not be traversable either.
 		 */
-		return this.move(perception, alternativeDirections.get(new Random().nextInt(alternativeDirections.size())), memory);
+		return this.move(perception, alternativeDirections.get(new Random().nextInt(alternativeDirections.size())),
+				memory);
 
 	}
 
@@ -137,14 +142,25 @@ public class AntOperationalBehaviour {
 	 *         with a random direction
 	 */
 	public Influence wander(AntPerception perception, HashMap<String, Object> memory) {
-		final Direction d = Direction.values()[new Random().nextInt(Direction.values().length)];
-		return this.move(perception, d, memory);
+		if (!memory.containsKey("lastMoveDirection")) {
+			final Direction d = Direction.values()[new Random().nextInt(Direction.values().length)];
+			return this.move(perception, d, memory);
+		}
+
+		Direction lastDirection = (Direction) (memory.get("lastMoveDirection"));
+		if (Math.random() < WANDER_TURN_FREQUENCY) {
+			final List<Direction> adjacentDirections = lastDirection.adjacentDirections();
+			final Direction d = adjacentDirections.get(new Random().nextInt(adjacentDirections.size()));
+			return this.move(perception, d, memory);
+		}
+		return this.move(perception, lastDirection, memory);
 	}
 
 	/**
 	 * Computes the influence to move in the specified direction while putting
 	 * pheromones according to the "pheromoneDistance" and "pheromoneType"
-	 * values in memory
+	 * values in memory. Also stores the direction to the "lastMoveDirection"
+	 * entry in memory
 	 * 
 	 * @param d
 	 * @param memory
@@ -172,8 +188,10 @@ public class AntOperationalBehaviour {
 					perception.getMyBody().getColony());
 			pheromoneQty = Math.max(pheromoneQty, qtyOnGround);
 
+			memory.put("lastMoveDirection", d);
 			return new PheromoneAndMoveInfluence(pheromoneType, pheromoneQty, d);
 		}
+		memory.put("lastMoveDirection", d);
 		return new MoveInfluence(d);
 	}
 }
