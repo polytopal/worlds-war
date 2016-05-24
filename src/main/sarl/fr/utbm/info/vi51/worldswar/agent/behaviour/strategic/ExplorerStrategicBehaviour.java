@@ -28,7 +28,7 @@ public class ExplorerStrategicBehaviour implements AntStrategicBehaviour {
 		if (perception.getMyBody().getFoodCarried() > 0) {
 			return this.tacticalBehaviour.bringFoodHome(perception, memory);
 		}
-		return this.tacticalBehaviour.collectFood(perception, memory);
+		return this.tacticalBehaviour.wanderForFood(perception, memory);
 	}
 
 }
