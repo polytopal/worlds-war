@@ -16,10 +16,23 @@ public class PerceptionGrid {
 
 	private final Grid<PerceptionCell> perceptionCellGrid;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param perceptionCellGrid
+	 *            {@link Grid}<{@link PerceptionCell}>
+	 */
 	public PerceptionGrid(Grid<PerceptionCell> perceptionCellGrid) {
 		this.perceptionCellGrid = perceptionCellGrid;
 	}
 
+	/**
+	 * Builds a new PerceptionGrid built based on a grid of EnvCell
+	 * 
+	 * @param envObjectCellGrid
+	 *            {@link Grid}<{@link EnvCell}>
+	 * @return new PerceptionGrid
+	 */
 	public static PerceptionGrid buildFromEnvObjectGrid(Grid<EnvCell> envObjectCellGrid) {
 		final int xMin = envObjectCellGrid.getXMin();
 		final int xMax = envObjectCellGrid.getXMax();
@@ -48,23 +61,27 @@ public class PerceptionGrid {
 			// coordinate system change
 			final Grid<PerceptionCell> localCellGrid = this.perceptionCellGrid.getSubGrid(position, range);
 
-			// circle with Manhattan distance
-			for (int x = localCellGrid.getXMin(); x <= localCellGrid.getXMax(); x++) {
-				for (int y = localCellGrid.getYMin(); y <= localCellGrid.getYMax(); y++) {
-					if (Math.abs(x + y) > range) {
-						// TODO voir ici si on met clear la cellule ou si on la
-						// met a null
-						// localCellGrid.get(x, y).clear();
-						localCellGrid.set(x, y, null);
-					}
-				}
-			}
+			/*
+			 * Remove this if we need to compute the manhattan distance
+			 */
 
 			return new PerceptionGrid(localCellGrid);
 		} catch (final InvalidAttributesException e) {
 			// TODO - use an other logger
 			System.err.println("Error : the body is not in the grid : " + e); //$NON-NLS-1$
 			return null;
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private static void manhattanDistanceCircle(final int range, final Grid<PerceptionCell> localCellGrid) {
+		// circle with Manhattan distance
+		for (int x = localCellGrid.getXMin(); x <= localCellGrid.getXMax(); x++) {
+			for (int y = localCellGrid.getYMin(); y <= localCellGrid.getYMax(); y++) {
+				if (Math.abs(x + y) > range) {
+					localCellGrid.set(x, y, null);
+				}
+			}
 		}
 	}
 

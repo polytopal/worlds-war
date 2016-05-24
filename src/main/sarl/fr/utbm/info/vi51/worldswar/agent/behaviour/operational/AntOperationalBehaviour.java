@@ -29,7 +29,8 @@ public class AntOperationalBehaviour {
 	private static final int MAX_PHEROMONE_DISTANCE = (int) (MAX_PHEROMONE / PHEROMONE_DECAY);
 
 	/**
-	 * Move in a direction to the target
+	 * Move in a direction to the target : either directly to the target (primary direction), either using an
+	 * alternative direction.
 	 * 
 	 * @param perception
 	 * @param memory
@@ -38,24 +39,73 @@ public class AntOperationalBehaviour {
 	 *         with a direction to the target
 	 */
 	public Influence moveToTarget(AntPerception perception, HashMap<String, Object> memory, Point target) {
-		ArrayList<Direction> viableDirections = new ArrayList<>(2);
-		if (target.x < 0) {
-			viableDirections.add(Direction.WEST);
-		} else if (target.x > 0) {
-			viableDirections.add(Direction.EAST);
+		/*
+		 * The direction corresponding to the target received
+		 */
+		Direction primaryDirection = null;
+		/*
+		 * The directions directly next to the primary direction, that can be used if the primary target
+		 * can't be reached
+		 */
+		ArrayList<Direction> alternativeDirections = new ArrayList<>(3);
+
+		/*
+		 * Right now, succession of if (max 4). Might be optimized by packing the target's coords in [(-1,-1),(1,1)]
+		 */
+		if (target.x < 0){
+			if (target.y < 0) {			//(-1,-1)
+				primaryDirection = Direction.NORTH_WEST;
+			} else if (target.y > 0) {	//(-1,1)
+				primaryDirection = Direction.SOUTH_WEST;
+
+			} else {					//(-1,0)
+				primaryDirection = Direction.WEST;
+
+			}
 		}
-		if (target.y < 0) {
-			viableDirections.add(Direction.NORTH);
-		} else if (target.y > 0) {
-			viableDirections.add(Direction.SOUTH);
+		else if (target.x > 0){
+			if (target.y < 0) {			//(1,-1)
+				primaryDirection = Direction.NORTH_EAST;
+
+			} else if (target.y > 0) {	//(1,1)
+				primaryDirection = Direction.SOUTH_EAST;
+
+			} else {					//(1,0)
+				primaryDirection = Direction.EAST;
+
+			}
+		}
+		else if (target.y < 0) {		//(0,-1)
+			primaryDirection = Direction.NORTH;
+
+		}
+		else if (target.y > 0) {		//(0,1)
+			primaryDirection = Direction.SOUTH;
+
 		}
 
-		if (viableDirections.isEmpty()) {
+
+		if (primaryDirection == null) {
 			// Target is (0,0), this means we already reached it
 			return new DoNothingInfluence();
 		}
-		// Pick a random direction from the list
-		return this.move(perception, viableDirections.get(new Random().nextInt(viableDirections.size())), memory);
+		// If the primaryDirection isn't null, compute
+		alternativeDirections = primaryDirection.adjacentDirections();
+
+		/*
+		 *  If the cell targeted by the primaryDirection is free (<=> traversable), generates the
+		 *  Influence corresponding to the direction
+		 */
+		if (perception.isTraversable(primaryDirection.getPoint())){
+			return this.move(perception, primaryDirection, memory);
+		}
+
+		/*
+		 *  If not, uses one of the 2 alternative directions to generate the influence.
+		 *  This direction might not be traversable either.
+		 */
+		return this.move(perception, alternativeDirections.get(new Random().nextInt(alternativeDirections.size())), memory);
+
 	}
 
 	/**
