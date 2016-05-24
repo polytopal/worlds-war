@@ -8,18 +8,18 @@ import fr.utbm.info.vi51.worldswar.environment.influence.Influence;
 import fr.utbm.info.vi51.worldswar.perception.AntPerception;
 
 /**
- * Define the behaviour of {@link Caste#GATHERER} ants. They will try to follow
- * food pheromones to gather as much food as possible.
+ * Defines the behaviour of {@link Caste#EXPLORER} ants. They will wander
+ * without following food pheromones to find food in new, unexplored areas.
  *
  */
-public class GathererStrategicBehaviour implements AntStrategicBehaviour {
+public class ExplorerStrategicBehaviour implements AntStrategicBehaviour {
 
 	private final AntTacticalBehaviour tacticalBehaviour;
 
 	/**
 	 * @param tacticalBehaviour
 	 */
-	public GathererStrategicBehaviour(AntTacticalBehaviour tacticalBehaviour) {
+	public ExplorerStrategicBehaviour(AntTacticalBehaviour tacticalBehaviour) {
 		this.tacticalBehaviour = tacticalBehaviour;
 	}
 
@@ -28,6 +28,7 @@ public class GathererStrategicBehaviour implements AntStrategicBehaviour {
 		if (perception.getMyBody().getFoodCarried() > 0) {
 			return this.tacticalBehaviour.bringFoodHome(perception, memory);
 		}
-		return this.tacticalBehaviour.wanderForFood(perception, memory);
+		return this.tacticalBehaviour.collectFood(perception, memory);
 	}
+
 }

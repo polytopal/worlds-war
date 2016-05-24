@@ -55,6 +55,29 @@ public class AntTacticalBehaviour {
 	}
 
 	/**
+	 * Wanders randomly, trying to find food in unexplored areas
+	 * 
+	 * @param perception
+	 * @param memory
+	 * @return the resulting influence
+	 */
+	public Influence wanderForFood(AntPerception perception, HashMap<String, Object> memory) {
+		if (perception.isAtHome()) {
+			memory.put("pheromoneType", PheromoneType.HOME);
+			memory.put("pheromoneDistance", new Integer(0));
+		}
+		if (perception.getFoodAt(MY_POSITION) > 0) {
+			memory.put("pheromoneType", PheromoneType.FOOD);
+			memory.put("pheromoneDistance", new Integer(0));
+			return this.operationalBehaviour.pickFood(perception);
+		}
+		if (perception.isAvailableFoodInSight()) {
+			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getClosestAvailableFoodPos());
+		}
+		return this.operationalBehaviour.wander(perception, memory);
+	}
+
+	/**
 	 * Tries to find the best position to target to go home, or drops the
 	 * carried food if currently at home
 	 * 
@@ -62,7 +85,7 @@ public class AntTacticalBehaviour {
 	 * @param memory
 	 * @return the resulting influence
 	 */
-	public Influence BringFoodHome(AntPerception perception, HashMap<String, Object> memory) {
+	public Influence bringFoodHome(AntPerception perception, HashMap<String, Object> memory) {
 		if (perception.isAtHome()) {
 			return this.operationalBehaviour.dropFood(perception);
 		}

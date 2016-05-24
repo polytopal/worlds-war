@@ -1,9 +1,12 @@
 package fr.utbm.info.vi51.worldswar.environment.envobject;
 
 import java.awt.Point;
+import java.util.Random;
 
+import fr.utbm.info.vi51.worldswar.environment.Caste;
 import fr.utbm.info.vi51.worldswar.environment.Colony;
 import fr.utbm.info.vi51.worldswar.utils.Stock;
+import io.sarl.lang.core.Agent;
 
 /**
  * Represents an anthill on the map
@@ -14,9 +17,14 @@ public class AntHill extends StaticObject {
 	/** Number of steps between the spawn of two ants in the anthill */
 	public static final int SPAWN_COOLDOWN = 15;
 	/** Food consumed by the spawn of a new ant */
-	public static final int SPAWN_COST = 25;
-
+	public static final int SPAWN_COST = 10;
+	/** Food available in the ant hill at the beginning of the simulation **/
 	private static final int INITIAL_FOOD_STOCK = 100000;
+
+	/** These numbers define the probability of each caste to be spawned **/
+	private static final int GATHERER_FREQUENCY = 20;
+	private static final int EXPLORER_FREQUENCY = 1;
+	private static final int TOTAL_FREQUENCIES = GATHERER_FREQUENCY + EXPLORER_FREQUENCY;
 
 	private Stock foodStock;
 
@@ -33,6 +41,27 @@ public class AntHill extends StaticObject {
 		super(position);
 		this.colony = colony;
 		this.foodStock = new Stock(INITIAL_FOOD_STOCK);
+	}
+
+	/**
+	 * Determines which {@link Caste} the ant hill needs the most and wants to
+	 * spawn. Currently, this behaviour is random, but it may be changed in the
+	 * future to make a smarter decision, or even delegate this choice to a
+	 * queen {@link Agent}.
+	 * 
+	 * @return the {@link Caste} that the ant hill wants to produce.
+	 */
+	@SuppressWarnings("static-method")
+	public Caste casteToSpawn() {
+		final int rand = new Random().nextInt(TOTAL_FREQUENCIES);
+		assert rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY;
+		if (rand < GATHERER_FREQUENCY) {
+			return Caste.GATHERER;
+		}
+		if (rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY) {
+			return Caste.EXPLORER;
+		}
+		throw new RuntimeException("Random number for caste choice was out of bound. rand = " + rand);
 	}
 
 	////////////////////////////////////////
@@ -110,7 +139,7 @@ public class AntHill extends StaticObject {
 	}
 
 	/**
-	 * @return
+	 * @return the available food in the ant hill
 	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#getAvailable()
 	 */
 	public int getAvailableFood() {
@@ -118,7 +147,7 @@ public class AntHill extends StaticObject {
 	}
 
 	/**
-	 * @return
+	 * @return true if there is no food in the ant hill
 	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#isEmpty()
 	 */
 	public boolean isFoodEmpty() {
