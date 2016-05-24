@@ -64,6 +64,7 @@ public class PerceptionGrid {
 			/*
 			 * Remove this if we need to compute the manhattan distance
 			 */
+			// manhattanDistanceCircle(range, localCellGrid);
 
 			return new PerceptionGrid(localCellGrid);
 		} catch (final InvalidAttributesException e) {

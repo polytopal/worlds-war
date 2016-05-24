@@ -17,12 +17,13 @@ public class AntLayer extends DefaultColorLayer {
 
 	@Override
 	public void paintLayer(Graphics g, int cellSize) {
+
 		for (int x = 0; x < this.width; x++) {
 			for (int y = 0; y < this.height; y++) {
 				final Color color = this.panelTable.get(x).get(y);
 				if (color != null) {
 					g.setColor(color);
-					g.fillRect(x * cellSize + 1, y * cellSize + 1, cellSize - 2, cellSize - 2);
+					g.fillOval(x * cellSize, y * cellSize, cellSize, cellSize);
 				}
 			}
 		}
