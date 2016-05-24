@@ -18,7 +18,9 @@ public class PerceptionGrid {
 
 	/**
 	 * Constructor
-	 * @param perceptionCellGrid {@link Grid}<{@link PerceptionCell}>
+	 * 
+	 * @param perceptionCellGrid
+	 *            {@link Grid}<{@link PerceptionCell}>
 	 */
 	public PerceptionGrid(Grid<PerceptionCell> perceptionCellGrid) {
 		this.perceptionCellGrid = perceptionCellGrid;
@@ -27,7 +29,8 @@ public class PerceptionGrid {
 	/**
 	 * Builds a new PerceptionGrid built based on a grid of EnvCell
 	 * 
-	 * @param envObjectCellGrid {@link Grid}<{@link EnvCell}>
+	 * @param envObjectCellGrid
+	 *            {@link Grid}<{@link EnvCell}>
 	 * @return new PerceptionGrid
 	 */
 	public static PerceptionGrid buildFromEnvObjectGrid(Grid<EnvCell> envObjectCellGrid) {
@@ -50,7 +53,6 @@ public class PerceptionGrid {
 		return new PerceptionGrid(perceptionCellGrid);
 	}
 
-
 	public PerceptionGrid computeAgentPerception(AgentBody agentBody) {
 		final Point position = agentBody.getPosition();
 		final int range = agentBody.getPerceptionRange();
@@ -62,7 +64,7 @@ public class PerceptionGrid {
 			/*
 			 * Remove this if we need to compute the manhattan distance
 			 */
-			//			manhattanDistanceCircle(range, localCellGrid);
+			// manhattanDistanceCircle(range, localCellGrid);
 
 			return new PerceptionGrid(localCellGrid);
 		} catch (final InvalidAttributesException e) {
