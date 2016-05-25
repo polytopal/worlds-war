@@ -352,11 +352,12 @@ public class EnvironmentUtils {
 	 * @param position
 	 * @param colony
 	 * @param type
+	 * @param grid
 	 * @return the {@link Pheromone} at the given position, of the given
 	 *         {@link PheromoneType} and belonging to the given {@link Colony},
 	 *         or {@code null} if there is none.
 	 */
-	private static Pheromone getPheromoneAt(Point position, Colony colony, PheromoneType type, Grid<EnvCell> grid) {
+	public static Pheromone getPheromoneAt(Point position, Colony colony, PheromoneType type, Grid<EnvCell> grid) {
 		Pheromone validPheromone = null;
 		for (final EnvironmentObject object : grid.get(position).getEnvObjects()) {
 			if (object instanceof Pheromone) {
@@ -367,5 +368,22 @@ public class EnvironmentUtils {
 			}
 		}
 		return validPheromone;
+	}
+
+	/**
+	 * 
+	 * @param position
+	 * @param grid
+	 * @return the {@link AntBody} that is not burrowed at the given position,
+	 *         or {@code null} if there is none
+	 */
+	public static AntBody getUnburrowedAndAt(Point position, Grid<EnvCell> grid) {
+		AntBody ant = null;
+		for (final EnvironmentObject object : grid.get(position).getEnvObjects()) {
+			if (object instanceof AntBody && !((AntBody) object).isBurrowed()) {
+				ant = (AntBody) object;
+			}
+		}
+		return ant;
 	}
 }
