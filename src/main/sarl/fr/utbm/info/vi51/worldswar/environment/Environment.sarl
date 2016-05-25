@@ -185,7 +185,10 @@ agent Environment {
 	 */
 	on InfluenceEvent {
 		synchronized(this) {
-			var body = agentBodies.get(occurrence.uuid);
+			var body = agentBodies.get(occurrence.uuid)
+			if(body === null) {
+				warning("Influence received from agent #" + occurrence.uuid + ", but this agent does not exist in the current Environment.")
+			}
 			
 			if(body.influence !== null) {
 				error("Agent #" + occurrence.uuid + " has sent multiple influences in the same step")
