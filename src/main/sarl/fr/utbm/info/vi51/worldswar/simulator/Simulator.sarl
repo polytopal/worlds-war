@@ -47,8 +47,6 @@ agent Simulator {
 	private var environmentReady = false
 	/** Indicates whether the environment is spawned and initialized */
 	private var environmentExists = false
-	/** Indicates if a pause is pending */
-	private var pausePending = false
 	
 	/** If a new simulation has been requested, contains the parameters of this new simulation. null otherwise. */
 	private var pendingSimulationParams : SimulationParameters = null
@@ -91,7 +89,6 @@ agent Simulator {
 	 */
 	on EnvironmentInitializedEvent {
 		synchronized(this) {
-			this.pausePending=false
 			this.environmentExists = true
 			this.environmentReady = true
 			this.stepTimerReady = true
@@ -124,12 +121,8 @@ agent Simulator {
 	 */
 	private def simulationLoop {
 		if(this.stepTimerReady && this.environmentReady) {
-			if(this.pausePending) {
-				this.pausePending = false
-			} else {
-				executeStep
-				this.stepTimerTask = in(this.simulationSpeed.milliseconds) [ setStepTimerReady ]
-			}
+			executeStep
+			this.stepTimerTask = in(this.simulationSpeed.milliseconds) [ setStepTimerReady ]
 		}
 	}
 	
@@ -154,7 +147,7 @@ agent Simulator {
 		for(l : listeners) {
 			l.simulationTerminated
 		}
-		this.pausePending = true
+		cancel(this.stepTimerTask, false)
 		emit(new StopSimulationEvent)
 	}
 	
@@ -220,14 +213,13 @@ agent Simulator {
 	}
 	
 	private def pauseSimulation() {
-		this.pausePending = true
+		cancel(this.stepTimerTask, false)
 		for(l : listeners) {
 			l.simulationPaused();
 		}
 	}
 	
 	private def resumeSimulation() {
-		executeStep
 		this.stepTimerTask = in(this.simulationSpeed.milliseconds) [ setStepTimerReady ]
 		for(l : listeners) {
 			l.simulationResumed();
