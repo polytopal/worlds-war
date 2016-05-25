@@ -18,7 +18,7 @@ public class PerceivableAnt extends Perceivable {
 	}
 
 	/**
-	 * @return
+	 * @return the food carried quantity
 	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.AntBody#getFoodCarried()
 	 */
 	public int getFoodCarried() {
@@ -26,7 +26,7 @@ public class PerceivableAnt extends Perceivable {
 	}
 
 	/**
-	 * @return
+	 * @return the food capacity of the ant
 	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.AntBody#getCapacity()
 	 */
 	public int getCapacity() {
@@ -34,7 +34,7 @@ public class PerceivableAnt extends Perceivable {
 	}
 
 	/**
-	 * @return
+	 * @return the health of the ant
 	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.AntBody#getHealth()
 	 */
 	public int getHealth() {
@@ -42,7 +42,7 @@ public class PerceivableAnt extends Perceivable {
 	}
 
 	/**
-	 * @return
+	 * @return the {@link Caste} of the ant
 	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.AntBody#getCaste()
 	 */
 	public Caste getCaste() {
@@ -50,16 +50,23 @@ public class PerceivableAnt extends Perceivable {
 	}
 
 	/**
-	 * @return
+	 * @return the {@link Colony} of the ant
 	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.AntBody#getColony()
 	 */
 	public Colony getColony() {
 		return this.ant.getColony();
 	}
 
+	/**
+	 * @return true if the ant is burrowed
+	 */
+	public boolean isBurrowed() {
+		return this.ant.isBurrowed();
+	}
+
 	@Override
 	public String toString() {
-		return "ant";
+		return "ant"; //$NON-NLS-1$
 	}
 
 }

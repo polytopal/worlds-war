@@ -14,7 +14,7 @@ public enum Caste {
 	GATHERER {
 		@Override
 		public int getCapacity() {
-			return 5;
+			return super.getCapacity() + 3;
 		}
 	},
 	/**
@@ -32,12 +32,12 @@ public enum Caste {
 	SOLDIER {
 		@Override
 		public int getAttackDamage() {
-			return 30;
+			return super.getAttackDamage() + 20;
 		}
 
 		@Override
 		public int getMaxHealth() {
-			return 150;
+			return super.getMaxHealth() + 50;
 		}
 
 		@Override
@@ -75,7 +75,7 @@ public enum Caste {
 	 * @return the default initial life time of the ant
 	 */
 	public int getLifeTime() {
-		return 150;
+		return 200;
 	}
 
 	/**
