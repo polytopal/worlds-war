@@ -255,7 +255,7 @@ public class EnvironmentUtils {
 			body.setBurrowed(false);
 		}
 		// if the ant go in the hill
-		else if (grid.get(target).isAntHill(body.getColony())) {
+		else if (grid.get(target).isAntHillOf(body.getColony())) {
 			body.setBurrowed(true);
 		}
 

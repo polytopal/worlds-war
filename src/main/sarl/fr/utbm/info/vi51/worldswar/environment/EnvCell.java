@@ -68,7 +68,7 @@ public class EnvCell {
 	 * @return true if the cell contains the {@link AntHill} of the given
 	 *         {@link Colony}
 	 */
-	public boolean isAntHill(Colony colony) {
+	public boolean isAntHillOf(Colony colony) {
 		for (final EnvironmentObject o : this.envObjects) {
 			if (o instanceof AntHill && ((AntHill) o).getColony() == (colony)) {
 				return true;

@@ -1,6 +1,7 @@
 package fr.utbm.info.vi51.worldswar.gui.layer;
 
 import java.awt.Color;
+import java.awt.Graphics;
 
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableFood;
@@ -25,6 +26,23 @@ public class MapLayer extends DefaultColorLayer {
 	}
 
 	@Override
+	public void paintLayer(Graphics g, int cellSize) {
+
+		g.setColor(EMPTY_CELL_COLOR);
+		g.fillRect(0, 0, this.width * cellSize, this.height * cellSize);
+
+		for (int x = 0; x < this.width; x++) {
+			for (int y = 0; y < this.height; y++) {
+				final Color color = this.panelTable.get(x).get(y);
+				if (color != null) {
+					g.setColor(color);
+					g.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+				}
+			}
+		}
+	}
+
+	@Override
 	protected Color computeCellColor(PerceptionCell cell) {
 
 		Color c = null;
@@ -41,7 +59,7 @@ public class MapLayer extends DefaultColorLayer {
 					c = FOOD_LITTLE_QTY_COLOR;
 				}
 			} else { // no food
-				c = EMPTY_CELL_COLOR;
+				c = null;
 			}
 		}
 
