@@ -10,7 +10,6 @@ import fr.utbm.info.vi51.worldswar.controller.SimulationParameters
 import fr.utbm.info.vi51.worldswar.environment.envobject.AgentBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill
-import fr.utbm.info.vi51.worldswar.environment.influence.BurrowInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.DropFoodInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.MeleeAttackInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence
@@ -82,9 +81,6 @@ agent Environment {
 			this.uninitializedAgents = new LinkedList
 			this.waitingAgentsInitialization = false
 			
-			
-			
-			
 			emit(new EnvironmentInitializedEvent)
 		}
 	}
@@ -110,6 +106,7 @@ agent Environment {
 			for(l : this.listeners) {
 				l.environmentUpdated(perceptionGrid)
 			}
+			
 			
 			influencesReceived = 0
 			sendPerceptionsToAgents(perceptionGrid)
@@ -169,9 +166,7 @@ agent Environment {
 	private def applyAntInfluence(ant : AntBody) {
 		val influence = ant.influence
 		
-		if(influence instanceof BurrowInfluence) {
-			EnvironmentUtils.burrow(ant, grid)
-		} else if(influence instanceof DropFoodInfluence) {
+		if(influence instanceof DropFoodInfluence) {
 			EnvironmentUtils.dropFood(ant, influence.droppedAmount, grid)
 		} else if(influence instanceof MeleeAttackInfluence) {
 			this.antMeleeAttack(ant, influence.direction)
@@ -207,7 +202,10 @@ agent Environment {
 	 */
 	on InfluenceEvent {
 		synchronized(this) {
-			var body = agentBodies.get(occurrence.uuid);
+			var body = agentBodies.get(occurrence.uuid)
+			if(body === null) {
+				warning("Influence received from agent #" + occurrence.uuid + ", but this agent does not exist in the current Environment.")
+			}
 			
 			if(body.influence !== null) {
 				error("Agent #" + occurrence.uuid + " has sent multiple influences in the same step")
@@ -313,8 +311,7 @@ agent Environment {
 			if(antHill.spawnCooldown === 0 && antHill.availableFood >= AntHill.SPAWN_COST) {
 				antHill.pickFood(AntHill.SPAWN_COST)
 				antHill.spawnCooldown = AntHill.SPAWN_COOLDOWN
-				//TODO spawn some other castes sometimes
-				this.spawnAnt(antHill.colony, Caste.GATHERER, antHill.position)
+				this.spawnAnt(antHill.colony, antHill.casteToSpawn, antHill.position)
 				
 			}
 		}

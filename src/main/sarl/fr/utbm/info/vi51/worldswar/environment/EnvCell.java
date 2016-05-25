@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill;
 import fr.utbm.info.vi51.worldswar.environment.envobject.EnvironmentObject;
 
 /**
@@ -53,11 +54,26 @@ public class EnvCell {
 	 */
 	public boolean isTraversable() {
 		boolean traversable = true;
-		for (EnvironmentObject o : this.envObjects) {
+		for (final EnvironmentObject o : this.envObjects) {
 			if (!o.isTraversable()) {
 				traversable = false;
 			}
 		}
 		return traversable;
+	}
+
+	/**
+	 * @param colony
+	 *            The colony of the AntHill
+	 * @return true if the cell contains the {@link AntHill} of the given
+	 *         {@link Colony}
+	 */
+	public boolean isAntHillOf(Colony colony) {
+		for (final EnvironmentObject o : this.envObjects) {
+			if (o instanceof AntHill && ((AntHill) o).getColony() == (colony)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

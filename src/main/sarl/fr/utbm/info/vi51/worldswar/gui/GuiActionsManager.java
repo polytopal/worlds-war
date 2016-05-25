@@ -97,7 +97,7 @@ public class GuiActionsManager {
 	/**
 	 * @author Leo
 	 * 
-	 *         This action allow to start a new simulation, by pressing ctrl+n
+	 *         This action allow to start a new simulation, by pressing ctrl+N
 	 */
 	private class NewSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 4958436812700297538L;
@@ -123,7 +123,7 @@ public class GuiActionsManager {
 	 * @author Leo
 	 * 
 	 *         This action allow to stop the current simulation, by pressing
-	 *         ctrl+s
+	 *         ctrl+C
 	 */
 	private class StopSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
@@ -131,7 +131,7 @@ public class GuiActionsManager {
 
 		public StopSimulationAction(final Controller controller) {
 			super(Messages.getString("MenuBar.stopSimulation")); //$NON-NLS-1$
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK));
 			this.controller = controller;
 		}
 
@@ -142,7 +142,7 @@ public class GuiActionsManager {
 	}
 
 	/**
-	 * This action allows to pause the simulation, by pressing ctrl+p
+	 * This action allows to pause the simulation, by pressing the key P
 	 */
 	private class PauseSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
@@ -150,7 +150,7 @@ public class GuiActionsManager {
 
 		public PauseSimulationAction(final Controller controller) {
 			super(Messages.getString("MenuBar.pauseSimulation")); //$NON-NLS-1$
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, 0));
 			this.controller = controller;
 			this.setEnabled(false);
 		}
@@ -162,7 +162,7 @@ public class GuiActionsManager {
 	}
 
 	/**
-	 * This action allows to resume the simulation, by pressing ctrl+p
+	 * This action allows to resume the simulation, by pressing the key P
 	 */
 	private class ResumeSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
@@ -170,7 +170,7 @@ public class GuiActionsManager {
 
 		public ResumeSimulationAction(final Controller controller) {
 			super(Messages.getString("MenuBar.resumeSimulation")); //$NON-NLS-1$
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, 0));
 			this.controller = controller;
 			this.setEnabled(false);
 		}
@@ -216,6 +216,9 @@ public class GuiActionsManager {
 
 		public SpeedSetterAction(final Controller controller, SimulationSpeed speed) {
 			super(Messages.getString(speed.getPropertyKey()));
+			if (speed.getKeyStroke() != null) {
+				putValue(ACCELERATOR_KEY, speed.getKeyStroke());
+			}
 			this.speed = speed;
 			this.controller = controller;
 		}

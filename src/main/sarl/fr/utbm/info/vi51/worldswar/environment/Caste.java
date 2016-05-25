@@ -7,28 +7,37 @@ package fr.utbm.info.vi51.worldswar.environment;
 @SuppressWarnings("static-method")
 public enum Caste {
 
-	// TODO - all the stats have to be adjusted
+	/**
+	 * These ants try to gather food and bring it home as efficiently as
+	 * possible.
+	 */
 	GATHERER {
 		@Override
 		public int getCapacity() {
-			return 5;
+			return super.getCapacity() + 3;
 		}
 	},
+	/**
+	 * Wanders around the ant hill, trying to find food in unexplored areas.
+	 */
 	EXPLORER {
 		@Override
 		public int getPerceptionRange() {
 			return super.getPerceptionRange() + 1;
 		}
 	},
+	/**
+	 * Patrols the ant hill to fight potential threats.
+	 */
 	SOLDIER {
 		@Override
 		public int getAttackDamage() {
-			return 30;
+			return super.getAttackDamage() + 20;
 		}
 
 		@Override
 		public int getMaxHealth() {
-			return 150;
+			return super.getMaxHealth() + 50;
 		}
 
 		@Override
@@ -66,7 +75,7 @@ public enum Caste {
 	 * @return the default initial life time of the ant
 	 */
 	public int getLifeTime() {
-		return 150;
+		return 200;
 	}
 
 	/**

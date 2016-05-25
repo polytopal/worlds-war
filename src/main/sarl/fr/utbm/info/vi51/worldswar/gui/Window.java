@@ -119,7 +119,7 @@ public class Window extends JFrame implements SimulatorListener {
 		this.guiActionsManager.getPauseSimulationAction().setEnabled(false);
 		this.guiActionsManager.getStepSimulationAction().setEnabled(true);
 	}
-	
+
 	@Override
 	public void simulationResumed() {
 		this.simState = SimulationState.RUNNING;
