@@ -19,6 +19,11 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
+import fr.utbm.info.vi51.worldswar.gui.layer.AntLayer;
+import fr.utbm.info.vi51.worldswar.gui.layer.DebugFilter;
+import fr.utbm.info.vi51.worldswar.gui.layer.GuiLayer;
+import fr.utbm.info.vi51.worldswar.gui.layer.MapLayer;
+import fr.utbm.info.vi51.worldswar.gui.layer.PheromoneFilter;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
 /**
@@ -30,21 +35,19 @@ import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 public class CentralPanel extends JPanel {
 	private static final long serialVersionUID = -8443885607526578507L;
 
-	private static final int CAMERA_MOVE_SPEED = 10;
+	private static final int CAMERA_MOVE_SPEED = 20;
 	private static final int CELL_SIZE_MIN = 2;
-	private static final int CELL_SIZE_MAX = 30;
+	private static final int CELL_SIZE_MAX = 70;
 
 	private int width;
 	private int height;
 
 	private int cellSize = 8;
 
-	private PheromoneType pheromoneFilter;
-
 	private final JScrollPane scrollPane;
 	private final JPanel gridPanel;
 
-	private final List<List<Color>> panelTable;
+	private final List<GuiLayer> layers;
 
 	/**
 	 * @param SimulatorController
@@ -67,22 +70,27 @@ public class CentralPanel extends JPanel {
 
 				g.setColor(Color.LIGHT_GRAY);
 				g.fillRect(0, 0, this.getWidth(), this.getHeight());
-				synchronized (CentralPanel.this.panelTable) {
-					for (int x = 0; x < CentralPanel.this.width; x++) {
-						for (int y = 0; y < CentralPanel.this.height; y++) {
-							g.setColor(CentralPanel.this.panelTable.get(x).get(y));
-							g.fillRect(x * CentralPanel.this.cellSize, y * CentralPanel.this.cellSize,
-									CentralPanel.this.cellSize, CentralPanel.this.cellSize);
-						}
+
+				for (final GuiLayer layer : CentralPanel.this.layers) {
+					if (layer.isEnabled()) {
+						layer.paintLayer(g, CentralPanel.this.cellSize);
 					}
 				}
 			}
 		};
 
-		this.panelTable = new ArrayList<>(0);
+		this.layers = new ArrayList<>();
+
+		// !! the order is important
+		this.layers.add(new MapLayer());
+		this.layers.add(new AntLayer());
+		for (final PheromoneType pheromoneType : PheromoneType.values()) {
+			this.layers.add(new PheromoneFilter(pheromoneType));
+		}
+		this.layers.add(new DebugFilter());
+
 		this.width = 0;
 		this.height = 0;
-		this.pheromoneFilter = null;
 
 		this.scrollPane = new JScrollPane(this.gridPanel);
 		this.scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -140,41 +148,31 @@ public class CentralPanel extends JPanel {
 	}
 
 	public void updateGrid(PerceptionGrid perceptionGrid) {
-		synchronized (CentralPanel.this.panelTable) {
-			if (this.width != perceptionGrid.getWidth() || this.height != perceptionGrid.getHeight()) {
-				resizeGrid(perceptionGrid.getWidth(), perceptionGrid.getHeight());
-			}
-			for (int x = 0; x < this.width; x++) {
-				for (int y = 0; y < this.height; y++) {
-					final Color cellColor = GUIUtils.computeCellColor(perceptionGrid.getCell(x, y),
-							this.pheromoneFilter);
-					this.panelTable.get(x).set(y, cellColor);
-				}
-			}
+
+		this.width = perceptionGrid.getWidth();
+		this.height = perceptionGrid.getHeight();
+
+		for (final GuiLayer guiLayer : this.layers) {
+			guiLayer.update(perceptionGrid);
 		}
+
 		this.gridPanel.repaint();
 	}
 
-	public void setPheromoneFilter(PheromoneType pheromoneType) {
-		synchronized (CentralPanel.this.panelTable) {
-			this.pheromoneFilter = pheromoneType;
+	public void setPheromoneFilterEnabled(PheromoneType pheromoneType, boolean selected) {
+		for (final GuiLayer guiLayer : this.layers) {
+			if (guiLayer instanceof PheromoneFilter
+					&& ((PheromoneFilter) guiLayer).getPheromoneType().equals(pheromoneType)) {
+				guiLayer.setEnabled(selected);
+			}
 		}
 	}
 
-	/**
-	 * Methods used only when a new environment with a different size of the
-	 * older environment
-	 */
-	private void resizeGrid(int w, int h) {
-		this.width = w;
-		this.height = h;
-		this.panelTable.clear();
-		for (int x = 0; x < this.width; x++) {
-			final ArrayList<Color> column = new ArrayList<>(h);
-			for (int y = 0; y < this.height; y++) {
-				column.add(Color.WHITE);
+	public void setDebugFilterEnabled(boolean selected) {
+		for (final GuiLayer guiLayer : this.layers) {
+			if (guiLayer instanceof DebugFilter) {
+				guiLayer.setEnabled(selected);
 			}
-			this.panelTable.add(column);
 		}
 	}
 
