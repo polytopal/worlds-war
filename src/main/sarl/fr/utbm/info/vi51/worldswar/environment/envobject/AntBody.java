@@ -3,13 +3,14 @@ package fr.utbm.info.vi51.worldswar.environment.envobject;
 import java.awt.Point;
 import java.util.UUID;
 
+import fr.utbm.info.vi51.worldswar.agent.AntAgent;
 import fr.utbm.info.vi51.worldswar.environment.Breed;
 import fr.utbm.info.vi51.worldswar.environment.Caste;
 import fr.utbm.info.vi51.worldswar.environment.Colony;
 import fr.utbm.info.vi51.worldswar.utils.Stock;
 
 /**
- * Physical body of an {@link Ant}
+ * Physical body of an {@link AntAgent}
  *
  */
 public class AntBody extends AgentBody {
@@ -27,7 +28,7 @@ public class AntBody extends AgentBody {
 	/**
 	 * Current health points
 	 */
-	private final int health;
+	private int health;
 
 	/**
 	 * The damages that will be done to the target in fight
@@ -77,6 +78,19 @@ public class AntBody extends AgentBody {
 		final float stat = baseStat * multiplier;
 		return Math.round(stat);
 	}
+
+	/**
+	 * Performs an attack on the ant body, reducing its health
+	 * 
+	 * @param damage
+	 */
+	public void attack(int damage) {
+		this.health -= damage;
+	}
+
+	////////////////////////////////////////
+	//////////// GETTERS/SETTERS ///////////
+	////////////////////////////////////////
 
 	/** {@inheritDoc} **/
 	@Override
@@ -165,7 +179,7 @@ public class AntBody extends AgentBody {
 	 * Picks food from the ant
 	 * 
 	 * @param qty
-	 * @return
+	 * @return the amount of food actually picked
 	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#pick(int)
 	 */
 	public int pickFood(int qty) {
@@ -181,7 +195,7 @@ public class AntBody extends AgentBody {
 	}
 
 	/**
-	 * @return
+	 * @return the amount of food carried
 	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#getAvailable()
 	 */
 	public int getFoodCarried() {
@@ -189,7 +203,7 @@ public class AntBody extends AgentBody {
 	}
 
 	/**
-	 * @return
+	 * @return true if the ant is currently carrying food
 	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#isEmpty()
 	 */
 	public boolean carriesFood() {

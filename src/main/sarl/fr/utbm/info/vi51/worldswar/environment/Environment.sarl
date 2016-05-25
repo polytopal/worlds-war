@@ -22,6 +22,7 @@ import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableAnt
 import fr.utbm.info.vi51.worldswar.simulator.SimulationStepEvent
 import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener
 import fr.utbm.info.vi51.worldswar.simulator.StopSimulationEvent
+import fr.utbm.info.vi51.worldswar.utils.Direction
 import fr.utbm.info.vi51.worldswar.utils.Grid
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Destroy
@@ -143,6 +144,10 @@ agent Environment {
 		emit(new EnvironmentReadyEvent)
 	}
 	
+	////////////////////////////////////////
+	///            INFLUENCES            ///
+	////////////////////////////////////////
+	
 	/**
 	 * Applies the ant influence stored in their bodies, then clear them.
 	 */
@@ -169,7 +174,7 @@ agent Environment {
 		} else if(influence instanceof DropFoodInfluence) {
 			EnvironmentUtils.dropFood(ant, influence.droppedAmount, grid)
 		} else if(influence instanceof MeleeAttackInfluence) {
-			throw(new UnsupportedOperationException("No fights only farm pls"))
+			this.antMeleeAttack(ant, influence.direction)
 		} else if(influence instanceof MoveInfluence) {
 			EnvironmentUtils.moveAnt(ant, influence.direction, grid)
 		} else if (influence instanceof PheromoneAndMoveInfluence) {
@@ -177,6 +182,23 @@ agent Environment {
 			EnvironmentUtils.moveAnt(ant, influence.direction, grid)
 		} else if (influence instanceof PickFoodInfluence) {
 			EnvironmentUtils.pickFood(ant, influence.qty, grid)
+		}
+	}
+	
+	private def antMeleeAttack(body : AntBody, direction : Direction) {
+		val target = new Point(body.position.x + direction.x, body.position.y + direction.y)
+		// Ensure target position is on map
+		if (!grid.containsPosition(target)) {
+			return
+		}
+		
+		val targetBody = EnvironmentUtils.getUnburrowedAndAt(target, grid);
+		if(targetBody === null) {
+			return
+		}
+		targetBody.attack(body.attackDamage)
+		if(targetBody.health <= 0) {
+			this.killAgent(targetBody.uuid)
 		}
 	}
 	
