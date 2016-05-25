@@ -123,7 +123,7 @@ public class AntHill extends StaticObject {
 
 	/**
 	 * @param qty
-	 * @return
+	 * @return the actual amount of food picked
 	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#pick(int)
 	 */
 	public int pickFood(int qty) {

@@ -31,7 +31,7 @@ public class Food extends StaticObject {
 
 	/**
 	 * @param qty
-	 * @return
+	 * @return the amount of food that was actually picked
 	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#pick(int)
 	 */
 	public int pick(int qty) {
@@ -47,7 +47,7 @@ public class Food extends StaticObject {
 	}
 
 	/**
-	 * @return
+	 * @return the amount of available food
 	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#getAvailable()
 	 */
 	public int getAvailable() {
@@ -55,7 +55,7 @@ public class Food extends StaticObject {
 	}
 
 	/**
-	 * @return
+	 * @return true if there is no food in the stock
 	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#isEmpty()
 	 */
 	public boolean isEmpty() {
