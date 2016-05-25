@@ -3,23 +3,28 @@ package fr.utbm.info.vi51.worldswar.environment.influence;
 import fr.utbm.info.vi51.worldswar.utils.Direction;
 
 /**
- * Melee attack in the targeted {@link Direction}. {@see Influence}
+ * Melee attack in the targeted {@link Direction}.
+ * 
+ * @see Influence
  *
  */
 public class MeleeAttackInfluence implements Influence {
 
-	private Direction target;
+	private Direction direction;
 
 	/**
 	 * 
-	 * @param target
+	 * @param direction
 	 *            the direction of the attack
 	 */
-	public MeleeAttackInfluence(Direction target) {
-		this.target = target;
+	public MeleeAttackInfluence(Direction direction) {
+		this.direction = direction;
 	}
 
-	public Direction getTarget() {
-		return this.target;
+	/**
+	 * @return the direction where the attack is targeted
+	 */
+	public Direction getDirection() {
+		return this.direction;
 	}
 }
