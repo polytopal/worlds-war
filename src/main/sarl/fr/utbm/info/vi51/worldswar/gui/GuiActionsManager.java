@@ -131,7 +131,7 @@ public class GuiActionsManager {
 
 		public StopSimulationAction(final Controller controller) {
 			super(Messages.getString("MenuBar.stopSimulation")); //$NON-NLS-1$
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK));
 			this.controller = controller;
 		}
 
@@ -150,7 +150,7 @@ public class GuiActionsManager {
 
 		public PauseSimulationAction(final Controller controller) {
 			super(Messages.getString("MenuBar.pauseSimulation")); //$NON-NLS-1$
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, 0));
 			this.controller = controller;
 			this.setEnabled(false);
 		}
@@ -170,7 +170,7 @@ public class GuiActionsManager {
 
 		public ResumeSimulationAction(final Controller controller) {
 			super(Messages.getString("MenuBar.resumeSimulation")); //$NON-NLS-1$
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, 0));
 			this.controller = controller;
 			this.setEnabled(false);
 		}
@@ -216,6 +216,9 @@ public class GuiActionsManager {
 
 		public SpeedSetterAction(final Controller controller, SimulationSpeed speed) {
 			super(Messages.getString(speed.getPropertyKey()));
+			if (speed.getKeyStroke() != null) {
+				putValue(ACCELERATOR_KEY, speed.getKeyStroke());
+			}
 			this.speed = speed;
 			this.controller = controller;
 		}
