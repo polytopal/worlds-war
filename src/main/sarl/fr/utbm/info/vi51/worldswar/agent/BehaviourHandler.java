@@ -2,6 +2,7 @@ package fr.utbm.info.vi51.worldswar.agent;
 
 import fr.utbm.info.vi51.worldswar.agent.behaviour.operational.AntOperationalBehaviour;
 import fr.utbm.info.vi51.worldswar.agent.behaviour.strategic.AntStrategicBehaviour;
+import fr.utbm.info.vi51.worldswar.agent.behaviour.strategic.ExplorerStrategicBehaviour;
 import fr.utbm.info.vi51.worldswar.agent.behaviour.strategic.GathererStrategicBehaviour;
 import fr.utbm.info.vi51.worldswar.agent.behaviour.tactical.AntTacticalBehaviour;
 import fr.utbm.info.vi51.worldswar.environment.Caste;
@@ -12,7 +13,11 @@ import fr.utbm.info.vi51.worldswar.environment.Caste;
 public class BehaviourHandler {
 
 	private final GathererStrategicBehaviour gathererStrategicBehaviour;
+	private final ExplorerStrategicBehaviour explorerStrategicBehaviour;
 
+	/**
+	 * Instantiates all behaviour objects, resolving dependencies between them
+	 */
 	public BehaviourHandler() {
 
 		// Operational layer
@@ -23,6 +28,7 @@ public class BehaviourHandler {
 
 		// Strategic layer
 		this.gathererStrategicBehaviour = new GathererStrategicBehaviour(antTacticalBehaviour);
+		this.explorerStrategicBehaviour = new ExplorerStrategicBehaviour(antTacticalBehaviour);
 	}
 
 	/**
@@ -34,9 +40,10 @@ public class BehaviourHandler {
 		switch (caste) {
 		case GATHERER:
 			return this.gathererStrategicBehaviour;
-		// TODO - return a behaviour for the other castes
+		case EXPLORER:
+			return this.explorerStrategicBehaviour;
 		default:
-			return null;
+			throw new IllegalArgumentException("No behaviour set for caste " + caste);
 		}
 	}
 }

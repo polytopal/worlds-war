@@ -291,8 +291,7 @@ agent Environment {
 			if(antHill.spawnCooldown === 0 && antHill.availableFood >= AntHill.SPAWN_COST) {
 				antHill.pickFood(AntHill.SPAWN_COST)
 				antHill.spawnCooldown = AntHill.SPAWN_COOLDOWN
-				//TODO spawn some other castes sometimes
-				this.spawnAnt(antHill.colony, Caste.GATHERER, antHill.position)
+				this.spawnAnt(antHill.colony, antHill.casteToSpawn, antHill.position)
 				
 			}
 		}
