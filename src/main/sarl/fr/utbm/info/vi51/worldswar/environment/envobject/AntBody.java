@@ -85,7 +85,7 @@ public class AntBody extends AgentBody {
 	 * @param damage
 	 */
 	public void attack(int damage) {
-		this.health -= damage;
+		this.health = Math.max(this.health - damage, 0);
 	}
 
 	////////////////////////////////////////
