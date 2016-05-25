@@ -39,9 +39,9 @@ public class SimulationParameters {
 
 	/** Default proportion of food on the map (in percents) **/
 	public static final int DEFAULT_FOOD_PROPORTION = 30;
-	/** Minimum proportion of food on the map (in percents) **/
+	/** Minimum proportion of food on the map (in percents) must be > 0 **/
 	public static final int MIN_FOOD_PROPORTION = 10;
-	/** Maximum proportion of food on the map (in percents) **/
+	/** Maximum proportion of food on the map (in percents) must be <= 100 **/
 	public static final int MAX_FOOD_PROPORTION = 70;
 
 	// -----

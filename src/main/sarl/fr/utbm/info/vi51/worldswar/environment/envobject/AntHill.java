@@ -19,7 +19,7 @@ public class AntHill extends StaticObject {
 	/** Food consumed by the spawn of a new ant */
 	public static final int SPAWN_COST = 10;
 	/** Food available in the ant hill at the beginning of the simulation **/
-	private static final int INITIAL_FOOD_STOCK = 100000;
+	private static final int INITIAL_FOOD_STOCK = 500;
 
 	/** These numbers define the probability of each caste to be spawned **/
 	private static final int GATHERER_FREQUENCY = 20;

@@ -5,6 +5,7 @@ import java.awt.Graphics;
 
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableFood;
+import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableWall;
 
 /**
  * This layer show the antHills and the food
@@ -13,6 +14,8 @@ import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableFood;
 public class MapLayer extends DefaultColorLayer {
 
 	private static Color ANT_HILL_COLOR = new Color(255, 0, 0);
+
+	private static Color ROCK_COLOR = new Color(100, 100, 100);
 
 	private static Color FOOD_LITTLE_QTY_COLOR = new Color(128, 255, 128);
 	private static Color FOOD_BIG_QTY_COLOR = new Color(102, 204, 102);
@@ -49,17 +52,22 @@ public class MapLayer extends DefaultColorLayer {
 		if (cell.getAntHill() != null) {
 			c = ANT_HILL_COLOR;
 		} else { // no ant hill
-			final PerceivableFood food = cell.getFood();
-			if (food != null) {
-				// the color is darker when there is more food
-				final int qty = food.getAvailable();
-				if (qty > FOOD_BIG_QTY_LIMIT) {
-					c = FOOD_BIG_QTY_COLOR;
-				} else {
-					c = FOOD_LITTLE_QTY_COLOR;
+			final PerceivableWall wall = cell.getWall();
+			if (wall != null) {
+				c = ROCK_COLOR;
+			} else {
+				final PerceivableFood food = cell.getFood();
+				if (food != null) {
+					// the color is darker when there is more food
+					final int qty = food.getAvailable();
+					if (qty > FOOD_BIG_QTY_LIMIT) {
+						c = FOOD_BIG_QTY_COLOR;
+					} else {
+						c = FOOD_LITTLE_QTY_COLOR;
+					}
+				} else { // no food
+					c = null;
 				}
-			} else { // no food
-				c = null;
 			}
 		}
 

@@ -164,7 +164,7 @@ agent Environment {
 		if(influence instanceof DropFoodInfluence) {
 			EnvironmentUtils.dropFood(ant, influence.droppedAmount, grid)
 		} else if(influence instanceof MeleeAttackInfluence) {
-			throw(new UnsupportedOperationException("No fights only farm pls"))
+			throw(new UnsupportedOperationException("No fights only farm pls"))// TODO : combat
 		} else if(influence instanceof MoveInfluence) {
 			EnvironmentUtils.moveAnt(ant, influence.direction, grid)
 		} else if (influence instanceof PheromoneAndMoveInfluence) {

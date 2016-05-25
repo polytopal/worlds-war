@@ -75,7 +75,7 @@ public enum Caste {
 	 * @return the default initial life time of the ant
 	 */
 	public int getLifeTime() {
-		return 200;
+		return 500;
 	}
 
 	/**

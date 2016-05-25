@@ -12,6 +12,7 @@ import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill;
 import fr.utbm.info.vi51.worldswar.environment.envobject.EnvironmentObject;
 import fr.utbm.info.vi51.worldswar.environment.envobject.Food;
 import fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone;
+import fr.utbm.info.vi51.worldswar.environment.envobject.Wall;
 import fr.utbm.info.vi51.worldswar.utils.Direction;
 import fr.utbm.info.vi51.worldswar.utils.Grid;
 
@@ -21,6 +22,9 @@ import fr.utbm.info.vi51.worldswar.utils.Grid;
  *
  */
 public class EnvironmentUtils {
+
+	private static final float ANT_HILL_RANGE = 20;
+
 	/**
 	 * Private empty constructor : this class is not meant to be instantiated
 	 */
@@ -39,7 +43,8 @@ public class EnvironmentUtils {
 		final List<Colony> coloniesList = simulationParameters.getColoniesList();
 		final float foodProportion = simulationParameters.getFoodProportion();
 
-		// ant hills positions
+		// --- computation of ant hills positions ---
+
 		final int nbColony = coloniesList.size();
 		// the initial angle, the first colony in near the left border
 		float angle = (float) Math.PI;
@@ -54,18 +59,36 @@ public class EnvironmentUtils {
 			angle += 2 * Math.PI / nbColony;
 		}
 
+		// --- creation of the food ---
+
 		// allow to choose how the food is grouped in parcel
-		final int octaveCount = 6;
-		final float max = 50; // !!! warning !!! represent the theoretically
-								// maximum food on a cell, but the real maximum
-								// food will be lower cause of the
-								// interpolations of the Perlin noise
+		final int foodOctaveCount = 6;
+		final float foodMaxValue = 80; // !!! warning !!! represent the
+		// theoretically maximum food on a cell, but the real maximum food will
+		// be lower cause of the interpolations of the Perlin noise
 
 		// simple cross product
-		final float min = max * (1f - (1f / foodProportion));
+		final float foddMinValue = foodMaxValue * (1f - (1f / foodProportion));
 		// the value of each cell will be between min and max
 		final Grid<Float> randomFoodGrid = PerlinNoiseGenerator.generatePerlinNoiseHeightGrid(width, height,
-				octaveCount, min, max);
+				foodOctaveCount, foddMinValue, foodMaxValue);
+
+		// --- creation of the rocks ---
+
+		final int rockOctaveCount = 4;
+		float rockMaxValue = ANT_HILL_RANGE;
+		final float rockProportion = 0.3f;
+		float rockMinValue = 0;
+		try {
+			rockMinValue = rockMaxValue * (1f - (1f / rockProportion));
+		} catch (final ArithmeticException e) { // if rock proportion = 0
+			rockMaxValue = -1;
+			rockMinValue = -1;
+		}
+		final Grid<Float> randomRockGrid = PerlinNoiseGenerator.generatePerlinNoiseHeightGrid(width, height,
+				rockOctaveCount, rockMinValue, rockMaxValue);
+
+		// -----------------------------
 
 		final Grid<EnvCell> grid = new Grid<>(0, width - 1, 0, height - 1);
 		for (int x = 0; x < width; x++) {
@@ -74,24 +97,31 @@ public class EnvironmentUtils {
 				grid.set(x, y, envCell);
 				final Point position = new Point(x, y);
 
-				boolean antHillCell = false;
+				float nearestAntHillDistance = Float.MAX_VALUE;
 				for (final AntHill antHill : antHillList) {
-					if (antHill.getPosition().equals(position)) {
+					final float AntHillDistance = (float) antHill.getPosition().distance(position);
+					nearestAntHillDistance = Math.min(AntHillDistance, nearestAntHillDistance);
+					if (nearestAntHillDistance == 0) {
 						envCell.addEnvObject(antHill);
-						antHillCell = true;
 					}
 				}
-				// if there is an ant hill, there should not be any other
-				// objects on the cell
-				if (!antHillCell) {
-					final int perlinHeight = randomFoodGrid.get(position).intValue();
-					if (perlinHeight > 0) {
-						envCell.addEnvObject(new Food(position, perlinHeight));
+
+				// a negative value. antHillModifier = 0 if there is not near
+				// hill. antHillModifier = -AntHillRange if on an ant hill
+				final float antHillModifier = Math.min(0f, nearestAntHillDistance - ANT_HILL_RANGE);
+				final float rockPerlinHeight = randomRockGrid.get(position).floatValue() + antHillModifier;
+				if (rockPerlinHeight > 0) {
+					envCell.addEnvObject(new Wall(position));
+				} else if (nearestAntHillDistance > 0) {
+					final int foodPerlinHeight = randomFoodGrid.get(position).intValue();
+					if (foodPerlinHeight > 0) {
+						envCell.addEnvObject(new Food(position, foodPerlinHeight));
 					}
 				}
 			}
 		}
 		return grid;
+
 	}
 
 	/**
@@ -245,7 +275,7 @@ public class EnvironmentUtils {
 		}
 		// Move the body
 		if (!grid.get(body.getPosition()).removeEnvObject(body)) {
-			System.err.println("Body #" + body.getUuid() + " not found in the grid when trying to move it");
+			System.err.println("Body #" + body.getUuid() + " not found in the grid when trying to move it"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		body.setPosition(target);
