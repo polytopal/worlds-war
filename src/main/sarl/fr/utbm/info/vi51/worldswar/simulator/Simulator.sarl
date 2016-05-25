@@ -147,7 +147,7 @@ agent Simulator {
 		for(l : listeners) {
 			l.simulationTerminated
 		}
-		cancel(this.stepTimerTask)
+		cancel(this.stepTimerTask, false)
 		emit(new StopSimulationEvent)
 	}
 	
@@ -213,7 +213,7 @@ agent Simulator {
 	}
 	
 	private def pauseSimulation() {
-		cancel(this.stepTimerTask)
+		cancel(this.stepTimerTask, false)
 		for(l : listeners) {
 			l.simulationPaused();
 		}
