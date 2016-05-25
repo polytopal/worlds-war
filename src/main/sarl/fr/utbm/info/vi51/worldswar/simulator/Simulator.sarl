@@ -91,7 +91,7 @@ agent Simulator {
 	 */
 	on EnvironmentInitializedEvent {
 		synchronized(this) {
-			this.pausePending=false
+			pausePending=false
 			this.environmentExists = true
 			this.environmentReady = true
 			this.stepTimerReady = true
@@ -124,8 +124,8 @@ agent Simulator {
 	 */
 	private def simulationLoop {
 		if(this.stepTimerReady && this.environmentReady) {
-			if(this.pausePending) {
-				this.pausePending = false
+			if(pausePending) {
+				pausePending = false
 			} else {
 				executeStep
 				this.stepTimerTask = in(this.simulationSpeed.milliseconds) [ setStepTimerReady ]
@@ -154,7 +154,7 @@ agent Simulator {
 		for(l : listeners) {
 			l.simulationTerminated
 		}
-		pausePending = true
+		cancel(this.stepTimerTask)
 		emit(new StopSimulationEvent)
 	}
 	
@@ -220,7 +220,7 @@ agent Simulator {
 	}
 	
 	private def pauseSimulation() {
-		this.pausePending = true
+		pausePending = true
 		for(l : listeners) {
 			l.simulationPaused();
 		}
