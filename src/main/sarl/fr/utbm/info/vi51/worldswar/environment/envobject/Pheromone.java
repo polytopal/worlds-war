@@ -28,6 +28,7 @@ public class Pheromone extends StaticObject {
 	/**
 	 * Places a new unit of pheromone on the map
 	 * 
+	 * @param position
 	 * @param colony
 	 *            the {@link Colony} of the ant that places the pheromone
 	 * @param type
@@ -61,10 +62,10 @@ public class Pheromone extends StaticObject {
 	/**
 	 * Adds the specified qty of pheromone
 	 * 
-	 * @param qty
+	 * @param addedQty
 	 */
-	public void addQty(float qty) {
-		this.qty = Math.max(qty, this.qty);
+	public void addQty(float addedQty) {
+		this.qty = Math.max(addedQty, this.qty);
 	}
 
 	////////////////////////////////////////

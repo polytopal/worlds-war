@@ -8,6 +8,12 @@ import java.awt.Point;
  */
 public abstract class StaticObject extends EnvironmentObject {
 
+	/**
+	 * Constructor
+	 * 
+	 * @param position
+	 *            the position of the object (in global coordinates)
+	 */
 	public StaticObject(Point position) {
 		super(position);
 	}
