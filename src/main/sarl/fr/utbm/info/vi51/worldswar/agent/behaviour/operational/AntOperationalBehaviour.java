@@ -134,7 +134,9 @@ public class AntOperationalBehaviour {
 	}
 
 	/**
-	 * Move in a random direction
+	 * Move in a random direction. Produces a much smoother trajectory if the
+	 * last move direction is stored in memory as "lastMoveDirection". In this
+	 * case, will return the same direction, or an adjacent one.
 	 * 
 	 * @param perception
 	 * @param memory
