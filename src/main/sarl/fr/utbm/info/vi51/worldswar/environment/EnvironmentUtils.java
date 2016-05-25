@@ -42,6 +42,7 @@ public class EnvironmentUtils {
 		final int height = simulationParameters.getGridHeight();
 		final List<Colony> coloniesList = simulationParameters.getColoniesList();
 		final float foodProportion = simulationParameters.getFoodProportion();
+		final float rockProportion = simulationParameters.getRockProportion();
 
 		// --- computation of ant hills positions ---
 
@@ -77,7 +78,6 @@ public class EnvironmentUtils {
 
 		final int rockOctaveCount = 4;
 		float rockMaxValue = ANT_HILL_RANGE;
-		final float rockProportion = 0.3f;
 		float rockMinValue = 0;
 		try {
 			rockMinValue = rockMaxValue * (1f - (1f / rockProportion));
