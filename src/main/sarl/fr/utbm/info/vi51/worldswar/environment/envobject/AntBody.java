@@ -70,7 +70,7 @@ public class AntBody extends AgentBody {
 		this.perceptionRange = computeStatistic(caste.getPerceptionRange(), breed.getPerceptionRangeMultiplier());
 
 		this.foodCarried = new Stock(0);
-		this.burrowed = false;
+		this.burrowed = true;
 	}
 
 	private static int computeStatistic(int baseStat, float multiplier) {
@@ -165,7 +165,7 @@ public class AntBody extends AgentBody {
 	 * Picks food from the ant
 	 * 
 	 * @param qty
-	 * @return
+	 * @return The quantity of resource that has been picked
 	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#pick(int)
 	 */
 	public int pickFood(int qty) {
@@ -181,7 +181,7 @@ public class AntBody extends AgentBody {
 	}
 
 	/**
-	 * @return
+	 * @return the available amount of resources in the stock
 	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#getAvailable()
 	 */
 	public int getFoodCarried() {
@@ -189,7 +189,7 @@ public class AntBody extends AgentBody {
 	}
 
 	/**
-	 * @return
+	 * @return true if the stock is empty
 	 * @see fr.utbm.info.vi51.worldswar.utils.Stock#isEmpty()
 	 */
 	public boolean carriesFood() {

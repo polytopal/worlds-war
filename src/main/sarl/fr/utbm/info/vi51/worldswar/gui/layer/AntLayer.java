@@ -33,7 +33,7 @@ public class AntLayer extends DefaultColorLayer {
 	protected Color computeCellColor(PerceptionCell cell) {
 		Color c = null;
 		final PerceivableAnt ant = cell.getAnt();
-		if (ant != null) {
+		if (ant != null && !ant.isBurrowed()) {
 			final Breed breed = ant.getColony().getBreed();
 			switch (breed) {
 			case DARK_ANTS:

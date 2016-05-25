@@ -10,7 +10,6 @@ import fr.utbm.info.vi51.worldswar.controller.SimulationParameters
 import fr.utbm.info.vi51.worldswar.environment.envobject.AgentBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill
-import fr.utbm.info.vi51.worldswar.environment.influence.BurrowInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.DropFoodInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.MeleeAttackInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence
@@ -164,9 +163,7 @@ agent Environment {
 	private def applyAntInfluence(ant : AntBody) {
 		val influence = ant.influence
 		
-		if(influence instanceof BurrowInfluence) {
-			EnvironmentUtils.burrow(ant, grid)
-		} else if(influence instanceof DropFoodInfluence) {
+		if(influence instanceof DropFoodInfluence) {
 			EnvironmentUtils.dropFood(ant, influence.droppedAmount, grid)
 		} else if(influence instanceof MeleeAttackInfluence) {
 			throw(new UnsupportedOperationException("No fights only farm pls"))

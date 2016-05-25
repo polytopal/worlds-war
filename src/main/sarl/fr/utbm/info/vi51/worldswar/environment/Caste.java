@@ -54,7 +54,7 @@ public enum Caste {
 	 * @return the default max health of the ant
 	 */
 	public int getMaxHealth() {
-		return 100;
+		return 500;
 	}
 
 	/**

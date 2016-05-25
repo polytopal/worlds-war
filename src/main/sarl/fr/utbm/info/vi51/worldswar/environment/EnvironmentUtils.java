@@ -247,7 +247,18 @@ public class EnvironmentUtils {
 		if (!grid.get(body.getPosition()).removeEnvObject(body)) {
 			System.err.println("Body #" + body.getUuid() + " not found in the grid when trying to move it");
 		}
+
 		body.setPosition(target);
+
+		// if the ant go out of the hill
+		if (body.isBurrowed()) {
+			body.setBurrowed(false);
+		}
+		// if the ant go in the hill
+		else if (grid.get(target).isAntHill(body.getColony())) {
+			body.setBurrowed(true);
+		}
+
 		grid.get(target).addEnvObject(body);
 	}
 
