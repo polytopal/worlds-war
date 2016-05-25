@@ -97,7 +97,7 @@ public class GuiActionsManager {
 	/**
 	 * @author Leo
 	 * 
-	 *         This action allow to start a new simulation, by pressing ctrl+n
+	 *         This action allow to start a new simulation, by pressing ctrl+N
 	 */
 	private class NewSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 4958436812700297538L;
@@ -123,7 +123,7 @@ public class GuiActionsManager {
 	 * @author Leo
 	 * 
 	 *         This action allow to stop the current simulation, by pressing
-	 *         ctrl+s
+	 *         ctrl+C
 	 */
 	private class StopSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
@@ -142,7 +142,7 @@ public class GuiActionsManager {
 	}
 
 	/**
-	 * This action allows to pause the simulation, by pressing ctrl+p
+	 * This action allows to pause the simulation, by pressing the key P
 	 */
 	private class PauseSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
@@ -162,7 +162,7 @@ public class GuiActionsManager {
 	}
 
 	/**
-	 * This action allows to resume the simulation, by pressing ctrl+p
+	 * This action allows to resume the simulation, by pressing the key P
 	 */
 	private class ResumeSimulationAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
