@@ -24,10 +24,8 @@ import fr.utbm.info.vi51.worldswar.utils.Direction;
 @SuppressWarnings("static-method")
 public class AntOperationalBehaviour {
 
-	private static final float MAX_PHEROMONE = 15;
-	private static final float PHEROMONE_DECAY = 0.1f;
-
-	private static final int MAX_PHEROMONE_DISTANCE = (int) (MAX_PHEROMONE / PHEROMONE_DECAY);
+	private static final float MAX_PHEROMONE = 100;
+	private static final float PHEROMONE_DECAY = 0.5f;
 
 	/**
 	 * Chances that a wandering ant will choose a new direction instead of going
@@ -159,10 +157,42 @@ public class AntOperationalBehaviour {
 	}
 
 	/**
+	 * Starts a pheromone trail by "remembering" in memory what pheromones to
+	 * place
+	 * 
+	 * @param memory
+	 *            the ant memory
+	 * @param type
+	 *            the type of pheromones to place
+	 * @param coeff
+	 *            between 0 and 1 : the intensity of the trail. A higher value
+	 *            means the trail will last longer, and be taken more into
+	 *            account by other ants.
+	 */
+	public void startPheromoneTrail(HashMap<String, Object> memory, PheromoneType type, float coeff) {
+		memory.put("pheromoneType", type);
+		memory.put("pheromoneQty", new Float(MAX_PHEROMONE * coeff));
+	}
+
+	/**
+	 * Starts a pheromone trail by "remembering" in memory what pheromones to
+	 * place. The trail will have the highest possible intensity.
+	 * 
+	 * @see AntOperationalBehaviour#startPheromoneTrail(HashMap, PheromoneType,
+	 *      float)
+	 * 
+	 * @param memory
+	 * @param type
+	 */
+	public void startPheromoneTrail(HashMap<String, Object> memory, PheromoneType type) {
+		this.startPheromoneTrail(memory, type, 1.f);
+	}
+
+	/**
 	 * Computes the influence to move in the specified direction while putting
-	 * pheromones according to the "pheromoneDistance" and "pheromoneType"
-	 * values in memory. Also stores the direction to the "lastMoveDirection"
-	 * entry in memory
+	 * pheromones according to the "pheromoneQty" and "pheromoneType" values in
+	 * memory. Also stores the direction to the "lastMoveDirection" entry in
+	 * memory
 	 * 
 	 * @param d
 	 * @param memory
@@ -170,19 +200,24 @@ public class AntOperationalBehaviour {
 	 *         with the specified direction
 	 */
 	private Influence move(AntPerception perception, Direction d, HashMap<String, Object> memory) {
-		if (memory.containsKey("pheromoneType") && memory.containsKey("pheromoneDistance")) {
+		if (memory.containsKey("pheromoneType") && memory.containsKey("pheromoneQty")) {
 			// Retrieve pheromone to put from memory
 			PheromoneType pheromoneType = (PheromoneType) (memory.get("pheromoneType"));
-			int pheromoneDistance = ((Integer) memory.get("pheromoneDistance")).intValue();
-			float pheromoneQty = MAX_PHEROMONE - (pheromoneDistance * PHEROMONE_DECAY);
+			float pheromoneQty = ((Float) memory.get("pheromoneQty")).floatValue();
+
+			// Update pheromone quantity
+			pheromoneQty -= PHEROMONE_DECAY;
+
+			// If the pheromone quantity is now negative, delete the keys from
+			// memory and perform a simple move
+			if (pheromoneQty <= 0) {
+				memory.remove("pheromoneType");
+				memory.remove("pheromoneQty");
+				return this.moveWithoutPheromone(memory, d);
+			}
 
 			// Update memory
-			if (pheromoneDistance >= MAX_PHEROMONE_DISTANCE) {
-				memory.remove("pheromoneType");
-				memory.remove("pheromoneDistance");
-			} else {
-				memory.put("pheromoneDistance", new Integer(pheromoneDistance + 1));
-			}
+			memory.put("pheromoneQty", new Float(pheromoneQty));
 
 			// Prevents ants from stacking pheromones by traversing the same
 			// cell multiple times
@@ -193,6 +228,19 @@ public class AntOperationalBehaviour {
 			memory.put("lastMoveDirection", d);
 			return new PheromoneAndMoveInfluence(pheromoneType, pheromoneQty, d);
 		}
+		return this.moveWithoutPheromone(memory, d);
+	}
+
+	/**
+	 * Computes the influence to move in the specified direction, without
+	 * putting any pheromone on ground. Stores the direction in memory as
+	 * "lastMoveDirection".
+	 * 
+	 * @param memory
+	 * @param d
+	 * @return a {@link MoveInfluence}
+	 */
+	private Influence moveWithoutPheromone(HashMap<String, Object> memory, Direction d) {
 		memory.put("lastMoveDirection", d);
 		return new MoveInfluence(d);
 	}

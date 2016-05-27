@@ -14,7 +14,7 @@ public class Pheromone extends StaticObject {
 	/**
 	 * Flat amount of qty lost each step
 	 */
-	public static final float FLAT_DISSIPATION = 0.03f;
+	public static final float FLAT_DISSIPATION = 0.2f;
 
 	/**
 	 * Ratio of the qty lost each step

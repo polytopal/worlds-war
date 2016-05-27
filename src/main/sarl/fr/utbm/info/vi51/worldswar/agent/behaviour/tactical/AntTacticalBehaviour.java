@@ -36,12 +36,10 @@ public class AntTacticalBehaviour {
 	 */
 	public Influence collectFood(AntPerception perception, HashMap<String, Object> memory) {
 		if (perception.isAtHome()) {
-			memory.put("pheromoneType", PheromoneType.HOME);
-			memory.put("pheromoneDistance", new Integer(0));
+			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.HOME);
 		}
 		if (perception.getFoodAt(MY_POSITION) > 0) {
-			memory.put("pheromoneType", PheromoneType.FOOD);
-			memory.put("pheromoneDistance", new Integer(0));
+			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.FOOD);
 			return this.operationalBehaviour.pickFood(perception);
 		}
 		if (perception.isAvailableFoodInSight()) {
@@ -63,12 +61,10 @@ public class AntTacticalBehaviour {
 	 */
 	public Influence wanderForFood(AntPerception perception, HashMap<String, Object> memory) {
 		if (perception.isAtHome()) {
-			memory.put("pheromoneType", PheromoneType.HOME);
-			memory.put("pheromoneDistance", new Integer(0));
+			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.HOME);
 		}
 		if (perception.getFoodAt(MY_POSITION) > 0) {
-			memory.put("pheromoneType", PheromoneType.FOOD);
-			memory.put("pheromoneDistance", new Integer(0));
+			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.FOOD);
 			return this.operationalBehaviour.pickFood(perception);
 		}
 		if (perception.isAvailableFoodInSight()) {
