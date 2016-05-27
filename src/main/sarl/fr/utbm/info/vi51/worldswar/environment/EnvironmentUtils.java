@@ -23,7 +23,17 @@ import fr.utbm.info.vi51.worldswar.utils.Grid;
  */
 public class EnvironmentUtils {
 
-	private static final float ANT_HILL_RANGE = 20;
+	// allow to choose how the food is grouped in parcel
+	private static final int FOOD_OCTAVE_COUNT = 6;
+	// !!! warning !!! represent the theoretically maximum food on a cell, but
+	// the real maximum food will be lower cause of the interpolations of the
+	// Perlin noise
+	private static final int FOOD_MAX_VALUE = 80;
+
+	private static final int ROCK_OCTAVE_COUNT = 4;
+
+	// There will be less rocks in this range around hills
+	private static final float ANT_HILL_FREE_ROCK_RANGE = 20;
 
 	/**
 	 * Private empty constructor : this class is not meant to be instantiated
@@ -62,31 +72,25 @@ public class EnvironmentUtils {
 
 		// --- creation of the food ---
 
-		// allow to choose how the food is grouped in parcel
-		final int foodOctaveCount = 6;
-		final float foodMaxValue = 80; // !!! warning !!! represent the
-		// theoretically maximum food on a cell, but the real maximum food will
-		// be lower cause of the interpolations of the Perlin noise
-
 		// simple cross product
-		final float foddMinValue = foodMaxValue * (1f - (1f / foodProportion));
+		final float foddMinValue = FOOD_MAX_VALUE * (1f - (1f / foodProportion));
 		// the value of each cell will be between min and max
 		final Grid<Float> randomFoodGrid = PerlinNoiseGenerator.generatePerlinNoiseHeightGrid(width, height,
-				foodOctaveCount, foddMinValue, foodMaxValue);
+				FOOD_OCTAVE_COUNT, foddMinValue, FOOD_MAX_VALUE);
 
 		// --- creation of the rocks ---
 
-		final int rockOctaveCount = 4;
-		float rockMaxValue = ANT_HILL_RANGE;
+		float rockMaxValue = ANT_HILL_FREE_ROCK_RANGE;
 		float rockMinValue = 0;
 		try {
 			rockMinValue = rockMaxValue * (1f - (1f / rockProportion));
-		} catch (final ArithmeticException e) { // if rock proportion = 0
+		} catch (@SuppressWarnings("unused") final ArithmeticException e) {
+			// if rock proportion = 0
 			rockMaxValue = -1;
 			rockMinValue = -1;
 		}
 		final Grid<Float> randomRockGrid = PerlinNoiseGenerator.generatePerlinNoiseHeightGrid(width, height,
-				rockOctaveCount, rockMinValue, rockMaxValue);
+				ROCK_OCTAVE_COUNT, rockMinValue, rockMaxValue);
 
 		// -----------------------------
 
@@ -108,7 +112,7 @@ public class EnvironmentUtils {
 
 				// a negative value. antHillModifier = 0 if there is not near
 				// hill. antHillModifier = -AntHillRange if on an ant hill
-				final float antHillModifier = Math.min(0f, nearestAntHillDistance - ANT_HILL_RANGE);
+				final float antHillModifier = Math.min(0f, nearestAntHillDistance - ANT_HILL_FREE_ROCK_RANGE);
 				final float rockPerlinHeight = randomRockGrid.get(position).floatValue() + antHillModifier;
 				if (rockPerlinHeight > 0) {
 					envCell.addEnvObject(new Wall(position));
