@@ -85,8 +85,7 @@ public enum Direction {
 			case NORTH_WEST:
 				return NORTH;
 			default:
-				System.err.println("undefined Direction : " + this); //$NON-NLS-1$
-				return null;
+				throw new RuntimeException("undefined Direction : " + this); //$NON-NLS-1$
 			}
 		case COUNTER_CLOCKWISE:
 			switch (this) {
@@ -107,12 +106,10 @@ public enum Direction {
 			case NORTH_EAST:
 				return NORTH;
 			default:
-				System.err.println("undefined Direction : " + this); //$NON-NLS-1$
-				return null;
+				throw new RuntimeException("undefined Direction : " + this); //$NON-NLS-1$
 			}
 		default:
-			System.err.println("undefined RotationDirection : " + rotation); //$NON-NLS-1$
-			return null;
+			throw new RuntimeException("undefined RotationDirection : " + rotation); //$NON-NLS-1$
 		}
 	}
 
@@ -145,8 +142,7 @@ public enum Direction {
 			case COUNTER_CLOCKWISE:
 				return CLOCKWISE;
 			default:
-				System.err.println("undefined Direction : " + this); //$NON-NLS-1$
-				return null;
+				throw new RuntimeException("undefined Direction : " + this); //$NON-NLS-1$
 			}
 		}
 

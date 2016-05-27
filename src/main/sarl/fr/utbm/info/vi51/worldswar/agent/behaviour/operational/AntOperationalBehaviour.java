@@ -87,12 +87,12 @@ public class AntOperationalBehaviour {
 			// Target is (0,0), this means we already reached it
 			return new DoNothingInfluence();
 		}
-		// the direction is initializes to the primary direction
+		// the direction is initialized to the primary direction
 		chosenDirection = primaryDirection;
 		// the angle between the primary direction and the chosen Direction
 		// (1 delta = 45°)
 		int delta = 1;
-		// this RotationDirection while be tested first
+		// this RotationDirection will be tested first
 		final RotationDirection preferedRotation = RotationDirection.random();
 		// the RotationDirection between the primary direction and the chosen
 		// Direction
@@ -109,7 +109,7 @@ public class AntOperationalBehaviour {
 		if (delta <= 3) {
 			return this.move(perception, chosenDirection, memory);
 		}
-		// if there is not free directions
+		// if there is no free direction
 		return new DoNothingInfluence();
 
 	}
