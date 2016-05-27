@@ -21,12 +21,12 @@ public interface SimulatorListener {
 	 * Invoked when the simulation start
 	 */
 	public void simulationStarted();
-	
+
 	/**
 	 * Invoked when the simulation is paused
 	 */
 	public void simulationPaused();
-	
+
 	/**
 	 * Invoked when the simulation is resumed
 	 */
@@ -37,6 +37,8 @@ public interface SimulatorListener {
 	 * 
 	 * @param perceptionGrid
 	 *            the complete {@link perceptionGrid} computed each step
+	 * @param agentCount
+	 *            the number of agents currently running
 	 */
-	public void environmentUpdated(PerceptionGrid perceptionGrid);
+	public void environmentUpdated(PerceptionGrid perceptionGrid, int agentCount);
 }
