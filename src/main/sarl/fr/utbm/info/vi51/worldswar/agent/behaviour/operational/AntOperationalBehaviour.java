@@ -4,8 +4,6 @@ import static fr.utbm.info.vi51.worldswar.perception.PerceptionGrid.MY_POSITION;
 
 import java.awt.Point;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.environment.influence.DoNothingInfluence;
@@ -23,6 +21,10 @@ import fr.utbm.info.vi51.worldswar.utils.Direction.RotationDirection;
  */
 @SuppressWarnings("static-method")
 public class AntOperationalBehaviour {
+
+	private static final String PHEROMONE_DISTANCE = "pheromoneDistance"; //$NON-NLS-1$
+	private static final String PHEROMONE_TYPE = "pheromoneType"; //$NON-NLS-1$
+	private static final String LAST_MOVE_DIRECTION = "lastMoveDirection"; //$NON-NLS-1$
 
 	private static final float MAX_PHEROMONE = 15;
 	private static final float PHEROMONE_DECAY = 0.1f;
@@ -91,8 +93,7 @@ public class AntOperationalBehaviour {
 		// (1 delta = 45°)
 		int delta = 1;
 		// this RotationDirection while be tested first
-		final RotationDirection preferedRotation = RotationDirection.values()[new Random()
-				.nextInt(RotationDirection.values().length)];
+		final RotationDirection preferedRotation = RotationDirection.random();
 		// the RotationDirection between the primary direction and the chosen
 		// Direction
 		RotationDirection r = preferedRotation;
@@ -144,18 +145,24 @@ public class AntOperationalBehaviour {
 	 *         with a random direction
 	 */
 	public Influence wander(AntPerception perception, HashMap<String, Object> memory) {
-		if (!memory.containsKey("lastMoveDirection")) {
-			final Direction d = Direction.values()[new Random().nextInt(Direction.values().length)];
+		if (!memory.containsKey(LAST_MOVE_DIRECTION)) {
+			final Direction d = Direction.random();
 			return this.move(perception, d, memory);
 		}
 
-		final Direction lastDirection = (Direction) (memory.get("lastMoveDirection"));
+		final Direction lastDirection = (Direction) (memory.get(LAST_MOVE_DIRECTION));
+		Direction d = lastDirection;
+		final RotationDirection rd = RotationDirection.random();
 		if (Math.random() < WANDER_TURN_FREQUENCY) {
-			final List<Direction> adjacentDirections = lastDirection.adjacentDirections();
-			final Direction d = adjacentDirections.get(new Random().nextInt(adjacentDirections.size()));
-			return this.move(perception, d, memory);
+			d = d.adjacentDirection(rd);
 		}
-		return this.move(perception, lastDirection, memory);
+
+		int delta = 1;
+		while (!perception.isTraversable(d.getPoint()) && delta < 8) {
+			d = d.adjacentDirection(rd);
+			delta++;
+		}
+		return this.move(perception, d, memory);
 	}
 
 	/**
@@ -170,18 +177,18 @@ public class AntOperationalBehaviour {
 	 *         with the specified direction
 	 */
 	private Influence move(AntPerception perception, Direction d, HashMap<String, Object> memory) {
-		if (memory.containsKey("pheromoneType") && memory.containsKey("pheromoneDistance")) {
+		if (memory.containsKey(PHEROMONE_TYPE) && memory.containsKey(PHEROMONE_DISTANCE)) {
 			// Retrieve pheromone to put from memory
-			final PheromoneType pheromoneType = (PheromoneType) (memory.get("pheromoneType"));
-			final int pheromoneDistance = ((Integer) memory.get("pheromoneDistance")).intValue();
+			final PheromoneType pheromoneType = (PheromoneType) (memory.get(PHEROMONE_TYPE));
+			final int pheromoneDistance = ((Integer) memory.get(PHEROMONE_DISTANCE)).intValue();
 			float pheromoneQty = MAX_PHEROMONE - (pheromoneDistance * PHEROMONE_DECAY);
 
 			// Update memory
 			if (pheromoneDistance >= MAX_PHEROMONE_DISTANCE) {
-				memory.remove("pheromoneType");
-				memory.remove("pheromoneDistance");
+				memory.remove(PHEROMONE_TYPE);
+				memory.remove(PHEROMONE_DISTANCE);
 			} else {
-				memory.put("pheromoneDistance", new Integer(pheromoneDistance + 1));
+				memory.put(PHEROMONE_DISTANCE, new Integer(pheromoneDistance + 1));
 			}
 
 			// Prevents ants from stacking pheromones by traversing the same
@@ -190,10 +197,10 @@ public class AntOperationalBehaviour {
 					perception.getMyBody().getColony());
 			pheromoneQty = Math.max(pheromoneQty, qtyOnGround);
 
-			memory.put("lastMoveDirection", d);
+			memory.put(LAST_MOVE_DIRECTION, d);
 			return new PheromoneAndMoveInfluence(pheromoneType, pheromoneQty, d);
 		}
-		memory.put("lastMoveDirection", d);
+		memory.put(LAST_MOVE_DIRECTION, d);
 		return new MoveInfluence(d);
 	}
 }

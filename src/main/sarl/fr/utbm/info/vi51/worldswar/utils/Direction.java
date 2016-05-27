@@ -2,6 +2,7 @@ package fr.utbm.info.vi51.worldswar.utils;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Cardinal directions, with getters on the X and Y components of the
@@ -130,6 +131,10 @@ public enum Direction {
 		return adjacentDirections;
 	}
 
+	public static Direction random() {
+		return Direction.values()[new Random().nextInt(Direction.values().length)];
+	}
+
 	public enum RotationDirection {
 		CLOCKWISE, COUNTER_CLOCKWISE;
 
@@ -143,6 +148,10 @@ public enum Direction {
 				System.err.println("undefined Direction : " + this); //$NON-NLS-1$
 				return null;
 			}
+		}
+
+		public static RotationDirection random() {
+			return RotationDirection.values()[new Random().nextInt(RotationDirection.values().length)];
 		}
 	}
 }
