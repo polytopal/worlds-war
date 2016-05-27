@@ -55,51 +55,94 @@ public enum Direction {
 		return new Point(this.x, this.y);
 	}
 
+	public Direction adjacentDirection(RotationDirection rotation, int delta) {
+		Direction d = this;
+		for (int i = 0; i < delta; i++) {
+			d = d.adjacentDirection(rotation);
+		}
+		return d;
+	}
+
+	public Direction adjacentDirection(RotationDirection rotation) {
+		switch (rotation) {
+		case CLOCKWISE:
+			switch (this) {
+			case NORTH:
+				return Direction.NORTH_EAST;
+			case NORTH_EAST:
+				return EAST;
+			case EAST:
+				return SOUTH_EAST;
+			case SOUTH_EAST:
+				return SOUTH;
+			case SOUTH:
+				return SOUTH_WEST;
+			case SOUTH_WEST:
+				return WEST;
+			case WEST:
+				return NORTH_WEST;
+			case NORTH_WEST:
+				return NORTH;
+			default:
+				System.err.println("undefined Direction : " + this); //$NON-NLS-1$
+				return null;
+			}
+		case COUNTER_CLOCKWISE:
+			switch (this) {
+			case NORTH:
+				return Direction.NORTH_WEST;
+			case NORTH_WEST:
+				return WEST;
+			case WEST:
+				return SOUTH_WEST;
+			case SOUTH_WEST:
+				return SOUTH;
+			case SOUTH:
+				return SOUTH_EAST;
+			case SOUTH_EAST:
+				return EAST;
+			case EAST:
+				return NORTH_EAST;
+			case NORTH_EAST:
+				return NORTH;
+			default:
+				System.err.println("undefined Direction : " + this); //$NON-NLS-1$
+				return null;
+			}
+		default:
+			System.err.println("undefined RotationDirection : " + rotation); //$NON-NLS-1$
+			return null;
+		}
+	}
+
 	/**
-	 * For each direction of the enum, computes the 2 adjacent directions and stores it in an ArrayList
+	 * For each direction of the enum, computes the 2 adjacent directions and
+	 * stores it in an ArrayList
 	 * 
 	 * @return ArrayList<{@link Direction}>
 	 */
 	public ArrayList<Direction> adjacentDirections() {
-		ArrayList<Direction> adjacentDirections = new ArrayList<>();
+		final ArrayList<Direction> adjacentDirections = new ArrayList<>();
 
-		switch(this){
-		case NORTH_WEST :
-			adjacentDirections.add(Direction.WEST);
-			adjacentDirections.add(Direction.NORTH);
-			break;
-		case NORTH :
-			adjacentDirections.add(Direction.NORTH_WEST);
-			adjacentDirections.add(Direction.NORTH_EAST);
-			break;
-		case NORTH_EAST :
-			adjacentDirections.add(Direction.NORTH);
-			adjacentDirections.add(Direction.EAST);
-			break;
-		case EAST :
-			adjacentDirections.add(Direction.NORTH_EAST);
-			adjacentDirections.add(Direction.SOUTH_EAST);
-			break;
-		case SOUTH_EAST :
-			adjacentDirections.add(Direction.SOUTH);
-			adjacentDirections.add(Direction.EAST);
-			break;
-		case SOUTH :
-			adjacentDirections.add(Direction.SOUTH_WEST);
-			adjacentDirections.add(Direction.SOUTH_EAST);
-			break;
-		case SOUTH_WEST :
-			adjacentDirections.add(Direction.SOUTH);
-			adjacentDirections.add(Direction.WEST);
-			break;
-		case WEST :
-			adjacentDirections.add(Direction.NORTH_WEST);
-			adjacentDirections.add(Direction.SOUTH_WEST);
-			break;
-		default :
-			break;
-		}
+		adjacentDirections.add(this.adjacentDirection(RotationDirection.COUNTER_CLOCKWISE));
+		adjacentDirections.add(this.adjacentDirection(RotationDirection.CLOCKWISE));
 
 		return adjacentDirections;
+	}
+
+	public enum RotationDirection {
+		CLOCKWISE, COUNTER_CLOCKWISE;
+
+		public RotationDirection getOpposite() {
+			switch (this) {
+			case CLOCKWISE:
+				return COUNTER_CLOCKWISE;
+			case COUNTER_CLOCKWISE:
+				return CLOCKWISE;
+			default:
+				System.err.println("undefined Direction : " + this); //$NON-NLS-1$
+				return null;
+			}
+		}
 	}
 }
