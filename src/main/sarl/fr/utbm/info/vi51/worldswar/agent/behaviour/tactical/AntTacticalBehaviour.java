@@ -20,6 +20,13 @@ public class AntTacticalBehaviour {
 	private final AntOperationalBehaviour operationalBehaviour;
 
 	/**
+	 * A food trail intensity depends on the quantity of food discovered. This
+	 * number corresponds to the quantity of food needed to dispose a maximum
+	 * intensity food trail.
+	 */
+	private static final float MAX_FOOD_TRAIL_QTY = 100;
+
+	/**
 	 * @param operationalBehaviour
 	 */
 	public AntTacticalBehaviour(AntOperationalBehaviour operationalBehaviour) {
@@ -39,7 +46,7 @@ public class AntTacticalBehaviour {
 			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.HOME);
 		}
 		if (perception.getFoodAt(MY_POSITION) > 0) {
-			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.FOOD);
+			this.startFoodTrail(perception, memory);
 			return this.operationalBehaviour.pickFood(perception);
 		}
 		if (perception.isAvailableFoodInSight()) {
@@ -64,7 +71,7 @@ public class AntTacticalBehaviour {
 			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.HOME);
 		}
 		if (perception.getFoodAt(MY_POSITION) > 0) {
-			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.FOOD);
+			this.startFoodTrail(perception, memory);
 			return this.operationalBehaviour.pickFood(perception);
 		}
 		if (perception.isAvailableFoodInSight()) {
@@ -108,5 +115,19 @@ public class AntTacticalBehaviour {
 			return this.operationalBehaviour.moveToTarget(perception, memory, highestAntPheromonePos);
 		}
 		return this.operationalBehaviour.wander(perception, memory);
+	}
+
+	/**
+	 * Starts a food trail, auto determining its intensity given the quantity of
+	 * food in sight
+	 * 
+	 * @param perception
+	 * @param memory
+	 */
+	private void startFoodTrail(AntPerception perception, HashMap<String, Object> memory) {
+		float trailCoeff = perception.countFoodInSight() / MAX_FOOD_TRAIL_QTY;
+		System.out.println(trailCoeff);
+		trailCoeff = Math.min(trailCoeff, 1);
+		this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.FOOD, trailCoeff);
 	}
 }

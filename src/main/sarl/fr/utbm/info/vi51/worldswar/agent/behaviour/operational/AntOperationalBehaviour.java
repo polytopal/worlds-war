@@ -170,6 +170,9 @@ public class AntOperationalBehaviour {
 	 *            account by other ants.
 	 */
 	public void startPheromoneTrail(HashMap<String, Object> memory, PheromoneType type, float coeff) {
+		assert (coeff >= 0);
+		assert (coeff <= 1);
+
 		memory.put("pheromoneType", type);
 		memory.put("pheromoneQty", new Float(MAX_PHEROMONE * coeff));
 	}

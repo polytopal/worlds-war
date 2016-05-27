@@ -144,6 +144,26 @@ public class AntPerception {
 	}
 
 	/**
+	 * @return the total number of food units in sight.
+	 */
+	public int countFoodInSight() {
+		int totalFood = 0;
+		PerceivableFood food = null;
+
+		for (int x = this.grid.getXMin(); x <= this.grid.getXMax(); x++) {
+			for (int y = this.grid.getYMin(); y <= this.grid.getYMax(); y++) {
+				if (this.grid.getCell(x, y) != null) {
+					food = this.grid.getCell(x, y).getFood();
+					if (food != null) {
+						totalFood += food.getAvailable();
+					}
+				}
+			}
+		}
+		return totalFood;
+	}
+
+	/**
 	 * @return {@code true} if the ant's anthill is in its field of perception
 	 */
 	public boolean isHomeInSight() {
