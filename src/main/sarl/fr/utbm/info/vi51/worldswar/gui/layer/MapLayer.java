@@ -15,7 +15,7 @@ public class MapLayer extends DefaultColorLayer {
 
 	private static Color ANT_HILL_COLOR = new Color(255, 0, 0);
 
-	private static Color ROCK_COLOR = new Color(100, 100, 100);
+	private static Color ROCK_COLOR = new Color(150, 150, 150);
 
 	private static Color FOOD_LITTLE_QTY_COLOR = new Color(128, 255, 128);
 	private static Color FOOD_BIG_QTY_COLOR = new Color(102, 204, 102);

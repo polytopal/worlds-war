@@ -68,7 +68,7 @@ public enum Caste {
 	 * @return the default capacity of the ant
 	 */
 	public int getCapacity() {
-		return 2;
+		return 4;
 	}
 
 	/**

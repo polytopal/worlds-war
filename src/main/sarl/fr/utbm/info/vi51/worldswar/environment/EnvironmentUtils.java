@@ -30,7 +30,7 @@ public class EnvironmentUtils {
 	// Perlin noise
 	private static final int FOOD_MAX_VALUE = 80;
 
-	private static final int ROCK_OCTAVE_COUNT = 4;
+	private static final int ROCK_OCTAVE_COUNT = 6;
 
 	// There will be less rocks in this range around hills
 	private static final float ANT_HILL_FREE_ROCK_RANGE = 20;
