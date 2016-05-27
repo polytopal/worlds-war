@@ -126,7 +126,6 @@ public class AntTacticalBehaviour {
 	 */
 	private void startFoodTrail(AntPerception perception, HashMap<String, Object> memory) {
 		float trailCoeff = perception.countFoodInSight() / MAX_FOOD_TRAIL_QTY;
-		System.out.println(trailCoeff);
 		trailCoeff = Math.min(trailCoeff, 1);
 		this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.FOOD, trailCoeff);
 	}
