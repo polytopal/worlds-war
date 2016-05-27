@@ -24,7 +24,7 @@ public class AntTacticalBehaviour {
 	 * number corresponds to the quantity of food needed to dispose a maximum
 	 * intensity food trail.
 	 */
-	private static final float MAX_FOOD_TRAIL_QTY = 100;
+	private static final float MAX_FOOD_TRAIL_QTY = 50;
 
 	/**
 	 * @param operationalBehaviour
