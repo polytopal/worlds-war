@@ -104,7 +104,7 @@ agent Environment {
 			var perceptionGrid = PerceptionGrid.buildFromEnvObjectGrid(grid)
 
 			for(l : this.listeners) {
-				l.environmentUpdated(perceptionGrid)
+				l.environmentUpdated(perceptionGrid, this.agentBodies.size)
 			}
 			
 			
@@ -274,7 +274,7 @@ agent Environment {
 	////////////////////////////////////////
 	
 	
-	def sendPerceptionsToAgents(perceptionGrid : PerceptionGrid) {
+	def sendPerceptionsToAgents(perceptionGrid : PerceptionGrid) : void {
 		
 		//If there is no agent, there is no perception to send, and no influence to wait.
 		//We can directly apply the step
