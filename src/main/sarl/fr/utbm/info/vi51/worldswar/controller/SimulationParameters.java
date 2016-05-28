@@ -39,18 +39,27 @@ public class SimulationParameters {
 
 	/** Default proportion of food on the map (in percents) **/
 	public static final int DEFAULT_FOOD_PROPORTION = 30;
-	/** Minimum proportion of food on the map (in percents) **/
+	/** Minimum proportion of food on the map (in percents) must be > 0 **/
 	public static final int MIN_FOOD_PROPORTION = 10;
-	/** Maximum proportion of food on the map (in percents) **/
+	/** Maximum proportion of food on the map (in percents) must be <= 100 **/
 	public static final int MAX_FOOD_PROPORTION = 70;
+
+	/** Default proportion of rocks on the map (in percents) **/
+	public static final int DEFAULT_ROCK_PROPORTION = 30;
+	/** Minimum proportion of rocks on the map (in percents) must be >= 0 **/
+	public static final int MIN_ROCK_PROPORTION = 0;
+	/** Maximum proportion of rocks on the map (in percents) must be <= 100 **/
+	public static final int MAX_ROCK_PROPORTION = 50;
 
 	// -----
 
 	private final int gridWidth;
 	private final int gridHeight;
 	private final List<Colony> coloniesList;
-	// the food proportion, between 0.0f and 1.0f
+	// the food proportion, between 0.001f and 1.0f
 	private final float foodProportion;
+	// the rock proportion, between 0f and 1.0f
+	private final float rockProportion;
 
 	/**
 	 * 
@@ -58,13 +67,15 @@ public class SimulationParameters {
 	 * @param gridHeight
 	 * @param coloniesList
 	 * @param foodProportion
-	 *            the food proportion, between 0.0f and 1.0f
+	 * @param rockProportion
 	 */
-	public SimulationParameters(int gridWidth, int gridHeight, List<Colony> coloniesList, float foodProportion) {
+	public SimulationParameters(int gridWidth, int gridHeight, List<Colony> coloniesList, float foodProportion,
+			float rockProportion) {
 		this.gridWidth = gridWidth;
 		this.gridHeight = gridHeight;
 		this.coloniesList = coloniesList;
 		this.foodProportion = foodProportion;
+		this.rockProportion = rockProportion;
 	}
 
 	/**
@@ -93,6 +104,13 @@ public class SimulationParameters {
 	 */
 	public float getFoodProportion() {
 		return this.foodProportion;
+	}
+
+	/**
+	 * @return the proportion of rocks to place on the map
+	 */
+	public float getRockProportion() {
+		return this.rockProportion;
 	}
 
 }

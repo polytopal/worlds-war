@@ -173,7 +173,7 @@ public class LaunchSimulationDialog extends JDialog {
 		final JLabel foodProportionLabel = new JLabel(
 				String.format("%s :", Messages.getString("LaunchSimulation.foodProportion"))); //$NON-NLS-1$ //$NON-NLS-2$
 		final GridBagConstraints gbc_foodProportionLabel = new GridBagConstraints();
-		gbc_foodProportionLabel.insets = new Insets(0, 5, 0, 5);
+		gbc_foodProportionLabel.insets = new Insets(0, 5, 5, 5);
 		gbc_foodProportionLabel.anchor = GridBagConstraints.EAST;
 		gbc_foodProportionLabel.gridx = 0;
 		gbc_foodProportionLabel.gridy = 3;
@@ -184,7 +184,7 @@ public class LaunchSimulationDialog extends JDialog {
 		final GridBagConstraints gbc_slider = new GridBagConstraints();
 		gbc_slider.gridwidth = 3;
 		gbc_slider.fill = GridBagConstraints.HORIZONTAL;
-		gbc_slider.insets = new Insets(0, 0, 0, 5);
+		gbc_slider.insets = new Insets(0, 0, 5, 5);
 		gbc_slider.gridx = 1;
 		gbc_slider.gridy = 3;
 		contentPanel.add(foodSlider, gbc_slider);
@@ -202,6 +202,43 @@ public class LaunchSimulationDialog extends JDialog {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				foodProportionDisplayer.setText(foodSlider.getValue() + "%"); //$NON-NLS-1$
+			}
+		});
+
+		// --------- Rock Proportion ---------
+
+		final JLabel rockProportionLabel = new JLabel(
+				String.format("%s :", Messages.getString("LaunchSimulation.rockProportion"))); //$NON-NLS-1$ //$NON-NLS-2$
+		final GridBagConstraints gbc_rockProportionLabel = new GridBagConstraints();
+		gbc_rockProportionLabel.insets = new Insets(0, 5, 0, 5);
+		gbc_rockProportionLabel.anchor = GridBagConstraints.EAST;
+		gbc_rockProportionLabel.gridx = 0;
+		gbc_rockProportionLabel.gridy = 4;
+		contentPanel.add(rockProportionLabel, gbc_rockProportionLabel);
+
+		final JSlider rockSlider = new JSlider(SimulationParameters.MIN_ROCK_PROPORTION,
+				SimulationParameters.MAX_ROCK_PROPORTION, SimulationParameters.DEFAULT_ROCK_PROPORTION);
+		final GridBagConstraints gbc_rock_slider = new GridBagConstraints();
+		gbc_rock_slider.gridwidth = 3;
+		gbc_rock_slider.fill = GridBagConstraints.HORIZONTAL;
+		gbc_rock_slider.insets = new Insets(0, 0, 0, 5);
+		gbc_rock_slider.gridx = 1;
+		gbc_rock_slider.gridy = 4;
+		contentPanel.add(rockSlider, gbc_rock_slider);
+
+		final JLabel rockProportionDisplayer = new JLabel(SimulationParameters.DEFAULT_ROCK_PROPORTION + "%"); //$NON-NLS-1$
+		rockProportionDisplayer.setMinimumSize(new Dimension(30, 14));
+		rockProportionDisplayer.setPreferredSize(new Dimension(30, 14));
+		final GridBagConstraints gbc_RockProportionDisplayer = new GridBagConstraints();
+		gbc_RockProportionDisplayer.insets = new Insets(0, 0, 5, 5);
+		gbc_RockProportionDisplayer.gridx = 4;
+		gbc_RockProportionDisplayer.gridy = 4;
+		contentPanel.add(rockProportionDisplayer, gbc_RockProportionDisplayer);
+
+		rockSlider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				rockProportionDisplayer.setText(rockSlider.getValue() + "%"); //$NON-NLS-1$
 			}
 		});
 
@@ -231,9 +268,10 @@ public class LaunchSimulationDialog extends JDialog {
 
 				// Conversion from percent to float
 				final float foodProportion = foodSlider.getValue() / 100.0f;
+				final float rockProportion = rockSlider.getValue() / 100.0f;
 
 				LaunchSimulationDialog.this.simulationParameters = new SimulationParameters(gridWidth, gridHeight,
-						coloniesList, foodProportion);
+						coloniesList, foodProportion, rockProportion);
 
 				dispose();
 			}

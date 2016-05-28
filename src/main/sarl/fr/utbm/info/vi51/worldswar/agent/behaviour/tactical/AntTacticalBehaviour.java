@@ -17,6 +17,9 @@ import fr.utbm.info.vi51.worldswar.perception.AntPerception;
  */
 public class AntTacticalBehaviour {
 
+	private static final String PHEROMONE_DISTANCE = "pheromoneDistance"; //$NON-NLS-1$
+	private static final String PHEROMONE_TYPE = "pheromoneType"; //$NON-NLS-1$
+
 	private final AntOperationalBehaviour operationalBehaviour;
 
 	/**
@@ -36,18 +39,18 @@ public class AntTacticalBehaviour {
 	 */
 	public Influence collectFood(AntPerception perception, HashMap<String, Object> memory) {
 		if (perception.isAtHome()) {
-			memory.put("pheromoneType", PheromoneType.HOME);
-			memory.put("pheromoneDistance", new Integer(0));
+			memory.put(PHEROMONE_TYPE, PheromoneType.HOME);
+			memory.put(PHEROMONE_DISTANCE, new Integer(0));
 		}
 		if (perception.getFoodAt(MY_POSITION) > 0) {
-			memory.put("pheromoneType", PheromoneType.FOOD);
-			memory.put("pheromoneDistance", new Integer(0));
+			memory.put(PHEROMONE_TYPE, PheromoneType.FOOD);
+			memory.put(PHEROMONE_DISTANCE, new Integer(0));
 			return this.operationalBehaviour.pickFood(perception);
 		}
 		if (perception.isAvailableFoodInSight()) {
 			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getClosestAvailableFoodPos());
 		}
-		Point highestFoodPheromonePos = perception.getHighestPheromonePos(PheromoneType.FOOD);
+		final Point highestFoodPheromonePos = perception.getHighestPheromonePos(PheromoneType.FOOD);
 		if (highestFoodPheromonePos != null) {
 			return this.operationalBehaviour.moveToTarget(perception, memory, highestFoodPheromonePos);
 		}
@@ -63,12 +66,12 @@ public class AntTacticalBehaviour {
 	 */
 	public Influence wanderForFood(AntPerception perception, HashMap<String, Object> memory) {
 		if (perception.isAtHome()) {
-			memory.put("pheromoneType", PheromoneType.HOME);
-			memory.put("pheromoneDistance", new Integer(0));
+			memory.put(PHEROMONE_TYPE, PheromoneType.HOME);
+			memory.put(PHEROMONE_DISTANCE, new Integer(0));
 		}
 		if (perception.getFoodAt(MY_POSITION) > 0) {
-			memory.put("pheromoneType", PheromoneType.FOOD);
-			memory.put("pheromoneDistance", new Integer(0));
+			memory.put(PHEROMONE_TYPE, PheromoneType.FOOD);
+			memory.put(PHEROMONE_DISTANCE, new Integer(0));
 			return this.operationalBehaviour.pickFood(perception);
 		}
 		if (perception.isAvailableFoodInSight()) {
@@ -107,7 +110,7 @@ public class AntTacticalBehaviour {
 			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getHomePos());
 		}
 
-		Point highestAntPheromonePos = perception.getHighestPheromonePos(PheromoneType.HOME);
+		final Point highestAntPheromonePos = perception.getHighestPheromonePos(PheromoneType.HOME);
 		if (highestAntPheromonePos != null) {
 			return this.operationalBehaviour.moveToTarget(perception, memory, highestAntPheromonePos);
 		}

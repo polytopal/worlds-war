@@ -99,6 +99,18 @@ public class PerceptionCell {
 	}
 
 	/**
+	 * @return the wall found, or null otherwise
+	 */
+	public PerceivableWall getWall() {
+		for (final Perceivable perceivable : this.perceptionList) {
+			if (perceivable instanceof PerceivableWall) {
+				return (PerceivableWall) perceivable;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * If the cell contains the pheromone type for the given colony, return its
 	 * quantity, else return 0
 	 * 
@@ -134,7 +146,7 @@ public class PerceptionCell {
 	}
 
 	public boolean isTraversable() {
-		for (Perceivable p : this.perceptionList) {
+		for (final Perceivable p : this.perceptionList) {
 			if (!p.isTraversable()) {
 				return false;
 			}

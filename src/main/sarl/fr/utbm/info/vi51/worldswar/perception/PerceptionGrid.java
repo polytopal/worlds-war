@@ -154,4 +154,12 @@ public class PerceptionGrid {
 		return this.perceptionCellGrid.getYMax();
 	}
 
+	/**
+	 * @param position
+	 * @return whether the specified position is in the bounds of the grid
+	 */
+	public boolean containsPosition(Point position) {
+		return this.perceptionCellGrid.containsPosition(position);
+	}
+
 }

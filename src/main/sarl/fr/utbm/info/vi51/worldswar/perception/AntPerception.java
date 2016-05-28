@@ -21,8 +21,8 @@ import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableFood;
  */
 public class AntPerception {
 
-	private PerceivableAnt myBody;
-	private PerceptionGrid grid;
+	private final PerceivableAnt myBody;
+	private final PerceptionGrid grid;
 
 	/**
 	 * 
@@ -109,7 +109,7 @@ public class AntPerception {
 		// this should not be computed more than once for each ant perception.
 		// Think about it after we have made the first simulations.
 
-		List<Point> closestPositions = new ArrayList<>(CLOSEST_FOOD_LIST_SIZE);
+		final List<Point> closestPositions = new ArrayList<>(CLOSEST_FOOD_LIST_SIZE);
 		int minDistance = Integer.MAX_VALUE;
 
 		int distance;
@@ -176,7 +176,7 @@ public class AntPerception {
 	 *         and no other blocking object on it.
 	 */
 	public boolean isTraversable(Point position) {
-		return this.grid.getCell(position).isTraversable();
+		return this.grid.containsPosition(position) && this.grid.getCell(position).isTraversable();
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class AntPerception {
 	 *         the food stored in an anthill.
 	 */
 	public int getFoodAt(Point position) {
-		PerceivableFood food = this.grid.getCell(position).getFood();
+		final PerceivableFood food = this.grid.getCell(position).getFood();
 		if (food == null) {
 			return 0;
 		}
@@ -217,7 +217,7 @@ public class AntPerception {
 	 * @return {@code true} if the ant is at home
 	 */
 	public boolean isAtHome() {
-		Point homePos = this.getHomePos();
+		final Point homePos = this.getHomePos();
 		return (homePos != null && homePos.equals(MY_POSITION));
 	}
 }
