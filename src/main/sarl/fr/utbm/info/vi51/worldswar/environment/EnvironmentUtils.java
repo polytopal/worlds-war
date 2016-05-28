@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.flowpowered.noise.module.source.Perlin;
+import com.flowpowered.noise.module.source.RidgedMulti;
+
 import fr.utbm.info.vi51.worldswar.controller.SimulationParameters;
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody;
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill;
@@ -34,7 +37,7 @@ public class EnvironmentUtils {
 
 	// There will be less rocks in this range around hills
 	private static final float ANT_HILL_FREE_ROCK_RANGE = 20;
-
+	private static RidgedMulti ridgedPerlin = new RidgedMulti();
 	/**
 	 * Private empty constructor : this class is not meant to be instantiated
 	 */
@@ -42,18 +45,57 @@ public class EnvironmentUtils {
 	}
 
 	/**
+	 * Utility function using the flowNoise library(which is based on the libNoise C++ library)
+	 * generates a grid with many octaves of Perlin noise
+	 */
+	public static Grid<Float> generatePerlinNoiseGrid(int width, int height, int octaveCount, float frequency) {
+		Perlin perlinNoise = new Perlin();
+		perlinNoise.setOctaveCount(octaveCount);
+		perlinNoise.setFrequency(frequency);
+		perlinNoise.setSeed((int)(Math.random()*Integer.MAX_VALUE));
+		final Grid<Float> grid = new Grid<>(0, width - 1, 0, height - 1);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				final float value = (float) perlinNoise.getValue(x, y, 0);
+				grid.set(x, y, new Float(value));
+			}
+		}
+		return grid;
+	}
+	/**
+	 * Utility function using the flowNoise library(which is based on the libNoise C++ library)
+	 * generates a grid with many octaves of ridged Perlin noise, which leads to a grid with 
+	 * more "lines" compared to raw Perlin noise
+	 */
+	public static Grid<Float> generateRidgedPerlinNoiseGrid(int width, int height, int octaveCount, float frequency) {
+		RidgedMulti ridgedPerlinNoise = new RidgedMulti();
+		ridgedPerlinNoise.setOctaveCount(octaveCount);
+		ridgedPerlinNoise.setFrequency(frequency);
+		ridgedPerlinNoise.setSeed((int)(Math.random()*Integer.MAX_VALUE));
+		final Grid<Float> grid = new Grid<>(0, width - 1, 0, height - 1);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				final float value = (float) ridgedPerlinNoise.getValue(x, y, 0);
+				grid.set(x, y, new Float(value));
+			}
+		}
+		return grid;
+	}
+	
+	/**
 	 * @param simulationParameters
 	 * @return a map randomly generated, following the specified simulation
 	 *         parameters
 	 */
 	public static Grid<EnvCell> generateMap(SimulationParameters simulationParameters) {
-
 		final int width = simulationParameters.getGridWidth();
 		final int height = simulationParameters.getGridHeight();
 		final List<Colony> coloniesList = simulationParameters.getColoniesList();
 		final float foodProportion = simulationParameters.getFoodProportion();
 		final float rockProportion = simulationParameters.getRockProportion();
-
+		final float foodNoiseFrequency = 0.05f;
+		final float rockNoiseFrequency = 0.02f;
+		
 		// --- computation of ant hills positions ---
 
 		final int nbColony = coloniesList.size();
@@ -69,31 +111,18 @@ public class EnvironmentUtils {
 			antHillList.add(new AntHill(new Point(x, y), colony));
 			angle += 2 * Math.PI / nbColony;
 		}
-
-		// --- creation of the food ---
-
-		// simple cross product
-		final float foddMinValue = FOOD_MAX_VALUE * (1f - (1f / foodProportion));
-		// the value of each cell will be between min and max
-		final Grid<Float> randomFoodGrid = PerlinNoiseGenerator.generatePerlinNoiseHeightGrid(width, height,
-				FOOD_OCTAVE_COUNT, foddMinValue, FOOD_MAX_VALUE);
-
-		// --- creation of the rocks ---
-
-		float rockMaxValue = ANT_HILL_FREE_ROCK_RANGE;
-		float rockMinValue = 0;
-		try {
-			rockMinValue = rockMaxValue * (1f - (1f / rockProportion));
-		} catch (@SuppressWarnings("unused") final ArithmeticException e) {
-			// if rock proportion = 0
-			rockMaxValue = -1;
-			rockMinValue = -1;
-		}
-		final Grid<Float> randomRockGrid = PerlinNoiseGenerator.generatePerlinNoiseHeightGrid(width, height,
-				ROCK_OCTAVE_COUNT, rockMinValue, rockMaxValue);
-
-		// -----------------------------
-
+				
+		// --- creation of the food height grid ---
+		
+		final Grid<Float> foodGrid;
+		foodGrid = generatePerlinNoiseGrid(width, height, FOOD_OCTAVE_COUNT, foodNoiseFrequency);
+		
+		// --- creation of the rocks height grid---
+		
+		final Grid<Float> rocksGrid;
+		rocksGrid = generateRidgedPerlinNoiseGrid(width, height, ROCK_OCTAVE_COUNT, rockNoiseFrequency);
+		
+		// cration of the map grid
 		final Grid<EnvCell> grid = new Grid<>(0, width - 1, 0, height - 1);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -113,19 +142,25 @@ public class EnvironmentUtils {
 				// a negative value. antHillModifier = 0 if there is not near
 				// hill. antHillModifier = -AntHillRange if on an ant hill
 				final float antHillModifier = Math.min(0f, nearestAntHillDistance - ANT_HILL_FREE_ROCK_RANGE);
-				final float rockPerlinHeight = randomRockGrid.get(position).floatValue() + antHillModifier;
-				if (rockPerlinHeight > 0) {
+				final float rockPerlinHeight = rocksGrid.get(position).floatValue() + antHillModifier;
+				final float rockTreshold = 1.0f - rockProportion;
+				final float foodTreshold = 1.0f - foodProportion;
+				
+				if (rockPerlinHeight > rockTreshold) {
 					envCell.addEnvObject(new Wall(position));
 				} else if (nearestAntHillDistance > 0) {
-					final int foodPerlinHeight = randomFoodGrid.get(position).intValue();
-					if (foodPerlinHeight > 0) {
-						envCell.addEnvObject(new Food(position, foodPerlinHeight));
+					final float foodPerlinHeight = foodGrid.get(position).floatValue();
+					if (foodPerlinHeight > foodTreshold) {
+						envCell.addEnvObject(new Food(position, (int)(foodPerlinHeight*FOOD_MAX_VALUE)));
+						System.out.println(foodPerlinHeight*FOOD_MAX_VALUE);
 					}
 				}
 			}
 		}
+		
+		
 		return grid;
-
+		
 	}
 
 	/**
