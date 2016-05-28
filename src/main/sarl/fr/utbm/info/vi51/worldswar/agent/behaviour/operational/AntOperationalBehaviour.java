@@ -3,10 +3,7 @@ package fr.utbm.info.vi51.worldswar.agent.behaviour.operational;
 import static fr.utbm.info.vi51.worldswar.perception.PerceptionGrid.MY_POSITION;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.environment.influence.DoNothingInfluence;
@@ -17,6 +14,7 @@ import fr.utbm.info.vi51.worldswar.environment.influence.PheromoneAndMoveInfluen
 import fr.utbm.info.vi51.worldswar.environment.influence.PickFoodInfluence;
 import fr.utbm.info.vi51.worldswar.perception.AntPerception;
 import fr.utbm.info.vi51.worldswar.utils.Direction;
+import fr.utbm.info.vi51.worldswar.utils.Direction.RotationDirection;
 
 /**
  * Defines basic operational behaviours for ants.
@@ -26,6 +24,10 @@ public class AntOperationalBehaviour {
 
 	private static final float MAX_PHEROMONE = 100;
 	private static final float PHEROMONE_DECAY = 0.5f;
+
+	private static final String PHEROMONE_QTY = "pheromoneQty"; //$NON-NLS-1$
+	private static final String PHEROMONE_TYPE = "pheromoneType"; //$NON-NLS-1$
+	private static final String LAST_MOVE_DIRECTION = "lastMoveDirection"; //$NON-NLS-1$
 
 	/**
 	 * Chances that a wandering ant will choose a new direction instead of going
@@ -49,10 +51,9 @@ public class AntOperationalBehaviour {
 		 */
 		Direction primaryDirection = null;
 		/*
-		 * The directions directly next to the primary direction, that can be
-		 * used if the primary target can't be reached
+		 * The direction that will be chosen by this method
 		 */
-		ArrayList<Direction> alternativeDirections = new ArrayList<>(3);
+		Direction chosenDirection = null;
 
 		/*
 		 * Right now, succession of if (max 4). Might be optimized by packing
@@ -63,50 +64,52 @@ public class AntOperationalBehaviour {
 				primaryDirection = Direction.NORTH_WEST;
 			} else if (target.y > 0) { // (-1,1)
 				primaryDirection = Direction.SOUTH_WEST;
-
 			} else { // (-1,0)
 				primaryDirection = Direction.WEST;
-
 			}
 		} else if (target.x > 0) {
 			if (target.y < 0) { // (1,-1)
 				primaryDirection = Direction.NORTH_EAST;
-
 			} else if (target.y > 0) { // (1,1)
 				primaryDirection = Direction.SOUTH_EAST;
-
 			} else { // (1,0)
 				primaryDirection = Direction.EAST;
-
 			}
 		} else if (target.y < 0) { // (0,-1)
 			primaryDirection = Direction.NORTH;
-
 		} else if (target.y > 0) { // (0,1)
 			primaryDirection = Direction.SOUTH;
-
 		}
 
 		if (primaryDirection == null) {
 			// Target is (0,0), this means we already reached it
 			return new DoNothingInfluence();
 		}
-		// If the primaryDirection isn't null, compute
-		alternativeDirections = primaryDirection.adjacentDirections();
 
-		/*
-		 * If the cell targeted by the primaryDirection is free (<=>
-		 * traversable), generates the Influence corresponding to the direction
-		 */
-		if (perception.isTraversable(primaryDirection.getPoint())) {
-			return this.move(primaryDirection, memory);
+		// the direction is initialized to the primary direction
+		chosenDirection = primaryDirection;
+		// the angle between the primary direction and the chosen Direction
+		// (1 delta = 45°)
+		int delta = 1;
+		// this RotationDirection will be tested first
+		final RotationDirection preferedRotation = RotationDirection.random();
+		// the RotationDirection between the primary direction and the chosen
+		// Direction
+		RotationDirection r = preferedRotation;
+
+		while (!perception.isTraversable(chosenDirection.getPoint()) && delta <= 3) {
+			chosenDirection = primaryDirection.adjacentDirection(preferedRotation, delta);
+			r = r.getOpposite();
+			if (r == preferedRotation) {
+				delta++;
+			}
 		}
 
-		/*
-		 * If not, uses one of the 2 alternative directions to generate the
-		 * influence. This direction might not be traversable either.
-		 */
-		return this.move(alternativeDirections.get(new Random().nextInt(alternativeDirections.size())), memory);
+		if (delta <= 3) {
+			return this.move(chosenDirection, memory);
+		}
+		// if there is no free direction
+		return new DoNothingInfluence();
 
 	}
 
@@ -141,18 +144,25 @@ public class AntOperationalBehaviour {
 	 *         with a random direction
 	 */
 	public Influence wander(AntPerception perception, HashMap<String, Object> memory) {
-		if (!memory.containsKey("lastMoveDirection")) {
-			final Direction d = Direction.values()[new Random().nextInt(Direction.values().length)];
+
+		if (!memory.containsKey(LAST_MOVE_DIRECTION)) {
+			final Direction d = Direction.random();
 			return this.move(d, memory);
 		}
 
-		Direction lastDirection = (Direction) (memory.get("lastMoveDirection"));
+		final Direction lastDirection = (Direction) (memory.get(LAST_MOVE_DIRECTION));
+		Direction d = lastDirection;
+		final RotationDirection rd = RotationDirection.random();
 		if (Math.random() < WANDER_TURN_FREQUENCY) {
-			final List<Direction> adjacentDirections = lastDirection.adjacentDirections();
-			final Direction d = adjacentDirections.get(new Random().nextInt(adjacentDirections.size()));
-			return this.move(d, memory);
+			d = d.adjacentDirection(rd);
 		}
-		return this.move(lastDirection, memory);
+
+		int delta = 1;
+		while (!perception.isTraversable(d.getPoint()) && delta < 8) {
+			d = d.adjacentDirection(rd);
+			delta++;
+		}
+		return this.move(d, memory);
 	}
 
 	/**
@@ -172,8 +182,8 @@ public class AntOperationalBehaviour {
 		assert (coeff >= 0);
 		assert (coeff <= 1);
 
-		memory.put("pheromoneType", type);
-		memory.put("pheromoneQty", new Float(MAX_PHEROMONE * coeff));
+		memory.put(PHEROMONE_TYPE, type);
+		memory.put(PHEROMONE_QTY, new Float(MAX_PHEROMONE * coeff));
 	}
 
 	/**
@@ -192,7 +202,7 @@ public class AntOperationalBehaviour {
 
 	/**
 	 * Computes the influence to move in the specified direction while putting
-	 * pheromones according to the "pheromoneQty" and "pheromoneType" values in
+	 * pheromones according to the PHEROMONE_QTY and PHEROMONE_TYPE values in
 	 * memory. Also stores the direction to the "lastMoveDirection" entry in
 	 * memory
 	 * 
@@ -202,10 +212,10 @@ public class AntOperationalBehaviour {
 	 *         with the specified direction
 	 */
 	private Influence move(Direction d, HashMap<String, Object> memory) {
-		if (memory.containsKey("pheromoneType") && memory.containsKey("pheromoneQty")) {
+		if (memory.containsKey(PHEROMONE_TYPE) && memory.containsKey(PHEROMONE_QTY)) {
 			// Retrieve pheromone to put from memory
-			PheromoneType pheromoneType = (PheromoneType) (memory.get("pheromoneType"));
-			float pheromoneQty = ((Float) memory.get("pheromoneQty")).floatValue();
+			PheromoneType pheromoneType = (PheromoneType) (memory.get(PHEROMONE_TYPE));
+			float pheromoneQty = ((Float) memory.get(PHEROMONE_QTY)).floatValue();
 
 			// Update pheromone quantity
 			pheromoneQty -= PHEROMONE_DECAY;
@@ -213,15 +223,15 @@ public class AntOperationalBehaviour {
 			// If the pheromone quantity is now negative, delete the keys from
 			// memory and perform a simple move
 			if (pheromoneQty <= 0) {
-				memory.remove("pheromoneType");
-				memory.remove("pheromoneQty");
+				memory.remove(PHEROMONE_TYPE);
+				memory.remove(PHEROMONE_QTY);
 				return this.moveWithoutPheromone(memory, d);
 			}
 
 			// Update memory
-			memory.put("pheromoneQty", new Float(pheromoneQty));
+			memory.put(PHEROMONE_QTY, new Float(pheromoneQty));
 
-			memory.put("lastMoveDirection", d);
+			memory.put(LAST_MOVE_DIRECTION, d);
 			return new PheromoneAndMoveInfluence(pheromoneType, pheromoneQty, d);
 		}
 		return this.moveWithoutPheromone(memory, d);

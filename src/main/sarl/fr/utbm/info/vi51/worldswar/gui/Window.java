@@ -90,8 +90,9 @@ public class Window extends JFrame implements SimulatorListener {
 	}
 
 	@Override
-	public void environmentUpdated(PerceptionGrid perceptionGrid) {
+	public void environmentUpdated(PerceptionGrid perceptionGrid, int agentCount) {
 		this.centralPanel.updateGrid(perceptionGrid);
+		this.infoPanel.setAgentCountLabel(agentCount);
 	}
 
 	@Override
