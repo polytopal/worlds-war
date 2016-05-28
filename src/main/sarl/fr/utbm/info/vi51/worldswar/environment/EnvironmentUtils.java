@@ -151,8 +151,10 @@ public class EnvironmentUtils {
 				} else if (nearestAntHillDistance > 0) {
 					final float foodPerlinHeight = foodGrid.get(position).floatValue();
 					if (foodPerlinHeight > foodTreshold) {
-						envCell.addEnvObject(new Food(position, (int)(foodPerlinHeight*FOOD_MAX_VALUE)));
-						System.out.println(foodPerlinHeight*FOOD_MAX_VALUE);
+						int foodQty = (int)((foodPerlinHeight- foodTreshold)*FOOD_MAX_VALUE);
+						if (foodQty > 0) {
+							envCell.addEnvObject(new Food(position, foodQty));
+						}
 					}
 				}
 			}
