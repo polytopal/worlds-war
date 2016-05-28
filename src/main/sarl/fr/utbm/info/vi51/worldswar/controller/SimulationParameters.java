@@ -38,14 +38,14 @@ public class SimulationParameters {
 	public static final int MIN_COLONY_NUMBER = 1;
 
 	/** Default proportion of food on the map (in percents) **/
-	public static final int DEFAULT_FOOD_PROPORTION = 30;
+	public static final int DEFAULT_FOOD_PROPORTION = 45;
 	/** Minimum proportion of food on the map (in percents) must be > 0 **/
 	public static final int MIN_FOOD_PROPORTION = 10;
 	/** Maximum proportion of food on the map (in percents) must be <= 100 **/
 	public static final int MAX_FOOD_PROPORTION = 70;
 
 	/** Default proportion of rocks on the map (in percents) **/
-	public static final int DEFAULT_ROCK_PROPORTION = 30;
+	public static final int DEFAULT_ROCK_PROPORTION = 40;
 	/** Minimum proportion of rocks on the map (in percents) must be >= 0 **/
 	public static final int MIN_ROCK_PROPORTION = 0;
 	/** Maximum proportion of rocks on the map (in percents) must be <= 100 **/
