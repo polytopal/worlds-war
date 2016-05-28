@@ -143,8 +143,8 @@ public class EnvironmentUtils {
 				// hill. antHillModifier = -AntHillRange if on an ant hill
 				final float antHillModifier = Math.min(0f, nearestAntHillDistance - ANT_HILL_FREE_ROCK_RANGE);
 				final float rockPerlinHeight = rocksGrid.get(position).floatValue() + antHillModifier;
-				final float rockTreshold = 1.0f - rockProportion;
-				final float foodTreshold = 1.0f - foodProportion;
+				final float rockTreshold = 1.5f - rockProportion*2;
+				final float foodTreshold = 1.5f - foodProportion*2;
 				
 				if (rockPerlinHeight > rockTreshold) {
 					envCell.addEnvObject(new Wall(position));
