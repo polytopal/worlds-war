@@ -34,9 +34,15 @@ public class EnvironmentUtils {
 	private static final int FOOD_MAX_VALUE = 80;
 
 	private static final int ROCK_OCTAVE_COUNT = 6;
+	
+	// Constants driving the "regularity" of the noise behind food and rock 
+	// distribution
+	private static final float FOOD_NOISE_FREQUENCY = 0.05f;
+	private static final float ROCK_NOISE_FREQUENCY = 0.025f;
 
 	// There will be less rocks in this range around hills
 	private static final float ANT_HILL_FREE_ROCK_RANGE = 20;
+
 	private static RidgedMulti ridgedPerlin = new RidgedMulti();
 	/**
 	 * Private empty constructor : this class is not meant to be instantiated
@@ -45,8 +51,14 @@ public class EnvironmentUtils {
 	}
 
 	/**
-	 * Utility function using the flowNoise library(which is based on the libNoise C++ library)
-	 * generates a grid with many octaves of Perlin noise
+	 * Utility function using the flowNoise library(which is based on the libNoise
+	 * C++ library) generates a grid with many octaves of ridged Perlin noise, 
+	 * which leads to a grid with more "lines" compared to raw Perlin noise
+	 * @param width
+	 * @param height
+	 * @param octaveCount
+	 * @param frequency
+	 * @return height grid
 	 */
 	public static Grid<Float> generatePerlinNoiseGrid(int width, int height, int octaveCount, float frequency) {
 		Perlin perlinNoise = new Perlin();
@@ -63,9 +75,14 @@ public class EnvironmentUtils {
 		return grid;
 	}
 	/**
-	 * Utility function using the flowNoise library(which is based on the libNoise C++ library)
-	 * generates a grid with many octaves of ridged Perlin noise, which leads to a grid with 
-	 * more "lines" compared to raw Perlin noise
+	 * Utility function using the flowNoise library(which is based on the libNoise
+	 * C++ library) generates a grid with many octaves of ridged Perlin noise, 
+	 * which leads to a grid with more "lines" compared to raw Perlin noise
+	 * @param width
+	 * @param height
+	 * @param octaveCount
+	 * @param frequency
+	 * @return height grid
 	 */
 	public static Grid<Float> generateRidgedPerlinNoiseGrid(int width, int height, int octaveCount, float frequency) {
 		RidgedMulti ridgedPerlinNoise = new RidgedMulti();
@@ -93,8 +110,6 @@ public class EnvironmentUtils {
 		final List<Colony> coloniesList = simulationParameters.getColoniesList();
 		final float foodProportion = simulationParameters.getFoodProportion();
 		final float rockProportion = simulationParameters.getRockProportion();
-		final float foodNoiseFrequency = 0.05f;
-		final float rockNoiseFrequency = 0.02f;
 		
 		// --- computation of ant hills positions ---
 
@@ -115,12 +130,12 @@ public class EnvironmentUtils {
 		// --- creation of the food height grid ---
 		
 		final Grid<Float> foodGrid;
-		foodGrid = generatePerlinNoiseGrid(width, height, FOOD_OCTAVE_COUNT, foodNoiseFrequency);
+		foodGrid = generatePerlinNoiseGrid(width, height, FOOD_OCTAVE_COUNT, FOOD_NOISE_FREQUENCY);
 		
 		// --- creation of the rocks height grid---
 		
 		final Grid<Float> rocksGrid;
-		rocksGrid = generateRidgedPerlinNoiseGrid(width, height, ROCK_OCTAVE_COUNT, rockNoiseFrequency);
+		rocksGrid = generateRidgedPerlinNoiseGrid(width, height, ROCK_OCTAVE_COUNT, ROCK_NOISE_FREQUENCY);
 		
 		// cration of the map grid
 		final Grid<EnvCell> grid = new Grid<>(0, width - 1, 0, height - 1);
