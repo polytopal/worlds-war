@@ -99,15 +99,14 @@ public class AntOperationalBehaviour {
 		 * traversable), generates the Influence corresponding to the direction
 		 */
 		if (perception.isTraversable(primaryDirection.getPoint())) {
-			return this.move(perception, primaryDirection, memory);
+			return this.move(primaryDirection, memory);
 		}
 
 		/*
 		 * If not, uses one of the 2 alternative directions to generate the
 		 * influence. This direction might not be traversable either.
 		 */
-		return this.move(perception, alternativeDirections.get(new Random().nextInt(alternativeDirections.size())),
-				memory);
+		return this.move(alternativeDirections.get(new Random().nextInt(alternativeDirections.size())), memory);
 
 	}
 
@@ -144,16 +143,16 @@ public class AntOperationalBehaviour {
 	public Influence wander(AntPerception perception, HashMap<String, Object> memory) {
 		if (!memory.containsKey("lastMoveDirection")) {
 			final Direction d = Direction.values()[new Random().nextInt(Direction.values().length)];
-			return this.move(perception, d, memory);
+			return this.move(d, memory);
 		}
 
 		Direction lastDirection = (Direction) (memory.get("lastMoveDirection"));
 		if (Math.random() < WANDER_TURN_FREQUENCY) {
 			final List<Direction> adjacentDirections = lastDirection.adjacentDirections();
 			final Direction d = adjacentDirections.get(new Random().nextInt(adjacentDirections.size()));
-			return this.move(perception, d, memory);
+			return this.move(d, memory);
 		}
-		return this.move(perception, lastDirection, memory);
+		return this.move(lastDirection, memory);
 	}
 
 	/**
@@ -202,7 +201,7 @@ public class AntOperationalBehaviour {
 	 * @return a {@link PheromoneAndMoveInfluence} or a {@link MoveInfluence}
 	 *         with the specified direction
 	 */
-	private Influence move(AntPerception perception, Direction d, HashMap<String, Object> memory) {
+	private Influence move(Direction d, HashMap<String, Object> memory) {
 		if (memory.containsKey("pheromoneType") && memory.containsKey("pheromoneQty")) {
 			// Retrieve pheromone to put from memory
 			PheromoneType pheromoneType = (PheromoneType) (memory.get("pheromoneType"));
@@ -221,12 +220,6 @@ public class AntOperationalBehaviour {
 
 			// Update memory
 			memory.put("pheromoneQty", new Float(pheromoneQty));
-
-			// Prevents ants from stacking pheromones by traversing the same
-			// cell multiple times
-			final float qtyOnGround = perception.getPheromoneQtyAt(MY_POSITION, pheromoneType,
-					perception.getMyBody().getColony());
-			pheromoneQty = Math.max(pheromoneQty, qtyOnGround);
 
 			memory.put("lastMoveDirection", d);
 			return new PheromoneAndMoveInfluence(pheromoneType, pheromoneQty, d);
