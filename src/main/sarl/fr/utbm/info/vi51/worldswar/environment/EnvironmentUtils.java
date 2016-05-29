@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import com.flowpowered.noise.module.source.Perlin;
 import com.flowpowered.noise.module.source.RidgedMulti;
@@ -43,7 +44,6 @@ public class EnvironmentUtils {
 	// There will be less rocks in this range around hills
 	private static final float ANT_HILL_FREE_ROCK_RANGE = 20;
 
-	private static RidgedMulti ridgedPerlin = new RidgedMulti();
 	/**
 	 * Private empty constructor : this class is not meant to be instantiated
 	 */
@@ -64,7 +64,7 @@ public class EnvironmentUtils {
 		Perlin perlinNoise = new Perlin();
 		perlinNoise.setOctaveCount(octaveCount);
 		perlinNoise.setFrequency(frequency);
-		perlinNoise.setSeed((int)(Math.random()*Integer.MAX_VALUE));
+		perlinNoise.setSeed(new Random().nextInt());
 		final Grid<Float> grid = new Grid<>(0, width - 1, 0, height - 1);
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
@@ -88,7 +88,7 @@ public class EnvironmentUtils {
 		RidgedMulti ridgedPerlinNoise = new RidgedMulti();
 		ridgedPerlinNoise.setOctaveCount(octaveCount);
 		ridgedPerlinNoise.setFrequency(frequency);
-		ridgedPerlinNoise.setSeed((int)(Math.random()*Integer.MAX_VALUE));
+		ridgedPerlinNoise.setSeed(new Random().nextInt());
 		final Grid<Float> grid = new Grid<>(0, width - 1, 0, height - 1);
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
@@ -158,15 +158,15 @@ public class EnvironmentUtils {
 				// hill. antHillModifier = -AntHillRange if on an ant hill
 				final float antHillModifier = Math.min(0f, nearestAntHillDistance - ANT_HILL_FREE_ROCK_RANGE);
 				final float rockPerlinHeight = rocksGrid.get(position).floatValue() + antHillModifier;
-				final float rockTreshold = 1.5f - rockProportion*2;
-				final float foodTreshold = 1.5f - foodProportion*2;
+				final float rockThreshold = 1.5f - rockProportion*2;
+				final float foodThreshold = 1.5f - foodProportion*2;
 				
-				if (rockPerlinHeight > rockTreshold) {
+				if (rockPerlinHeight > rockThreshold) {
 					envCell.addEnvObject(new Wall(position));
 				} else if (nearestAntHillDistance > 0) {
 					final float foodPerlinHeight = foodGrid.get(position).floatValue();
-					if (foodPerlinHeight > foodTreshold) {
-						int foodQty = (int)((foodPerlinHeight- foodTreshold)*FOOD_MAX_VALUE);
+					if (foodPerlinHeight > foodThreshold) {
+						int foodQty = (int)((foodPerlinHeight- foodThreshold)*FOOD_MAX_VALUE);
 						if (foodQty > 0) {
 							envCell.addEnvObject(new Food(position, foodQty));
 						}
