@@ -128,6 +128,7 @@ public class AntTacticalBehaviour {
 		int foodInSight = perception.countFoodInSight() - perception.getMyBody().getCapacity();
 		float trailCoeff = foodInSight / MAX_FOOD_TRAIL_QTY;
 		trailCoeff = Math.min(trailCoeff, 1);
+		trailCoeff = Math.max(trailCoeff, 0);
 		this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.FOOD, trailCoeff);
 	}
 }
