@@ -212,7 +212,7 @@ public class AntPerception {
 	 *         and no other blocking object on it.
 	 */
 	public boolean isTraversable(Point position) {
-		return this.grid.getCell(position).isTraversable();
+		return this.grid.containsPosition(position) && this.grid.getCell(position).isTraversable();
 	}
 
 	/**

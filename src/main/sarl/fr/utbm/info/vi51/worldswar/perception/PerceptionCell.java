@@ -136,6 +136,27 @@ public class PerceptionCell {
 		return null;
 	}
 
+	private PerceivableWall wallCache = null;
+	private boolean wallCalculated = false;
+
+	/**
+	 * @return the wall found, or null otherwise
+	 */
+	public PerceivableWall getWall() {
+		if (this.wallCalculated) {
+			return this.wallCache;
+		}
+		this.wallCalculated = true;
+		for (final Perceivable perceivable : this.perceptionList) {
+			if (perceivable instanceof PerceivableWall) {
+				final PerceivableWall wall = (PerceivableWall) perceivable;
+				this.wallCache = wall;
+				return wall;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * The cache of the function
 	 * {@link PerceptionCell#getPheromoneQuantity(PheromoneType, Colony)}
