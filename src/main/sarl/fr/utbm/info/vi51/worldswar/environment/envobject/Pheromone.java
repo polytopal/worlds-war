@@ -14,12 +14,12 @@ public class Pheromone extends StaticObject {
 	/**
 	 * Flat amount of qty lost each step
 	 */
-	public static final float FLAT_DISSIPATION = 0.35f;
+	public static final float FLAT_DISSIPATION = 0.25f;
 
 	/**
 	 * Ratio of the qty lost each step
 	 */
-	public static final float SCALING_DISSIPATION = 0.001f;
+	public static final float SCALING_DISSIPATION = 0.01f;
 
 	private float qty;
 	private PheromoneType type;
@@ -48,7 +48,12 @@ public class Pheromone extends StaticObject {
 	 * time
 	 */
 	public void dissipate() {
-		this.qty -= FLAT_DISSIPATION + SCALING_DISSIPATION * this.qty;
+		if(this.type == PheromoneType.FOOD) {
+			this.qty -= FLAT_DISSIPATION + SCALING_DISSIPATION * this.qty;
+		} else {
+			this.qty -= SCALING_DISSIPATION * this.qty;
+		}
+		
 		if (this.qty < 0) {
 			this.qty = 0;
 		}

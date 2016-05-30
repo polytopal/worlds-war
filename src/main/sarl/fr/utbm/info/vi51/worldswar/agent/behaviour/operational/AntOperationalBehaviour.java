@@ -218,7 +218,13 @@ public class AntOperationalBehaviour {
 			float pheromoneQty = ((Float) memory.get(PHEROMONE_QTY)).floatValue();
 
 			// Update pheromone quantity
-			pheromoneQty -= PHEROMONE_DECAY;
+//			pheromoneQty -= PHEROMONE_DECAY;
+			if(pheromoneType == PheromoneType.FOOD) {
+				pheromoneQty -= 0.3f + 0.02f*pheromoneQty;
+			} else {
+				pheromoneQty = 0.98f*pheromoneQty;
+			}
+			
 
 			// If the pheromone quantity is now negative, delete the keys from
 			// memory and perform a simple move
