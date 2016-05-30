@@ -78,10 +78,6 @@ agent Simulator {
 	 */
 	private def newSimulation(params : SimulationParameters) {
 		spawn(typeof(Environment), {params}, listeners)
-		
-		for(l : listeners) {
-			l.simulationStarted
-		}
 	}
 	
 	/**
@@ -89,6 +85,9 @@ agent Simulator {
 	 */
 	on EnvironmentInitializedEvent {
 		synchronized(this) {
+			for(l : listeners) {
+				l.simulationStarted(occurrence.mapInfo);
+			}
 			this.environmentExists = true
 			this.environmentReady = true
 			this.stepTimerReady = true

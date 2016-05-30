@@ -81,7 +81,9 @@ agent Environment {
 			this.uninitializedAgents = new LinkedList
 			this.waitingAgentsInitialization = false
 			
-			emit(new EnvironmentInitializedEvent)
+			var mapInfos = new MapInformation(simParameters.getNoiseSeed())
+			
+			emit(new EnvironmentInitializedEvent(mapInfos))
 		}
 	}
 	

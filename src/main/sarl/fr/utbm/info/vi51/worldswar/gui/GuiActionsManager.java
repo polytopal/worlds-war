@@ -13,6 +13,7 @@ import javax.swing.KeyStroke;
 
 import fr.utbm.info.vi51.worldswar.controller.Controller;
 import fr.utbm.info.vi51.worldswar.controller.SimulationParameters;
+import fr.utbm.info.vi51.worldswar.environment.MapInformation;
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.simulator.SimulationSpeed;
 
@@ -29,6 +30,7 @@ public class GuiActionsManager {
 	private final Action pauseSimulationAction;
 	private final Action resumeSimulationAction;
 	private final Action stepSimulationAction;
+	private final MapInfoAction mapInfoAction;
 
 	private final Map<SimulationSpeed, Action> speedActionsMap;
 
@@ -42,6 +44,7 @@ public class GuiActionsManager {
 		this.pauseSimulationAction = new PauseSimulationAction(controller);
 		this.resumeSimulationAction = new ResumeSimulationAction(controller);
 		this.stepSimulationAction = new StepSimulationAction(controller);
+		this.mapInfoAction = new MapInfoAction();
 
 		this.speedActionsMap = new HashMap<>();
 		for (final SimulationSpeed simSpeed : SimulationSpeed.values()) {
@@ -80,6 +83,14 @@ public class GuiActionsManager {
 
 	public Action getStepSimulationAction() {
 		return this.stepSimulationAction;
+	}
+	
+	public Action getMapInfoAction() {
+		return this.mapInfoAction;
+	}
+	
+	public void updateMapInfo(MapInformation mapInfo) {
+		this.mapInfoAction.setMapInfo(mapInfo);
 	}
 
 	public Action getSpeedAction(SimulationSpeed simSpeed) {
@@ -199,6 +210,31 @@ public class GuiActionsManager {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			this.controller.stepSimulation();
+		}
+	}
+	
+	/**
+	 * This action allows to execute a step in the simulation when it is paused,
+	 * by pressing the space bar.
+	 */
+	private class MapInfoAction extends AbstractAction {
+		private static final long serialVersionUID = 2286692516797367038L;
+		
+		private MapInformation mapInfo;
+
+		public MapInfoAction() {
+			super(Messages.getString("MenuBar.mapInfo")); //$NON-NLS-1$
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0));
+			this.setEnabled(false);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			final MapInfoDialog mapInfoDialog = new MapInfoDialog(mapInfo);
+		}
+		
+		public void setMapInfo(MapInformation mapInfo){
+			this.mapInfo = mapInfo;
 		}
 	}
 

@@ -3,4 +3,9 @@ package fr.utbm.info.vi51.worldswar.environment
 /**
  * Event broadcasted by the {@link Environment} when its initialization is finished
  */
-event EnvironmentInitializedEvent
+event EnvironmentInitializedEvent {
+	val mapInfo : MapInformation
+	new(mapInfo : MapInformation) {
+		this.mapInfo = mapInfo
+	}
+}
