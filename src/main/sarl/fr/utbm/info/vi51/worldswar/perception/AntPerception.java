@@ -61,7 +61,7 @@ public class AntPerception {
 	 *         or {@code null} if no relevant pheromone is perceived
 	 */
 	public Point getHighestPheromonePos(PheromoneType type, Colony colony) {
-		if (colony == this.myBody.getColony() && this.highestPheromoneCalculated.get(type) == true) {
+		if (colony == this.myBody.getColony() && this.highestPheromoneCalculated.get(type) != null) {
 			return this.highestPheromonePosCache.get(type);
 		}
 
