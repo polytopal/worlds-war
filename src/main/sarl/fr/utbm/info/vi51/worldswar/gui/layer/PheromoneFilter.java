@@ -5,9 +5,13 @@ import java.awt.Color;
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 
+/**
+ * {@link GuiLayer} displaying pheromones.
+ *
+ */
 public class PheromoneFilter extends DefaultColorLayer {
 
-	private static float PHEROMONE_VISIBILITY_COEFFICIENT = 10f;
+	private static float PHEROMONE_VISIBILITY_COEFFICIENT = 1.5f;
 	private static Color PHEROMONE_DANGER_COLOR = new Color(255, 102, 255);
 	private static Color PHEROMONE_FOOD_COLOR = new Color(102, 255, 255);
 	private static Color PHEROMONE_HOME_COLOR = new Color(255, 178, 102);
@@ -16,6 +20,12 @@ public class PheromoneFilter extends DefaultColorLayer {
 
 	private final Color PheromoneColor;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param pheromoneType
+	 *            the type of pheromones shown by this filter
+	 */
 	public PheromoneFilter(PheromoneType pheromoneType) {
 		this.pheromoneType = pheromoneType;
 		switch (pheromoneType) {
@@ -36,6 +46,9 @@ public class PheromoneFilter extends DefaultColorLayer {
 		this.enabled = false;
 	}
 
+	/**
+	 * @return the type of pheromones displayed
+	 */
 	public PheromoneType getPheromoneType() {
 		return this.pheromoneType;
 	}

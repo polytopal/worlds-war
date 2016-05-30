@@ -17,10 +17,14 @@ import fr.utbm.info.vi51.worldswar.perception.AntPerception;
  */
 public class AntTacticalBehaviour {
 
-	private static final String PHEROMONE_DISTANCE = "pheromoneDistance"; //$NON-NLS-1$
-	private static final String PHEROMONE_TYPE = "pheromoneType"; //$NON-NLS-1$
-
 	private final AntOperationalBehaviour operationalBehaviour;
+
+	/**
+	 * A food trail intensity depends on the quantity of food discovered. This
+	 * number corresponds to the quantity of food needed to dispose a maximum
+	 * intensity food trail.
+	 */
+	private static final float MAX_FOOD_TRAIL_QTY = 50;
 
 	/**
 	 * @param operationalBehaviour
@@ -39,12 +43,10 @@ public class AntTacticalBehaviour {
 	 */
 	public Influence collectFood(AntPerception perception, HashMap<String, Object> memory) {
 		if (perception.isAtHome()) {
-			memory.put(PHEROMONE_TYPE, PheromoneType.HOME);
-			memory.put(PHEROMONE_DISTANCE, new Integer(0));
+			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.HOME);
 		}
 		if (perception.getFoodAt(MY_POSITION) > 0) {
-			memory.put(PHEROMONE_TYPE, PheromoneType.FOOD);
-			memory.put(PHEROMONE_DISTANCE, new Integer(0));
+			this.startFoodTrail(perception, memory);
 			return this.operationalBehaviour.pickFood(perception);
 		}
 		if (perception.isAvailableFoodInSight()) {
@@ -66,12 +68,10 @@ public class AntTacticalBehaviour {
 	 */
 	public Influence wanderForFood(AntPerception perception, HashMap<String, Object> memory) {
 		if (perception.isAtHome()) {
-			memory.put(PHEROMONE_TYPE, PheromoneType.HOME);
-			memory.put(PHEROMONE_DISTANCE, new Integer(0));
+			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.HOME);
 		}
 		if (perception.getFoodAt(MY_POSITION) > 0) {
-			memory.put(PHEROMONE_TYPE, PheromoneType.FOOD);
-			memory.put(PHEROMONE_DISTANCE, new Integer(0));
+			this.startFoodTrail(perception, memory);
 			return this.operationalBehaviour.pickFood(perception);
 		}
 		if (perception.isAvailableFoodInSight()) {
@@ -115,5 +115,20 @@ public class AntTacticalBehaviour {
 			return this.operationalBehaviour.moveToTarget(perception, memory, highestAntPheromonePos);
 		}
 		return this.operationalBehaviour.wander(perception, memory);
+	}
+
+	/**
+	 * Starts a food trail, auto determining its intensity given the quantity of
+	 * food in sight
+	 * 
+	 * @param perception
+	 * @param memory
+	 */
+	private void startFoodTrail(AntPerception perception, HashMap<String, Object> memory) {
+		int foodInSight = perception.countFoodInSight() - perception.getMyBody().getCapacity();
+		float trailCoeff = foodInSight / MAX_FOOD_TRAIL_QTY;
+		trailCoeff = Math.min(trailCoeff, 1);
+		trailCoeff = Math.max(trailCoeff, 0);
+		this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.FOOD, trailCoeff);
 	}
 }

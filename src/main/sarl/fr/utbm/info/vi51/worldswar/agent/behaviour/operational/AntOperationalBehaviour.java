@@ -22,14 +22,12 @@ import fr.utbm.info.vi51.worldswar.utils.Direction.RotationDirection;
 @SuppressWarnings("static-method")
 public class AntOperationalBehaviour {
 
-	private static final String PHEROMONE_DISTANCE = "pheromoneDistance"; //$NON-NLS-1$
+	private static final float MAX_PHEROMONE = 100;
+	private static final float PHEROMONE_DECAY = 0.5f;
+
+	private static final String PHEROMONE_QTY = "pheromoneQty"; //$NON-NLS-1$
 	private static final String PHEROMONE_TYPE = "pheromoneType"; //$NON-NLS-1$
 	private static final String LAST_MOVE_DIRECTION = "lastMoveDirection"; //$NON-NLS-1$
-
-	private static final float MAX_PHEROMONE = 15;
-	private static final float PHEROMONE_DECAY = 0.1f;
-
-	private static final int MAX_PHEROMONE_DISTANCE = (int) (MAX_PHEROMONE / PHEROMONE_DECAY);
 
 	/**
 	 * Chances that a wandering ant will choose a new direction instead of going
@@ -87,6 +85,7 @@ public class AntOperationalBehaviour {
 			// Target is (0,0), this means we already reached it
 			return new DoNothingInfluence();
 		}
+
 		// the direction is initialized to the primary direction
 		chosenDirection = primaryDirection;
 		// the angle between the primary direction and the chosen Direction
@@ -107,7 +106,7 @@ public class AntOperationalBehaviour {
 		}
 
 		if (delta <= 3) {
-			return this.move(perception, chosenDirection, memory);
+			return this.move(chosenDirection, memory);
 		}
 		// if there is no free direction
 		return new DoNothingInfluence();
@@ -145,9 +144,10 @@ public class AntOperationalBehaviour {
 	 *         with a random direction
 	 */
 	public Influence wander(AntPerception perception, HashMap<String, Object> memory) {
+
 		if (!memory.containsKey(LAST_MOVE_DIRECTION)) {
 			final Direction d = Direction.random();
-			return this.move(perception, d, memory);
+			return this.move(d, memory);
 		}
 
 		final Direction lastDirection = (Direction) (memory.get(LAST_MOVE_DIRECTION));
@@ -162,45 +162,92 @@ public class AntOperationalBehaviour {
 			d = d.adjacentDirection(rd);
 			delta++;
 		}
-		return this.move(perception, d, memory);
+		return this.move(d, memory);
+	}
+
+	/**
+	 * Starts a pheromone trail by "remembering" in memory what pheromones to
+	 * place
+	 * 
+	 * @param memory
+	 *            the ant memory
+	 * @param type
+	 *            the type of pheromones to place
+	 * @param coeff
+	 *            between 0 and 1 : the intensity of the trail. A higher value
+	 *            means the trail will last longer, and be taken more into
+	 *            account by other ants.
+	 */
+	public void startPheromoneTrail(HashMap<String, Object> memory, PheromoneType type, float coeff) {
+		assert (coeff >= 0);
+		assert (coeff <= 1);
+
+		memory.put(PHEROMONE_TYPE, type);
+		memory.put(PHEROMONE_QTY, new Float(MAX_PHEROMONE * coeff));
+	}
+
+	/**
+	 * Starts a pheromone trail by "remembering" in memory what pheromones to
+	 * place. The trail will have the highest possible intensity.
+	 * 
+	 * @see AntOperationalBehaviour#startPheromoneTrail(HashMap, PheromoneType,
+	 *      float)
+	 * 
+	 * @param memory
+	 * @param type
+	 */
+	public void startPheromoneTrail(HashMap<String, Object> memory, PheromoneType type) {
+		this.startPheromoneTrail(memory, type, 1.f);
 	}
 
 	/**
 	 * Computes the influence to move in the specified direction while putting
-	 * pheromones according to the "pheromoneDistance" and "pheromoneType"
-	 * values in memory. Also stores the direction to the "lastMoveDirection"
-	 * entry in memory
+	 * pheromones according to the PHEROMONE_QTY and PHEROMONE_TYPE values in
+	 * memory. Also stores the direction to the "lastMoveDirection" entry in
+	 * memory
 	 * 
 	 * @param d
 	 * @param memory
 	 * @return a {@link PheromoneAndMoveInfluence} or a {@link MoveInfluence}
 	 *         with the specified direction
 	 */
-	private Influence move(AntPerception perception, Direction d, HashMap<String, Object> memory) {
-		if (memory.containsKey(PHEROMONE_TYPE) && memory.containsKey(PHEROMONE_DISTANCE)) {
+	private Influence move(Direction d, HashMap<String, Object> memory) {
+		if (memory.containsKey(PHEROMONE_TYPE) && memory.containsKey(PHEROMONE_QTY)) {
 			// Retrieve pheromone to put from memory
-			final PheromoneType pheromoneType = (PheromoneType) (memory.get(PHEROMONE_TYPE));
-			final int pheromoneDistance = ((Integer) memory.get(PHEROMONE_DISTANCE)).intValue();
-			float pheromoneQty = MAX_PHEROMONE - (pheromoneDistance * PHEROMONE_DECAY);
+			PheromoneType pheromoneType = (PheromoneType) (memory.get(PHEROMONE_TYPE));
+			float pheromoneQty = ((Float) memory.get(PHEROMONE_QTY)).floatValue();
 
-			// Update memory
-			if (pheromoneDistance >= MAX_PHEROMONE_DISTANCE) {
+			// Update pheromone quantity
+			pheromoneQty -= PHEROMONE_DECAY;
+
+			// If the pheromone quantity is now negative, delete the keys from
+			// memory and perform a simple move
+			if (pheromoneQty <= 0) {
 				memory.remove(PHEROMONE_TYPE);
-				memory.remove(PHEROMONE_DISTANCE);
-			} else {
-				memory.put(PHEROMONE_DISTANCE, new Integer(pheromoneDistance + 1));
+				memory.remove(PHEROMONE_QTY);
+				return this.moveWithoutPheromone(memory, d);
 			}
 
-			// Prevents ants from stacking pheromones by traversing the same
-			// cell multiple times
-			final float qtyOnGround = perception.getPheromoneQtyAt(MY_POSITION, pheromoneType,
-					perception.getMyBody().getColony());
-			pheromoneQty = Math.max(pheromoneQty, qtyOnGround);
+			// Update memory
+			memory.put(PHEROMONE_QTY, new Float(pheromoneQty));
 
 			memory.put(LAST_MOVE_DIRECTION, d);
 			return new PheromoneAndMoveInfluence(pheromoneType, pheromoneQty, d);
 		}
-		memory.put(LAST_MOVE_DIRECTION, d);
+		return this.moveWithoutPheromone(memory, d);
+	}
+
+	/**
+	 * Computes the influence to move in the specified direction, without
+	 * putting any pheromone on ground. Stores the direction in memory as
+	 * "lastMoveDirection".
+	 * 
+	 * @param memory
+	 * @param d
+	 * @return a {@link MoveInfluence}
+	 */
+	private Influence moveWithoutPheromone(HashMap<String, Object> memory, Direction d) {
+		memory.put("lastMoveDirection", d);
 		return new MoveInfluence(d);
 	}
 }
