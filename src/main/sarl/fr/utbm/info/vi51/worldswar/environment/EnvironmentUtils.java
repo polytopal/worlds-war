@@ -119,7 +119,15 @@ public class EnvironmentUtils {
 		final List<Colony> coloniesList = simulationParameters.getColoniesList();
 		final float foodProportion = simulationParameters.getFoodProportion();
 		final float rockProportion = simulationParameters.getRockProportion();
-
+		
+		// --- grid initialization ---
+		final Grid<EnvCell> grid = new Grid<>(0, width - 1, 0, height - 1);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				final EnvCell envCell = new EnvCell();
+				grid.set(x, y, envCell);
+			}
+		}
 		// --- computation of ant hills positions ---
 
 		final int nbColony = coloniesList.size();
@@ -132,7 +140,9 @@ public class EnvironmentUtils {
 			// x radius = width/3, y radius = height/3
 			final int x = (int) (width / 2 + (width / 3) * Math.cos(angle));
 			final int y = (int) (height / 2 + (height / 3) * Math.sin(angle));
-			antHillList.add(new AntHill(new Point(x, y), colony));
+			final AntHill newAntHill = new AntHill(new Point(x, y), colony);
+			antHillList.add(newAntHill);
+			grid.get(x, y).addEnvObject(newAntHill);
 			angle += 2 * Math.PI / nbColony;
 		}
 
@@ -149,20 +159,14 @@ public class EnvironmentUtils {
 				simulationParameters.getNoiseSeed() + 1);
 
 		// cration of the map grid
-		final Grid<EnvCell> grid = new Grid<>(0, width - 1, 0, height - 1);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				final EnvCell envCell = new EnvCell();
-				grid.set(x, y, envCell);
 				final Point position = new Point(x, y);
 
 				float nearestAntHillDistance = Float.MAX_VALUE;
 				for (final AntHill antHill : antHillList) {
 					final float AntHillDistance = (float) antHill.getPosition().distance(position);
 					nearestAntHillDistance = Math.min(AntHillDistance, nearestAntHillDistance);
-					if (nearestAntHillDistance == 0) {
-						envCell.addEnvObject(antHill);
-					}
 				}
 
 				// a negative value. antHillModifier = 0 if there is not near
@@ -173,13 +177,13 @@ public class EnvironmentUtils {
 				final float foodThreshold = 1.5f - foodProportion * 2;
 
 				if (rockPerlinHeight > rockThreshold) {
-					envCell.addEnvObject(new Wall(position));
+					grid.get(x, y).addEnvObject(new Wall(position));
 				} else if (nearestAntHillDistance > 0) {
 					final float foodPerlinHeight = foodGrid.get(position).floatValue();
 					if (foodPerlinHeight > foodThreshold) {
 						final int foodQty = (int) ((foodPerlinHeight - foodThreshold) * FOOD_MAX_VALUE);
 						if (foodQty > 0) {
-							envCell.addEnvObject(new Food(position, foodQty));
+							grid.get(x, y).addEnvObject(new Food(position, foodQty));
 						}
 					}
 				}
@@ -196,7 +200,6 @@ public class EnvironmentUtils {
 	 */
 	public static List<AntHill> getAntHills(Grid<EnvCell> grid) {
 		final List<AntHill> list = new ArrayList<>();
-
 		final Iterator<EnvCell> it = grid.iterator();
 		while (it.hasNext()) {
 			final EnvCell cell = it.next();
