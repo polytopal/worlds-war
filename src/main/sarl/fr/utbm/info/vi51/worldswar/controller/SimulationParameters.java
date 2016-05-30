@@ -50,7 +50,7 @@ public class SimulationParameters {
 	public static final int MIN_ROCK_PROPORTION = 0;
 	/** Maximum proportion of rocks on the map (in percents) must be <= 100 **/
 	public static final int MAX_ROCK_PROPORTION = 50;
-
+	
 	// -----
 
 	private final int gridWidth;
@@ -60,6 +60,8 @@ public class SimulationParameters {
 	private final float foodProportion;
 	// the rock proportion, between 0f and 1.0f
 	private final float rockProportion;
+	// the seed used for the map generation
+	private final int noiseSeed;
 
 	/**
 	 * 
@@ -70,12 +72,13 @@ public class SimulationParameters {
 	 * @param rockProportion
 	 */
 	public SimulationParameters(int gridWidth, int gridHeight, List<Colony> coloniesList, float foodProportion,
-			float rockProportion) {
+			float rockProportion, int noiseSeed) {
 		this.gridWidth = gridWidth;
 		this.gridHeight = gridHeight;
 		this.coloniesList = coloniesList;
 		this.foodProportion = foodProportion;
 		this.rockProportion = rockProportion;
+		this.noiseSeed = noiseSeed;
 	}
 
 	/**
@@ -111,6 +114,12 @@ public class SimulationParameters {
 	 */
 	public float getRockProportion() {
 		return this.rockProportion;
+	}
+	/**
+	 * @return the seed used for the map generation
+	 */
+	public int getNoiseSeed() {
+		return this.noiseSeed;
 	}
 
 }

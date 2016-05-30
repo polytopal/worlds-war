@@ -60,11 +60,11 @@ public class EnvironmentUtils {
 	 * @param frequency
 	 * @return height grid
 	 */
-	public static Grid<Float> generatePerlinNoiseGrid(int width, int height, int octaveCount, float frequency) {
+	public static Grid<Float> generatePerlinNoiseGrid(int width, int height, int octaveCount, float frequency, int seed) {
 		Perlin perlinNoise = new Perlin();
 		perlinNoise.setOctaveCount(octaveCount);
 		perlinNoise.setFrequency(frequency);
-		perlinNoise.setSeed(new Random().nextInt());
+		perlinNoise.setSeed(seed);
 		final Grid<Float> grid = new Grid<>(0, width - 1, 0, height - 1);
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
@@ -84,11 +84,11 @@ public class EnvironmentUtils {
 	 * @param frequency
 	 * @return height grid
 	 */
-	public static Grid<Float> generateRidgedPerlinNoiseGrid(int width, int height, int octaveCount, float frequency) {
+	public static Grid<Float> generateRidgedPerlinNoiseGrid(int width, int height, int octaveCount, float frequency, int seed) {
 		RidgedMulti ridgedPerlinNoise = new RidgedMulti();
 		ridgedPerlinNoise.setOctaveCount(octaveCount);
 		ridgedPerlinNoise.setFrequency(frequency);
-		ridgedPerlinNoise.setSeed(new Random().nextInt());
+		ridgedPerlinNoise.setSeed(seed);
 		final Grid<Float> grid = new Grid<>(0, width - 1, 0, height - 1);
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
@@ -130,12 +130,12 @@ public class EnvironmentUtils {
 		// --- creation of the food height grid ---
 		
 		final Grid<Float> foodGrid;
-		foodGrid = generatePerlinNoiseGrid(width, height, FOOD_OCTAVE_COUNT, FOOD_NOISE_FREQUENCY);
+		foodGrid = generatePerlinNoiseGrid(width, height, FOOD_OCTAVE_COUNT, FOOD_NOISE_FREQUENCY, simulationParameters.getNoiseSeed());
 		
 		// --- creation of the rocks height grid---
 		
 		final Grid<Float> rocksGrid;
-		rocksGrid = generateRidgedPerlinNoiseGrid(width, height, ROCK_OCTAVE_COUNT, ROCK_NOISE_FREQUENCY);
+		rocksGrid = generateRidgedPerlinNoiseGrid(width, height, ROCK_OCTAVE_COUNT, ROCK_NOISE_FREQUENCY, simulationParameters.getNoiseSeed()+1337);
 		
 		// cration of the map grid
 		final Grid<EnvCell> grid = new Grid<>(0, width - 1, 0, height - 1);
