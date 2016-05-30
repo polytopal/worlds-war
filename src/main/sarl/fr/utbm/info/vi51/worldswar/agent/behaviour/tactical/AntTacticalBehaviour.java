@@ -131,4 +131,15 @@ public class AntTacticalBehaviour {
 		trailCoeff = Math.max(trailCoeff, 0);
 		this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.FOOD, trailCoeff);
 	}
+
+	/**
+	 * Patrols around the hill. Just a wander, maybe later with a perimeter to
+	 * prevent the ant to get too far from the hill while patrolling
+	 * 
+	 * @param perception
+	 * @param memory
+	 */
+	private void patrol(AntPerception perception, HashMap<String, Object> memory) {
+		// TODO
+	}
 }

@@ -250,4 +250,9 @@ public class AntOperationalBehaviour {
 		memory.put("lastMoveDirection", d);
 		return new MoveInfluence(d);
 	}
+
+	private Influence attackTarget() {
+		// TODO
+		return null;
+	}
 }

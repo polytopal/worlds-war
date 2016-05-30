@@ -29,7 +29,7 @@ public enum Caste {
 	/**
 	 * Patrols the ant hill to fight potential threats.
 	 */
-	SOLDIER {
+	WARRIOR {
 		@Override
 		public int getAttackDamage() {
 			return super.getAttackDamage() + 20;
