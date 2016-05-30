@@ -24,7 +24,8 @@ public class AntHill extends StaticObject {
 	/** These numbers define the probability of each caste to be spawned **/
 	private static final int GATHERER_FREQUENCY = 12;
 	private static final int EXPLORER_FREQUENCY = 1;
-	private static final int TOTAL_FREQUENCIES = GATHERER_FREQUENCY + EXPLORER_FREQUENCY;
+	private static final int WARRIOR_FREQUENCY = 5;
+	private static final int TOTAL_FREQUENCIES = GATHERER_FREQUENCY + EXPLORER_FREQUENCY + WARRIOR_FREQUENCY;
 
 	private final Stock foodStock;
 
@@ -54,12 +55,15 @@ public class AntHill extends StaticObject {
 	@SuppressWarnings("static-method")
 	public Caste casteToSpawn() {
 		final int rand = new Random().nextInt(TOTAL_FREQUENCIES);
-		assert rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY;
+		assert rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY + WARRIOR_FREQUENCY;
 		if (rand < GATHERER_FREQUENCY) {
 			return Caste.GATHERER;
 		}
 		if (rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY) {
 			return Caste.EXPLORER;
+		}
+		if (rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY + WARRIOR_FREQUENCY) {
+			return Caste.WARRIOR;
 		}
 		throw new RuntimeException("Random number for caste choice was out of bound. rand = " + rand);
 	}

@@ -25,6 +25,12 @@ public class ExplorerStrategicBehaviour implements AntStrategicBehaviour {
 
 	@Override
 	public Influence computeInfluence(AntPerception perception, HashMap<String, Object> memory) {
+		// Survivability prevails :the ant checks if there is an ennemy in sight
+		// before doing anything else
+		if (perception.isEnnemyInSight()) {
+			// default choice if an ennemy is seen is to flee
+			return this.tacticalBehaviour.flee(perception, memory);
+		}
 		if (perception.getMyBody().getFoodCarried() > 0) {
 			return this.tacticalBehaviour.bringFoodHome(perception, memory);
 		}

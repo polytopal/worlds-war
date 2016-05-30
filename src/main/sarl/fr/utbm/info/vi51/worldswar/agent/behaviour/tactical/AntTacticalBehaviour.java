@@ -133,13 +133,69 @@ public class AntTacticalBehaviour {
 	}
 
 	/**
-	 * Patrols around the hill. Just a wander, maybe later with a perimeter to
-	 * prevent the ant to get too far from the hill while patrolling
+	 * Starts a danger trail. TODO : Decide whether the quantity of pheromones
+	 * dropped should depend on the number/caste of ennemies spotted
 	 * 
 	 * @param perception
 	 * @param memory
 	 */
-	private void patrol(AntPerception perception, HashMap<String, Object> memory) {
-		// TODO
+	private void startDangerTrail(AntPerception perception, HashMap<String, Object> memory) {
+		// TODO prendre en compte la qté d'ennemis
+		this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.DANGER);
+	}
+
+	/**
+	 * Patrols around the hill. TODO : Just a wander, maybe later with a
+	 * perimeter to prevent the ant to get too far from the hill while
+	 * patrolling
+	 * 
+	 * @param perception
+	 * @param memory
+	 * @return the resulting influence
+	 */
+	public Influence patrol(AntPerception perception, HashMap<String, Object> memory) {
+		// TODO implement a real patrolling behaviour
+		return this.operationalBehaviour.wander(perception, memory);
+	}
+
+	/**
+	 * The ant runs back home, dropping Danger pheromones on its way
+	 * 
+	 * @param perception
+	 * @param memory
+	 * @return the resulting influence
+	 */
+	public Influence flee(AntPerception perception, HashMap<String, Object> memory) {
+		// TODO Auto-generated method stub
+		this.startDangerTrail(perception, memory);
+		return this.goHome(perception, memory);
+	}
+
+	/**
+	 * The ant will pursue its ennemies, using the danger trails left by the
+	 * other ants to find them
+	 * 
+	 * @param perception
+	 * @param memory
+	 * @return the resulting influence
+	 */
+	public Influence chaseAndFight(AntPerception perception, HashMap<String, Object> memory) {
+		if (perception.isAtHome()) {
+			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.HOME);
+		}
+		/*
+		 * TODO : if ennemy on an adjacent cell, attack the corresponding
+		 * direction -> forces the ant to attack all the ennemies that surrounds
+		 * it, using or not an algo to determine the best target. calls
+		 * AntOperationalBehaviour#attackTarget
+		 */
+		if (perception.isEnnemyInSight()) {
+			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getStrongestEnnemyPos());
+		}
+		final Point highestDangerPheromonePos = perception.getHighestPheromonePos(PheromoneType.DANGER);
+		if (highestDangerPheromonePos != null) {
+			return this.operationalBehaviour.moveToTarget(perception, memory, highestDangerPheromonePos);
+		}
+		return this.operationalBehaviour.wander(perception, memory);
 	}
 }

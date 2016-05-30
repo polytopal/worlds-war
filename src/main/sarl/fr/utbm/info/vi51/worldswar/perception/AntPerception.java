@@ -193,6 +193,9 @@ public class AntPerception {
 	private static final int CLOSEST_ENNEMIES_LIST_SIZE = 8;
 	private static final Object STRONGEST_ANT_CASTE = Caste.WARRIOR;
 
+	private Point strongestEnnemyPosCache = null;
+	private boolean strongestEnnemyPosCalculated = false;
+
 	/**
 	 * Serches in the perceptions the strongest ennemy (Warrior > others) If no
 	 * warrior found, focuses the other ants without distinction
@@ -201,6 +204,12 @@ public class AntPerception {
 	 *         coordinates) of one of the priority targets found
 	 */
 	public Point getStrongestEnnemyPos() {
+		if(this.strongestEnnemyPosCalculated){
+			return this.strongestEnnemyPosCache;
+		}
+		this.strongestEnnemyPosCalculated = true;
+
+
 		// TODO Doesn't manage the ennemy anthill yet, which would be considered
 		// here as an unique ant of the strongest caste represented in the hill
 		// -> if there is at least a warrior in the hill, it will become a
@@ -232,7 +241,7 @@ public class AntPerception {
 							// if the ant isn't a priority target, we consider
 							// the distance
 							distance = Math.abs(x) + Math.abs(y);
-							if (distance < minDistance && true) {
+							if (distance < minDistance) {
 								minDistance = distance;
 								closestPositions.clear();
 								closestPositions.add(new Point(x, y));
@@ -249,7 +258,9 @@ public class AntPerception {
 		if (closestPositions.isEmpty()) {
 			return null;
 		}
-		return closestPositions.get(new Random().nextInt(closestPositions.size()));
+		Point result = closestPositions.get(new Random().nextInt(closestPositions.size()));
+		this.strongestEnnemyPosCache = result;
+		return result;
 	}
 
 	/**
@@ -263,12 +274,22 @@ public class AntPerception {
 
 	/**
 	 * 
+	 * @return {code true} if there is either an ennemy in sight, or some danger pheromones in the field of perceptions
+	 */
+	public boolean isDangerNearby(){
+		return (this.isEnnemyInSight()
+				|| this.getHighestPheromonePos(PheromoneType.DANGER, this.myBody.getColony()) != null);
+	}
+
+	/**
+	 * 
 	 * @return the number of ennemies perceived, or maybe compute a danger ratio
 	 *         based on the number and the caste of each ennemy nearby
 	 */
 	public int countEnnemiesInSight() {
 		// TODO si on décide de modifier la qté de phéro DANGER déposées en
-		// fonction de la qté d'ennemis perçus
+		// fonction de la qté d'ennemis perçus, pr gérer notamment la
+		// fourmilière
 		return 0;
 	}
 
