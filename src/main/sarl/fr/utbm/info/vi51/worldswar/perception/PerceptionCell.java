@@ -1,7 +1,11 @@
 package fr.utbm.info.vi51.worldswar.perception;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.eclipse.xtext.xbase.lib.Pair;
 
 import fr.utbm.info.vi51.worldswar.environment.Colony;
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
@@ -50,27 +54,53 @@ public class PerceptionCell {
 	}
 
 	/**
+	 * The cache of the function {@link PerceptionCell#getAntHill()}
+	 */
+	private PerceivableAntHill antHillCache = null;
+	private boolean antHillCaclulated = false;
+
+	/**
 	 * @return the antFill found, or null otherwise
 	 */
 	public PerceivableAntHill getAntHill() {
+		if (this.antHillCaclulated) {
+			return this.antHillCache;
+		}
+		this.antHillCaclulated = true;
+
 		for (final Perceivable perceivable : this.perceptionList) {
 			if (perceivable instanceof PerceivableAntHill) {
-				return (PerceivableAntHill) perceivable;
+				final PerceivableAntHill result = (PerceivableAntHill) perceivable;
+				this.antHillCache = result;
+				return result;
 			}
 		}
+
 		return null;
 	}
+
+	/**
+	 * the cache of the function {@link PerceptionCell#getAnts()}
+	 */
+	private List<PerceivableAnt> antsCache = null;
+	private boolean antsCalculated = false;
 
 	/**
 	 * @return all the ants found in the cell
 	 */
 	public List<PerceivableAnt> getAnts() {
+		if (this.antsCalculated) {
+			return this.antsCache;
+		}
+		this.antsCalculated = true;
+
 		final ArrayList<PerceivableAnt> antList = new ArrayList<>();
 		for (final Perceivable perceivable : this.perceptionList) {
 			if (perceivable instanceof PerceivableAnt) {
 				antList.add((PerceivableAnt) perceivable);
 			}
 		}
+		this.antsCache = antList;
 		return antList;
 	}
 
@@ -78,25 +108,39 @@ public class PerceptionCell {
 	 * @return the first ant found in the cell, or null otherwise
 	 */
 	public PerceivableAnt getAnt() {
+		final List<PerceivableAnt> ants = this.getAnts();
+		if (ants.size() > 0) {
+			return ants.get(0);
+		}
+		return null;
+	}
+
+	private PerceivableFood foodCache = null;
+	private boolean foodCalculated = false;
+
+	/**
+	 * @return the food found, or null otherwise
+	 */
+	public PerceivableFood getFood() {
+		if (this.foodCalculated) {
+			return this.foodCache;
+		}
+		this.foodCalculated = true;
 		for (final Perceivable perceivable : this.perceptionList) {
-			if (perceivable instanceof PerceivableAnt) {
-				return (PerceivableAnt) perceivable;
+			if (perceivable instanceof PerceivableFood) {
+				final PerceivableFood result = (PerceivableFood) perceivable;
+				this.foodCache = result;
+				return result;
 			}
 		}
 		return null;
 	}
 
 	/**
-	 * @return the food found, or null otherwise
+	 * The cache of the function
+	 * {@link PerceptionCell#getPheromoneQuantity(PheromoneType, Colony)}
 	 */
-	public PerceivableFood getFood() {
-		for (final Perceivable perceivable : this.perceptionList) {
-			if (perceivable instanceof PerceivableFood) {
-				return (PerceivableFood) perceivable;
-			}
-		}
-		return null;
-	}
+	private final Map<Pair<PheromoneType, Colony>, Float> pheromoneQuantityCache = new HashMap<>();
 
 	/**
 	 * If the cell contains the pheromone type for the given colony, return its
@@ -108,14 +152,27 @@ public class PerceptionCell {
 	 * @return the pheromone quantity
 	 */
 	public float getPheromoneQuantity(PheromoneType type, Colony colony) {
+		if (this.pheromoneQuantityCache.get(new Pair<>(type, colony)) != null) {
+			return this.pheromoneQuantityCache.get(new Pair<>(type, colony));
+		}
+
 		for (final Perceivable perceivable : this.perceptionList) {
 			if (perceivable instanceof PerceivablePheromone && ((PerceivablePheromone) perceivable).getType() == type
 					&& ((PerceivablePheromone) perceivable).getColony() == colony) {
-				return ((PerceivablePheromone) perceivable).getQty();
+				final float qty = ((PerceivablePheromone) perceivable).getQty();
+				this.pheromoneQuantityCache.put(new Pair<>(type, colony), qty);
+				return qty;
 			}
 		}
+		this.pheromoneQuantityCache.put(new Pair<>(type, colony), (float) 0);
 		return 0;
 	}
+
+	/**
+	 * The cache of the function
+	 * {@link PerceptionCell#getTotalPheromoneQuantity(PheromoneType)}
+	 */
+	private final Map<PheromoneType, Float> totalPheromoneQuantityCache = new HashMap<>();
 
 	/**
 	 * 
@@ -124,21 +181,34 @@ public class PerceptionCell {
 	 *         pheromone of each colony
 	 */
 	public float getTotalPheromoneQuantity(PheromoneType type) {
+		if (this.totalPheromoneQuantityCache.get(type) != null) {
+			return this.totalPheromoneQuantityCache.get(type);
+		}
+
 		float qty = 0;
 		for (final Perceivable perceivable : this.perceptionList) {
 			if (perceivable instanceof PerceivablePheromone && ((PerceivablePheromone) perceivable).getType() == type) {
 				qty += ((PerceivablePheromone) perceivable).getQty();
 			}
 		}
+		this.totalPheromoneQuantityCache.put(type, qty);
 		return qty;
 	}
 
+	private boolean TaversableCache = false;
+	private boolean TaversableCalculated = false;
+
 	public boolean isTraversable() {
-		for (Perceivable p : this.perceptionList) {
+		if (this.TaversableCalculated) {
+			return this.TaversableCache;
+		}
+		this.TaversableCalculated = true;
+		for (final Perceivable p : this.perceptionList) {
 			if (!p.isTraversable()) {
 				return false;
 			}
 		}
+		this.TaversableCache = true;
 		return true;
 	}
 

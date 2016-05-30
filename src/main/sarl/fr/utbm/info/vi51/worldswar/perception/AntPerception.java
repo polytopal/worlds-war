@@ -51,6 +51,7 @@ public class AntPerception {
 	 * {@link AntPerception#getHighestPheromonePos(PheromoneType, Colony)}
 	 */
 	private final Map<PheromoneType, Point> highestPheromonePosCache = new HashMap<>();
+	private final Map<PheromoneType, Boolean> highestPheromoneCalculated = new HashMap<>();
 
 	/**
 	 * @param type
@@ -60,7 +61,7 @@ public class AntPerception {
 	 *         or {@code null} if no relevant pheromone is perceived
 	 */
 	public Point getHighestPheromonePos(PheromoneType type, Colony colony) {
-		if (colony == this.myBody.getColony() && this.highestPheromonePosCache.get(type) != null) {
+		if (colony == this.myBody.getColony() && this.highestPheromoneCalculated.get(type) == true) {
 			return this.highestPheromonePosCache.get(type);
 		}
 
@@ -80,7 +81,10 @@ public class AntPerception {
 			}
 		}
 
-		this.highestPheromonePosCache.put(type, highestPos);
+		if (colony == this.myBody.getColony()) {
+			this.highestPheromoneCalculated.put(type, true);
+			this.highestPheromonePosCache.put(type, highestPos);
+		}
 		return highestPos;
 	}
 
@@ -169,6 +173,9 @@ public class AntPerception {
 		return this.getHomePos() != null;
 	}
 
+	/**
+	 * The cache of the function {@link AntPerception#getHomePos()}
+	 */
 	private boolean homePosCaclulated = false;
 	private Point homePosCache = null;
 
