@@ -10,11 +10,21 @@ import javax.swing.KeyStroke;
  */
 public enum SimulationSpeed {
 
-	SLOW("SimulationSpeed.slow", 500, KeyStroke.getKeyStroke(KeyEvent.VK_1, 0)), //$NON-NLS-1$
+	/**
+	 * 1 second of real time = 1 second in simulation time
+	 */
+	REAL_TIME("SimulationSpeed.real_time", 500, KeyStroke.getKeyStroke(KeyEvent.VK_1, 0)), //$NON-NLS-1$
 
-	NORMAL("SimulationSpeed.normal", 250, KeyStroke.getKeyStroke(KeyEvent.VK_2, 0)), //$NON-NLS-1$
+	/**
+	 * 1 second of real time = 2 seconds in simulation time
+	 */
+	X2("SimulationSpeed.x2", 250, KeyStroke.getKeyStroke(KeyEvent.VK_2, 0)), //$NON-NLS-1$
 
-	FAST("SimulationSpeed.fast", 100, KeyStroke.getKeyStroke(KeyEvent.VK_3, 0)), //$NON-NLS-1$
+	/**
+	 * 1 second of real time = 5 seconds in simulation time
+	 */
+	X5("SimulationSpeed.x5", 100, KeyStroke.getKeyStroke(KeyEvent.VK_3, 0)), //$NON-NLS-1$
+
 	/**
 	 * No delay between steps means the simulation will run as fast as possible
 	 */
@@ -50,7 +60,7 @@ public enum SimulationSpeed {
 	 *         simulation is kept for the new one
 	 */
 	public static SimulationSpeed getInitialSpeed() {
-		return NORMAL;
+		return REAL_TIME;
 	}
 
 	/**

@@ -26,7 +26,7 @@ public class InfoPanel extends JPanel {
 		this.labelSimulationState = new JLabel(String.format("%s |", Messages.getString("SimulationState.stopped"))); //$NON-NLS-1$ //$NON-NLS-2$
 		this.add(this.labelSimulationState);
 
-		this.labelStepPerSecond = new JLabel(String.format("%s |", Messages.getString("na"))); //$NON-NLS-1$//$NON-NLS-2$
+		this.labelStepPerSecond = new JLabel(String.format("%s |", Messages.getString("InfoPanel.na"))); //$NON-NLS-1$//$NON-NLS-2$
 		this.add(this.labelStepPerSecond);
 
 		this.labelStepNumber = new JLabel(
