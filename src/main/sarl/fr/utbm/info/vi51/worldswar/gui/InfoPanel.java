@@ -32,7 +32,7 @@ public class InfoPanel extends JPanel {
 			.toFormatter();
 
 	private JLabel labelSimulationState;
-	private JLabel labelStepPerSecond;
+	private JLabel labelSimulationSpeed;
 	private JLabel labelSimulationTime;
 	private JLabel labelAgentCount;
 
@@ -41,30 +41,30 @@ public class InfoPanel extends JPanel {
 	 */
 	public InfoPanel() {
 		this.labelSimulationState = new JLabel();
-		this.labelStepPerSecond = new JLabel();
-		this.labelAgentCount = new JLabel();
+		this.labelSimulationSpeed = new JLabel();
 		this.labelSimulationTime = new JLabel();
+		this.labelAgentCount = new JLabel();
 
 		this.add(this.labelSimulationState);
 		this.add(this.labelSimulationTime);
+		this.add(this.labelSimulationSpeed);
 		this.add(this.labelAgentCount);
-		this.add(this.labelStepPerSecond);
 
 		this.setSimulationStateLabel(SimulationState.STOPPED);
-		this.setStepPerSecondLabel(0);
-		this.setAgentCountLabel(0);
+		this.setSimulationSpeedLabel(0);
 		this.setSimulationTimeLabel(0);
+		this.setAgentCountLabel(0);
 
 	}
 
 	/**
 	 * @param nbSPS
-	 *            the number of steps per second to display
+	 *            the current steps per second
 	 */
-	public void setStepPerSecondLabel(float nbSPS) {
-		this.labelStepPerSecond
-				.setText(String.format("%.2f %s", new Float(nbSPS), Messages.getString("InfoPanel.stepsPerSecond"))); //$NON-NLS-1$//$NON-NLS-2$
-																														// //$NON-NLS-3$
+	public void setSimulationSpeedLabel(float nbSPS) {
+		final Float speedMultiplier = new Float(nbSPS * (SimulationSpeed.REAL_TIME.getMilliseconds() / 1000.f));
+		this.labelSimulationSpeed
+				.setText(String.format("%s : X%.1f |", Messages.getString("InfoPanel.currentSpeed"), speedMultiplier));
 	}
 
 	/**
@@ -98,6 +98,6 @@ public class InfoPanel extends JPanel {
 	 */
 	public void setAgentCountLabel(int agentCount) {
 		this.labelAgentCount.setText(
-				String.format(" %s : %d |", Messages.getString("InfoPanel.agentCount"), new Integer(agentCount))); //$NON-NLS-1$ //$NON-NLS-2$
+				String.format(" %s : %d", Messages.getString("InfoPanel.agentCount"), new Integer(agentCount))); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

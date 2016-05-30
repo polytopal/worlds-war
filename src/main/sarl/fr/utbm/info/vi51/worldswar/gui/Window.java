@@ -82,7 +82,7 @@ public class Window extends JFrame implements SimulatorListener {
 		this.stepsPerSecond = 1000.f / stepDuration;
 
 		this.infoPanel.setSimulationStateLabel(this.simState);
-		this.infoPanel.setStepPerSecondLabel(this.stepsPerSecond);
+		this.infoPanel.setSimulationSpeedLabel(this.stepsPerSecond);
 		this.infoPanel.setSimulationTimeLabel(this.stepNumber);
 
 		this.stepNumber++;
