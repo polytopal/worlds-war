@@ -154,6 +154,9 @@ public class AntTacticalBehaviour {
 	 * @return the resulting influence
 	 */
 	public Influence patrol(AntPerception perception, HashMap<String, Object> memory) {
+		if (perception.isAtHome()) {
+			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.HOME);
+		}
 		// TODO implement a real patrolling behaviour
 		return this.operationalBehaviour.wander(perception, memory);
 	}
@@ -190,6 +193,7 @@ public class AntTacticalBehaviour {
 		 * AntOperationalBehaviour#attackTarget
 		 */
 		if (perception.isEnnemyInSight()) {
+			this.startDangerTrail(perception, memory);
 			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getStrongestEnnemyPos());
 		}
 		final Point highestDangerPheromonePos = perception.getHighestPheromonePos(PheromoneType.DANGER);
