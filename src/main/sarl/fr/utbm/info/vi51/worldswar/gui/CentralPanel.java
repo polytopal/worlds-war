@@ -39,6 +39,9 @@ public class CentralPanel extends JPanel {
 	private static final int CELL_SIZE_MIN = 2;
 	private static final int CELL_SIZE_MAX = 70;
 
+	private static final int DEFAULT_WIDTH = 800;
+	private static final int DEFAULT_HEIGHT = 600;
+
 	private int width;
 	private int height;
 
@@ -100,15 +103,15 @@ public class CentralPanel extends JPanel {
 
 		this.add(this.scrollPane, BorderLayout.CENTER);
 
-		this.setPreferredSize(new Dimension(400, 400));
+		this.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 
 		final MouseWheelListener mouseWheelListener = new MouseWheelListener() {
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				if (e.getPreciseWheelRotation() > 0) {
-					zoomOut();
+					CentralPanel.this.zoomOut();
 				} else {
-					zoomIn();
+					CentralPanel.this.zoomIn();
 				}
 			}
 		};
@@ -120,22 +123,22 @@ public class CentralPanel extends JPanel {
 
 				switch (e.getExtendedKeyCode()) {
 				case KeyEvent.VK_LEFT: // left arrow
-					moveCameraLeft(CAMERA_MOVE_SPEED);
+					CentralPanel.this.moveCameraLeft(CAMERA_MOVE_SPEED);
 					break;
 				case KeyEvent.VK_UP:// up arrow
-					moveCameraUp(CAMERA_MOVE_SPEED);
+					CentralPanel.this.moveCameraUp(CAMERA_MOVE_SPEED);
 					break;
 				case KeyEvent.VK_RIGHT:// right arrow
-					moveCameraRight(CAMERA_MOVE_SPEED);
+					CentralPanel.this.moveCameraRight(CAMERA_MOVE_SPEED);
 					break;
 				case KeyEvent.VK_DOWN:// down arrow
-					moveCameraDown(CAMERA_MOVE_SPEED);
+					CentralPanel.this.moveCameraDown(CAMERA_MOVE_SPEED);
 					break;
 				case KeyEvent.VK_ADD:// + button
-					zoomIn();
+					CentralPanel.this.zoomIn();
 					break;
 				case KeyEvent.VK_SUBTRACT:// - button
-					zoomOut();
+					CentralPanel.this.zoomOut();
 					break;
 				default:
 					break;
