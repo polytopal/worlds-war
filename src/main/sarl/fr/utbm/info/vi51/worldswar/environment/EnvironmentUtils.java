@@ -135,7 +135,7 @@ public class EnvironmentUtils {
 		// --- creation of the rocks height grid---
 		
 		final Grid<Float> rocksGrid;
-		rocksGrid = generateRidgedPerlinNoiseGrid(width, height, ROCK_OCTAVE_COUNT, ROCK_NOISE_FREQUENCY, simulationParameters.getNoiseSeed()+1337);
+		rocksGrid = generateRidgedPerlinNoiseGrid(width, height, ROCK_OCTAVE_COUNT, ROCK_NOISE_FREQUENCY, simulationParameters.getNoiseSeed()+1);
 		
 		// cration of the map grid
 		final Grid<EnvCell> grid = new Grid<>(0, width - 1, 0, height - 1);
