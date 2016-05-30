@@ -15,11 +15,11 @@ import io.sarl.lang.core.Agent;
 public class AntHill extends StaticObject {
 
 	/** Number of steps between the spawn of two ants in the anthill */
-	public static final int SPAWN_COOLDOWN = 5;
+	public static final int SPAWN_COOLDOWN = 15;
 	/** Food consumed by the spawn of a new ant */
-	public static final int SPAWN_COST = 10;
+	public static final int SPAWN_COST = 25;
 	/** Food available in the ant hill at the beginning of the simulation **/
-	private static final int INITIAL_FOOD_STOCK = 100000;
+	private static final int INITIAL_FOOD_STOCK = 100000000;
 
 	/** These numbers define the probability of each caste to be spawned **/
 	private static final int GATHERER_FREQUENCY = 20;
