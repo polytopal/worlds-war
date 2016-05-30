@@ -9,14 +9,16 @@ import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
+import io.sarl.core.Schedules
 import io.sarl.util.Scopes
 import java.util.HashMap
+import java.util.Random
 
 /**
  * Abstract agent inherited by every other ants agents
  */
 agent AntAgent {
-	uses Lifecycle, DefaultContextInteractions, Logging
+	uses Lifecycle, Schedules, DefaultContextInteractions, Logging
 	
 	val memory : HashMap<String, Object> = new HashMap()
 	var behaviour : AntStrategicBehaviour
@@ -32,7 +34,10 @@ agent AntAgent {
 	
 	on KillAgentEvent {
 		synchronized(this) {
-			killMe
+			// Agent is killed after a random delay.
+			// When too many agents are killed at the same time, a memory leak can occur.
+			// This is a workaround to prevent this problem.
+			in(new Random().nextInt(3000)) [killMe]
 		}
 	}
 	
