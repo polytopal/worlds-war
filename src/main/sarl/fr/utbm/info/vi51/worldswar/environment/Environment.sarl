@@ -306,7 +306,6 @@ agent Environment {
 	
 	/** To be called each step. Periodically spawn an ant inside each anthill */
 	private def spawnAntsInAntHills {
-		var i = 0;
 		for(antHill : this.antHills) {
 			antHill.decrementSpawnCooldown();
 			if(antHill.spawnCooldown === 0 && antHill.availableFood >= AntHill.SPAWN_COST) {
@@ -314,7 +313,6 @@ agent Environment {
 				antHill.spawnCooldown = AntHill.SPAWN_COOLDOWN
 				this.spawnAnt(antHill.colony, antHill.casteToSpawn, antHill.position)
 			}
-			i++;
 		}
 	}
 

@@ -120,7 +120,7 @@ public class EnvironmentUtils {
 		final float foodProportion = simulationParameters.getFoodProportion();
 		final float rockProportion = simulationParameters.getRockProportion();
 		
-		// grid initialization
+		// --- grid initialization ---
 		final Grid<EnvCell> grid = new Grid<>(0, width - 1, 0, height - 1);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
