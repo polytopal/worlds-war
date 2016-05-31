@@ -1,5 +1,6 @@
 package fr.utbm.info.vi51.worldswar.environment;
 
+import java.awt.Point;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,9 +14,11 @@ import fr.utbm.info.vi51.worldswar.environment.envobject.EnvironmentObject;
  */
 public class EnvCell {
 	private final List<EnvironmentObject> envObjects;
+	private Point position;
 
-	public EnvCell() {
+	public EnvCell(Point position) {
 		this.envObjects = new LinkedList<>();
+		this.position = position;
 	}
 
 	public List<EnvironmentObject> getEnvObjects() {
@@ -75,5 +78,9 @@ public class EnvCell {
 			}
 		}
 		return false;
+	}
+	
+	public Point getPosition() {
+		return this.position;
 	}
 }

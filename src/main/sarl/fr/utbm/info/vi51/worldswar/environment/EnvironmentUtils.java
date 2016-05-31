@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.naming.directory.InvalidAttributesException;
+
 import com.flowpowered.noise.module.source.Perlin;
 import com.flowpowered.noise.module.source.RidgedMulti;
 
@@ -152,7 +154,7 @@ public class EnvironmentUtils {
 		final Grid<EnvCell> grid = new Grid<>(0, width - 1, 0, height - 1);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				final EnvCell envCell = new EnvCell();
+				final EnvCell envCell = new EnvCell(new Point(x, y));
 				grid.set(x, y, envCell);
 				final Point position = new Point(x, y);
 
@@ -218,11 +220,12 @@ public class EnvironmentUtils {
 	 * 
 	 * @param grid
 	 *            the environment grid
+	 * @throws InvalidAttributesException 
 	 * 
 	 * 
 	 * @see Pheromone#dissipate()
 	 */
-	public static void applyPheromoneDissipation(Grid<EnvCell> grid) {
+	public static void applyPheromoneDissipation(Grid<EnvCell> grid) throws InvalidAttributesException {
 
 		for (final EnvCell c : grid) {
 			final List<EnvironmentObject> toRemove = new LinkedList<>();
@@ -232,6 +235,14 @@ public class EnvironmentUtils {
 					p.dissipate();
 					if (p.getQty() <= 0) {
 						toRemove.add(p);
+					}
+					final Grid<EnvCell> neighbors = grid.getSubGrid(c.getPosition(), 1);
+					for (final EnvCell n : neighbors) {
+						placePheromone(((Pheromone) envObj).getColony(),
+										((Pheromone) envObj).getType(),
+										((Pheromone) envObj).getQty()*0.4f - 1.f,
+										n.getPosition(),
+										grid);
 					}
 				}
 			}

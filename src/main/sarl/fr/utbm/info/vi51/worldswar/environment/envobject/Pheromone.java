@@ -51,7 +51,7 @@ public class Pheromone extends StaticObject {
 		if(this.type == PheromoneType.FOOD) {
 			this.qty -= FLAT_DISSIPATION + SCALING_DISSIPATION * this.qty;
 		} else {
-			this.qty -= SCALING_DISSIPATION * this.qty;
+			this.qty -= 0.1*FLAT_DISSIPATION + SCALING_DISSIPATION * this.qty;
 		}
 		
 		if (this.qty < 0) {
