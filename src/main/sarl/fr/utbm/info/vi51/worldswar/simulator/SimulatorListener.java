@@ -20,9 +20,9 @@ public interface SimulatorListener {
 
 	/**
 	 * Invoked when the simulation start
-	 * @param noiseSeed : seed of the current simulation map
+	 * @param mapInfo information on the map (seed etc...)
 	 */
-	public void simulationStarted(MapInformation mapInfos);
+	public void simulationStarted(MapInformation mapInfo);
 
 	/**
 	 * Invoked when the simulation is paused

@@ -88,6 +88,11 @@ public class GuiActionsManager {
 	public Action getMapInfoAction() {
 		return this.mapInfoAction;
 	}
+	/**
+	 * This method update the map information needed for 
+	 * display of the MapInfoDialog in MapInfoAction
+	 * @param mapInfo informations related to the simulation map
+	 */
 	
 	public void updateMapInfo(MapInformation mapInfo) {
 		this.mapInfoAction.setMapInfo(mapInfo);

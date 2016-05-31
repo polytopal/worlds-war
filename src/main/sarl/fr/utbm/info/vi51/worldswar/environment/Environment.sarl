@@ -82,7 +82,6 @@ agent Environment {
 			this.waitingAgentsInitialization = false
 			
 			var mapInfos = new MapInformation(simParameters.getNoiseSeed())
-			
 			emit(new EnvironmentInitializedEvent(mapInfos))
 		}
 	}
