@@ -37,6 +37,7 @@ import java.util.LinkedList
 import java.util.List
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import fr.utbm.info.vi51.worldswar.environment.influence.DoNothingInfluence
 
 /**
  * While it does not appear obvious, this agent manages the environment.
@@ -176,7 +177,12 @@ agent Environment {
 			EnvironmentUtils.moveAnt(ant, influence.direction, grid)
 		} else if (influence instanceof PickFoodInfluence) {
 			EnvironmentUtils.pickFood(ant, influence.qty, grid)
+		} else if (influence instanceof DoNothingInfluence) {
+			// do nothing
+		} else {
+			error("unrecognized influence")
 		}
+		return
 	}
 	
 	private def antMeleeAttack(body : AntBody, direction : Direction) {
@@ -207,6 +213,9 @@ agent Environment {
 				}
 				else if (body instanceof AntBody){
 					body.influence = antInfluences.get(body.uuid)
+					if(body.influence === null) {
+						error("bodyinfluence null")
+					}
 				}
 			}
 			applyStep
@@ -249,7 +258,6 @@ agent Environment {
 		if(this.uninitializedAgents.remove(uuid)) {
 			warning("Agent #" + uuid + " was killed before it was fully initialized")
 		}
-		
 		emit(new KillAgentEvent, Scopes.addresses(defaultSpace.getAddress(body.uuid)))
 	}
 	

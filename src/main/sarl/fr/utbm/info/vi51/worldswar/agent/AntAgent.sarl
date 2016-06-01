@@ -57,22 +57,27 @@ agent AntAgent {
 			if(alive && behaviour !== null ){
 				// The influence is computed by the behaviour
 				val influence = behaviour.computeInfluence(perception, memory)
-				
-				if(this.antInfluences.get(this.getID) === null) {
-					this.antInfluences.put(this.getID, influence)
-					if(this.antInfluences.size >= nbAgents) {// if all other agents have sent their influence
-						var evt = new InfluenceEvent()
-						emit(evt, 
-							Scopes.addresses(occurrence.callbackAddress)
-							)
-					}
-				} else {
-					error("AntAgent::PerceptionEvent : antInfluence already placed")
+				if(influence === null) {
+					println("NULL")
 				}
-			}else{
-				error("AntAgent::PerceptionEvent : ant agent doesn't have a behaviour or is dead "+alive)
+				if(this.antInfluences.get(this.getID) === null) {
+					synchronized(antInfluences) {
+						this.antInfluences.put(this.getID, influence)
+						if(this.antInfluences.size == nbAgents) {// if all other agents have sent their influence
+							
+							var evt = new InfluenceEvent()
+							emit(evt, 
+								Scopes.addresses(occurrence.callbackAddress)
+								)
+						}
+					}
+					
+				} else {
+					println("AntAgent::PerceptionEvent : antInfluence already placed "+ influence+" ||| "+this.antInfluences.get(this.getID))
+				}
+			} else if (alive) {
+				println("AntAgent::PerceptionEvent : ant agent doesn't have a behaviour")
 			}
-			
 		}
 	}
 }
