@@ -15,7 +15,7 @@ import io.sarl.lang.core.Agent;
 public class AntHill extends StaticObject {
 
 	/** Number of steps between the spawn of two ants in the anthill */
-	public static final int SPAWN_COOLDOWN = 3;
+	public static final int SPAWN_COOLDOWN = 1;
 	/** Food consumed by the spawn of a new ant */
 	public static final int SPAWN_COST = 0;
 	/** Food available in the ant hill at the beginning of the simulation **/

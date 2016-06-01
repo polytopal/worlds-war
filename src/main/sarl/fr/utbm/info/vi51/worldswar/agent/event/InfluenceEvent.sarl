@@ -5,7 +5,6 @@ package fr.utbm.info.vi51.worldswar.^agent.^event
 
 import fr.utbm.info.vi51.worldswar.^agent.AntAgent
 import fr.utbm.info.vi51.worldswar.environment.Environment
-import fr.utbm.info.vi51.worldswar.environment.influence.Influence
 import java.util.UUID
 
 /**
@@ -14,14 +13,12 @@ import java.util.UUID
  */
 event InfluenceEvent {
 	val uuid : UUID
-	val influence : Influence
 	
 	/**
 	 * @param uuid : uuid of the emitter
 	 * @param influence
 	 */
-	new(uuid : UUID, influence : Influence) {
+	new(uuid : UUID) {
 		this.uuid = uuid
-		this.influence = influence
 	}
 }

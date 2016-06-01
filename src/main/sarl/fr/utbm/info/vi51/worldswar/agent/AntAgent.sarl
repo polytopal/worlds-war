@@ -16,6 +16,9 @@ import io.sarl.util.Scopes
 import java.util.HashMap
 import java.util.Random
 import io.sarl.util.OpenEventSpace
+import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
+import fr.utbm.info.vi51.worldswar.environment.influence.Influence
 
 /**
  * Abstract agent inherited by every other ants agents
@@ -24,18 +27,16 @@ agent AntAgent {
 	uses Lifecycle, Schedules, DefaultContextInteractions, Logging, Behaviors
 	
 	val memory : HashMap<String, Object> = new HashMap()
+	var antInfluences : ConcurrentHashMap<UUID, Influence> = new ConcurrentHashMap() 
 	var behaviour : AntStrategicBehaviour
-	var space : OpenEventSpace
+	var alive : boolean = false
 	
 	on Initialize{
 		synchronized(this) {
 			// the strategic behaviour is get from the parameters
 			this.behaviour = occurrence.parameters.get(0) as AntStrategicBehaviour
-			
-			space = defaultContext.getOrCreateSpaceWithSpec(
-				typeof(OpenEventSpaceSpecification),
-				this.getID)
-			space.register(asEventListener())
+			this.antInfluences = occurrence.parameters.get(1) as ConcurrentHashMap<UUID, Influence>
+			alive = true
 			
 			emit(new AgentInitializedEvent)
 		}
@@ -46,31 +47,45 @@ agent AntAgent {
 			// Agent is killed after a random delay.
 			// When too many agents are killed at the same time, a memory leak can occur.
 			// This is a workaround to prevent this problem.
+			alive = false
 			in(new Random().nextInt(3000)) [killMe]
+//			killMe
 		}
 	}
 	
 	on PerceptionEvent {
 		synchronized(this) {
-			
 			val perceptions = occurrence.perception
+			var nbAgents = occurrence.nbAgents
 			val perception = perceptions.get(this.getID)
-			if(behaviour !== null ){
+			if(alive && behaviour !== null ){
 				
 				// The influence is computed by the behaviour
 				val influence = behaviour.computeInfluence(perception, memory)
+				
+
 //				emit(new InfluenceEvent(this.getID(), influence),
 //					Scopes.addresses(occurrence.callbackAddress))
-				var evt = new InfluenceEvent(this.getID(), influence)
+				
 //				evt.setSource(space.getAddress(getID))
 //				space.emit(evt, 
 //					Scopes.addresses(occurrence.callbackAddress)
 //				)
-				emit(evt, 
-					Scopes.addresses(occurrence.callbackAddress)
-				)
+				if(this.antInfluences.get(this.getID) === null) {
+					
+				} else {
+					error("antInfluence already placed")
+				}
+				this.antInfluences.put(this.getID, influence)
+				if(this.antInfluences.size >= nbAgents) {// if all other agents have sent their influence
+					var evt = new InfluenceEvent(this.getID)
+					emit(evt, 
+						Scopes.addresses(occurrence.callbackAddress)
+						)
+				}
+				
 			}else{
-				error("ant agent doesn't have behaviour")
+//				error("ant agent doesn't have behaviour or is dead "+alive)
 			}
 			
 		}

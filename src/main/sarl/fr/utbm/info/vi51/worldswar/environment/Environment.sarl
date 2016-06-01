@@ -39,6 +39,8 @@ import java.util.UUID
 import io.sarl.util.OpenEventSpaceSpecification
 import io.sarl.core.Behaviors
 import java.util.ArrayList
+import java.util.concurrent.ConcurrentHashMap
+import fr.utbm.info.vi51.worldswar.environment.influence.Influence
 
 /**
  * While it does not appear obvious, this agent manages the environment.
@@ -57,7 +59,7 @@ agent Environment {
 	var antHills : List<AntHill>
 
 	var agentBodies : HashMap<UUID, AgentBody>
-	var agentBodiesArray : ArrayList<AgentBody>
+//	var agentBodiesArray : ArrayList<AgentBody>
 	var influencesReceived : int
 
 	/** List of the UUID of agents that have been spawned, but are not initialized yet */
@@ -65,9 +67,9 @@ agent Environment {
 	/** True if and only if the environment is waiting one or more agents to finish their initialization before finishing its step. */
 	var waitingAgentsInitialization : boolean
 	
-	var agentEventSpaces : HashMap<UUID,OpenEventSpace>
+	var antInfluences : ConcurrentHashMap<UUID, Influence>
 	
-	
+	var perceptionGrid : PerceptionGrid
 
 	on Initialize {
 		synchronized(this) {
@@ -83,11 +85,9 @@ agent Environment {
 			
 			info("Creating agents map...")
 			this.agentBodies = new HashMap(AGENTS_MAP_INITIAL_SIZE)
-			this.agentBodiesArray = new ArrayList()
+			this.antInfluences = new ConcurrentHashMap(AGENTS_MAP_INITIAL_SIZE)
 			info("Map created")
-			
-			this.agentEventSpaces = new HashMap()
-			
+
 			this.uninitializedAgents = new LinkedList
 			this.waitingAgentsInitialization = false
 			
@@ -111,7 +111,7 @@ agent Environment {
 	
 	on SimulationStepEvent {
 		synchronized(this) {
-			var perceptionGrid = PerceptionGrid.buildFromEnvObjectGrid(grid)
+			perceptionGrid = PerceptionGrid.buildFromEnvObjectGrid(grid)
 
 			for(l : this.listeners) {
 				l.environmentUpdated(perceptionGrid, this.agentBodies.size)
@@ -135,21 +135,19 @@ agent Environment {
 		EnvironmentUtils.applyPheromoneDissipation(grid)
 		antsAging
 		spawnAntsInAntHills
-		if(this.uninitializedAgents.size > 0) {
-			this.waitingAgentsInitialization = true
-		}
-		else {
-			finishStep
-		}
+//		this.waitingAgentsInitialization = false
+		antInfluences.clear()
+		emit(new EnvironmentReadyEvent)
 	}
 	
 	/**
 	 * Invoked when all the computation for the current step is done. This will tell the environment is ready to compute a new one.
 	 */
-	private def finishStep {
-		this.waitingAgentsInitialization = false
-		emit(new EnvironmentReadyEvent)
-	}
+//	private def finishStep {
+//		this.waitingAgentsInitialization = false
+//		antInfluences.clear()
+//		emit(new EnvironmentReadyEvent)
+//	}
 	
 	////////////////////////////////////////
 	///            INFLUENCES            ///
@@ -213,22 +211,24 @@ agent Environment {
 	 */
 	on InfluenceEvent {
 		synchronized(this) {
-			var body = agentBodies.get(occurrence.uuid)
-			if(body === null) {
+			for(body : this.agentBodies.values){
+				if(body === null) {
 				warning("Influence received from agent #" + occurrence.uuid + ", but this agent does not exist in the current Environment.")
-			}
-			
-			if(body.influence !== null) {
-				error("Agent #" + occurrence.uuid + " has sent multiple influences in the same step")
-			}
-			else {
-				body.influence = occurrence.influence
-				influencesReceived++
+				}
 				
-				if(influencesReceived == agentBodies.size) {
-					applyStep
+				if(body.influence !== null) {
+					error("Agent #" + occurrence.uuid + " has sent multiple influences in the same step")
+				}
+				else if (body instanceof AntBody){
+					body.influence = antInfluences.get(body.uuid)
+//					if(body.influence === null) {
+//						error("wut : "+body.uuid)
+//					}
+					influencesReceived++
 				}
 			}
+			applyStep
+
 		}
 	}
 	
@@ -240,13 +240,12 @@ agent Environment {
 	private def spawnAnt(colony : Colony, caste : Caste, position : Point) {
 		
 		// the ant behaviour is passed as a parameters
-		var antUuid : UUID = spawn(typeof(AntAgent), behaviourHandler.getStrategicBehaviour(caste))
+		var antUuid : UUID = spawn(typeof(AntAgent), behaviourHandler.getStrategicBehaviour(caste), antInfluences)
 		var body : AntBody = new AntBody(position, antUuid, colony, caste)
 		
 		//Add the new body in the proper cell of the grid, and in the agentBodies table
 		this.grid.get(position).addEnvObject(body)
 		this.agentBodies.put(antUuid, body)
-		this.agentBodiesArray.add(body)
 		this.uninitializedAgents.add(antUuid)
 	}
 	
@@ -258,9 +257,10 @@ agent Environment {
 		}
 		if(this.agentBodies.remove(uuid) === null) {
 			error("Body not found in hashmap when killing agent #" + uuid)
-		}
-		if(!this.agentBodiesArray.remove(body)){
-			error("Body not found in arraylist when killing agent #" + uuid)
+		} else if (body instanceof AntBody) {
+			if(this.antInfluences.remove(uuid) === null) {
+				error("antInfluence not found in hashmap when killing ant #" + uuid)
+			}
 		}
 		// This is unlikely to happen, but an agent can theoretically be "spawn killed", killed in the same step is was spawned, 
 		// hence potentially killed before its initialization was complete.
@@ -274,18 +274,14 @@ agent Environment {
 	on AgentInitializedEvent {
 		synchronized(this) {
 			var agentUUID = occurrence.source.UUID	
-			var space = defaultContext.getOrCreateSpaceWithSpec(
-	      					typeof(OpenEventSpaceSpecification),
-	      					agentUUID)
-			this.agentEventSpaces.put(agentUUID, space)
-			space.register(asEventListener)
 			
 			if(!uninitializedAgents.remove(agentUUID)) {
 				error("Agent #" + agentUUID + "said he was just initialized, but we didn't expect him to initialize now")
 			}
 			//If this is the last agent we were waiting for, we finish the step.
 			if(this.waitingAgentsInitialization && this.uninitializedAgents.isEmpty) {
-				finishStep
+				this.waitingAgentsInitialization = false
+				sendPerceptionsToAgents(perceptionGrid)
 			}
 		}
 	}
@@ -299,51 +295,25 @@ agent Environment {
 		
 		//If there is no agent, there is no perception to send, and no influence to wait.
 		//We can directly apply the step
-		if(agentBodies.isEmpty) {
+		if(this.uninitializedAgents.size > 0) {
+			this.waitingAgentsInitialization = true
+		} else {
+			if(agentBodies.isEmpty) {
 			applyStep
 			return
-		}
-//		var time = System.currentTimeMillis();
-		var totalTime = 0.0;
-//		for(agentBody : agentBodiesArray) {
-//			
-//			if(agentBody instanceof AntBody) {
-//
-//				val agentPerceptionGrid = perceptionGrid.computeAgentPerception(agentBody)
-//				val agentPerception = new AntPerception(new PerceivableAnt(agentBody), agentPerceptionGrid)
-//
-//
-////				emit(new PerceptionEvent(this.defaultAddress, agentPerception), 
-////					Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
-////				)
-//				var space = this.agentEventSpaces.get(agentBody.uuid)
-//				var evt = new PerceptionEvent(space.getAddress(getID), agentPerception)
-//
-//				evt.setSource(space.getAddress(getID))
-//				var time = System.currentTimeMillis()
-//				space.emit(evt, 
-//					Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
-//				)
-//				var time2 = System.currentTimeMillis()
-//				totalTime = totalTime +(time2-time)
-//			} else {
-//				error("Perceptions are unimplemented for non-ant agent bodies")
-//			}
-//			
-//		}
-		val antPerceptions = new HashMap<UUID, AntPerception>
-		for(agentBody : agentBodiesArray) {
-			if (agentBody instanceof AntBody) {
-				val agentPerceptionGrid = perceptionGrid.computeAgentPerception(agentBody)
-				val agentPerception = new AntPerception(new PerceivableAnt(agentBody), agentPerceptionGrid)
-				antPerceptions.put(agentBody.uuid, agentPerception)
 			}
+			val antPerceptions = new ConcurrentHashMap<UUID, AntPerception>
+			for(agentBody : agentBodies.values()) {
+				if (agentBody instanceof AntBody) {
+					val agentPerceptionGrid = perceptionGrid.computeAgentPerception(agentBody)
+					val agentPerception = new AntPerception(new PerceivableAnt(agentBody), agentPerceptionGrid)
+					antPerceptions.put(agentBody.uuid, agentPerception)
+				}
+			}
+			var evt = new PerceptionEvent(this.defaultAddress, antPerceptions, this.agentBodies.size)
+			emit(evt)
 		}
-		var evt = new PerceptionEvent(this.defaultAddress, antPerceptions)
-		emit(evt)
-//		var time2 = System.currentTimeMillis();
-//		info("time : "+(time2-time))
-//		info("totalTime : "+totalTime)
+		
 	}
 	
 	
