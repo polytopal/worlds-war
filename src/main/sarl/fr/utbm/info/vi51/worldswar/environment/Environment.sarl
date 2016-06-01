@@ -11,6 +11,7 @@ import fr.utbm.info.vi51.worldswar.environment.envobject.AgentBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntHill
 import fr.utbm.info.vi51.worldswar.environment.influence.DropFoodInfluence
+import fr.utbm.info.vi51.worldswar.environment.influence.Influence
 import fr.utbm.info.vi51.worldswar.environment.influence.MeleeAttackInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence
 import fr.utbm.info.vi51.worldswar.environment.influence.PheromoneAndMoveInfluence
@@ -28,7 +29,6 @@ import io.sarl.core.Destroy
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
-import io.sarl.util.OpenEventSpace
 import io.sarl.util.Scopes
 import java.awt.Point
 import java.util.Collections
@@ -36,17 +36,13 @@ import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
 import java.util.UUID
-import io.sarl.util.OpenEventSpaceSpecification
-import io.sarl.core.Behaviors
-import java.util.ArrayList
 import java.util.concurrent.ConcurrentHashMap
-import fr.utbm.info.vi51.worldswar.environment.influence.Influence
 
 /**
  * While it does not appear obvious, this agent manages the environment.
  * */
 agent Environment {
-	uses Logging, DefaultContextInteractions, Lifecycle, Behaviors
+	uses Logging, DefaultContextInteractions, Lifecycle
 	
 	val AGENTS_MAP_INITIAL_SIZE : int = 1500
 	
@@ -59,8 +55,6 @@ agent Environment {
 	var antHills : List<AntHill>
 
 	var agentBodies : HashMap<UUID, AgentBody>
-//	var agentBodiesArray : ArrayList<AgentBody>
-	var influencesReceived : int
 
 	/** List of the UUID of agents that have been spawned, but are not initialized yet */
 	var uninitializedAgents : List<UUID>
@@ -116,9 +110,6 @@ agent Environment {
 			for(l : this.listeners) {
 				l.environmentUpdated(perceptionGrid, this.agentBodies.size)
 			}
-			
-			
-			influencesReceived = 0
 			sendPerceptionsToAgents(perceptionGrid)
 		}
 	}
@@ -135,7 +126,6 @@ agent Environment {
 		EnvironmentUtils.applyPheromoneDissipation(grid)
 		antsAging
 		spawnAntsInAntHills
-//		this.waitingAgentsInitialization = false
 		antInfluences.clear()
 		emit(new EnvironmentReadyEvent)
 	}
@@ -212,19 +202,11 @@ agent Environment {
 	on InfluenceEvent {
 		synchronized(this) {
 			for(body : this.agentBodies.values){
-				if(body === null) {
-				warning("Influence received from agent #" + occurrence.uuid + ", but this agent does not exist in the current Environment.")
-				}
-				
 				if(body.influence !== null) {
-					error("Agent #" + occurrence.uuid + " has sent multiple influences in the same step")
+					error("Agent #" + body.uuid + " has sent multiple influences in the same step")
 				}
 				else if (body instanceof AntBody){
 					body.influence = antInfluences.get(body.uuid)
-//					if(body.influence === null) {
-//						error("wut : "+body.uuid)
-//					}
-					influencesReceived++
 				}
 			}
 			applyStep

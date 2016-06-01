@@ -5,26 +5,23 @@ import fr.utbm.info.vi51.worldswar.^agent.^event.AgentInitializedEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.InfluenceEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.KillAgentEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.PerceptionEvent
-import io.sarl.core.Behaviors
+import fr.utbm.info.vi51.worldswar.environment.influence.Influence
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
 import io.sarl.core.Schedules
-import io.sarl.util.OpenEventSpaceSpecification
 import io.sarl.util.Scopes
 import java.util.HashMap
 import java.util.Random
-import io.sarl.util.OpenEventSpace
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
-import fr.utbm.info.vi51.worldswar.environment.influence.Influence
 
 /**
  * Abstract agent inherited by every other ants agents
  */
 agent AntAgent {
-	uses Lifecycle, Schedules, DefaultContextInteractions, Logging, Behaviors
+	uses Lifecycle, Schedules, DefaultContextInteractions, Logging
 	
 	val memory : HashMap<String, Object> = new HashMap()
 	var antInfluences : ConcurrentHashMap<UUID, Influence> = new ConcurrentHashMap() 
@@ -49,7 +46,6 @@ agent AntAgent {
 			// This is a workaround to prevent this problem.
 			alive = false
 			in(new Random().nextInt(3000)) [killMe]
-//			killMe
 		}
 	}
 	
@@ -59,33 +55,22 @@ agent AntAgent {
 			var nbAgents = occurrence.nbAgents
 			val perception = perceptions.get(this.getID)
 			if(alive && behaviour !== null ){
-				
 				// The influence is computed by the behaviour
 				val influence = behaviour.computeInfluence(perception, memory)
 				
-
-//				emit(new InfluenceEvent(this.getID(), influence),
-//					Scopes.addresses(occurrence.callbackAddress))
-				
-//				evt.setSource(space.getAddress(getID))
-//				space.emit(evt, 
-//					Scopes.addresses(occurrence.callbackAddress)
-//				)
 				if(this.antInfluences.get(this.getID) === null) {
-					
+					this.antInfluences.put(this.getID, influence)
+					if(this.antInfluences.size >= nbAgents) {// if all other agents have sent their influence
+						var evt = new InfluenceEvent()
+						emit(evt, 
+							Scopes.addresses(occurrence.callbackAddress)
+							)
+					}
 				} else {
-					error("antInfluence already placed")
+					error("AntAgent::PerceptionEvent : antInfluence already placed")
 				}
-				this.antInfluences.put(this.getID, influence)
-				if(this.antInfluences.size >= nbAgents) {// if all other agents have sent their influence
-					var evt = new InfluenceEvent(this.getID)
-					emit(evt, 
-						Scopes.addresses(occurrence.callbackAddress)
-						)
-				}
-				
 			}else{
-//				error("ant agent doesn't have behaviour or is dead "+alive)
+				error("AntAgent::PerceptionEvent : ant agent doesn't have a behaviour or is dead "+alive)
 			}
 			
 		}
