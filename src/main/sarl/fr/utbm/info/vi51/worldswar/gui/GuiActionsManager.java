@@ -73,18 +73,32 @@ public class GuiActionsManager {
 		return this.stopSimulationAction;
 	}
 
+	/**
+	 * @return the action corresponding to pausing the simulation
+	 */
 	public Action getPauseSimulationAction() {
 		return this.pauseSimulationAction;
 	}
 
+	/**
+	 * @return the action corresponding to resuming the simulation after it was paused
+	 */
 	public Action getResumeSimulationAction() {
 		return this.resumeSimulationAction;
 	}
 
+	/**
+	 * @return the action corresponding to executing the next simulation step.
+	 * Only usable when the simulation is paused.
+	 */
 	public Action getStepSimulationAction() {
 		return this.stepSimulationAction;
 	}
 	
+	/**
+	 * @return the action corresponding to displaying a popup showing informations
+	 * related to the map
+	 */
 	public Action getMapInfoAction() {
 		return this.mapInfoAction;
 	}
@@ -98,14 +112,26 @@ public class GuiActionsManager {
 		this.mapInfoAction.setMapInfo(mapInfo);
 	}
 
+	/**
+	 * @param simSpeed
+	 * @return the action corresponding to setting the simulation to a certain speed
+	 */
 	public Action getSpeedAction(SimulationSpeed simSpeed) {
 		return this.speedActionsMap.get(simSpeed);
 	}
-
+	
+	/**
+	 * @param pheromoneType
+	 * @return the action corresponding to activating or deactivating a pheromone
+	 * of a certain type
+	 */
 	public Action getPheromoneFilterActions(PheromoneType pheromoneType) {
 		return this.pheromoneFilterActionsMap.get(pheromoneType);
 	}
 
+	/**
+	 * @return the action corresponding to activating or deactivating the debug filter
+	 */
 	public Action getDebugFilterAction() {
 		return this.debugFilterAction;
 	}
@@ -219,8 +245,7 @@ public class GuiActionsManager {
 	}
 	
 	/**
-	 * This action allows to execute a step in the simulation when it is paused,
-	 * by pressing the space bar.
+	 * This action allows to display information related to the simulation map
 	 */
 	private class MapInfoAction extends AbstractAction {
 		private static final long serialVersionUID = 2286692516797367038L;
@@ -229,13 +254,13 @@ public class GuiActionsManager {
 
 		public MapInfoAction() {
 			super(Messages.getString("MenuBar.mapInfo")); //$NON-NLS-1$
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0));
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_I, 0));
 			this.setEnabled(false);
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			final MapInfoDialog mapInfoDialog = new MapInfoDialog(mapInfo);
+			final MapInfoDialog mapInfoDialog = new MapInfoDialog(this.mapInfo);
 		}
 		
 		public void setMapInfo(MapInformation mapInfo){
