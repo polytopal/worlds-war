@@ -23,6 +23,8 @@ public class Stock {
 	 * Picks up the specified quantity in the stock. If there is not enough
 	 * available, picks up as much as possible.
 	 * 
+	 * @param qty
+	 * 
 	 * @return The quantity of resource that has been picked
 	 */
 	public int pick(int qty) {
@@ -37,6 +39,8 @@ public class Stock {
 
 	/**
 	 * Adds the specified quantity of resource to the stock
+	 * 
+	 * @param qty
 	 */
 	public void drop(int qty) {
 		this.available += qty;
@@ -58,7 +62,7 @@ public class Stock {
 
 	@Override
 	public String toString() {
-		return "Stock [available=" + available + "]";
+		return "Stock [available=" + this.available + "]";
 	}
 
 }
