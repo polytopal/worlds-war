@@ -31,11 +31,11 @@ public class DebugFilter implements GuiLayer {
 	private static String computeString(PerceptionCell cell) {
 		if (cell.getAntHill() != null) {
 			final int availableFood = cell.getAntHill().getAvailableFood();
-			return String.format("f:%d", availableFood); //$NON-NLS-1$
+			return String.format("f:%d", new Integer(availableFood)); //$NON-NLS-1$
 		}
 		if (cell.getAnt() != null) {
 			final int foodCarried = cell.getAnt().getFoodCarried();
-			return String.format("f:%d", foodCarried); //$NON-NLS-1$
+			return String.format("f:%d", new Integer(foodCarried)); //$NON-NLS-1$
 		}
 
 		// uncomment this to show pheromone quantity
@@ -68,7 +68,7 @@ public class DebugFilter implements GuiLayer {
 	@Override
 	public void update(PerceptionGrid perceptionGrid) {
 		if (this.width != perceptionGrid.getWidth() || this.height != perceptionGrid.getHeight()) {
-			resizeGrid(perceptionGrid.getWidth(), perceptionGrid.getHeight());
+			this.resizeGrid(perceptionGrid.getWidth(), perceptionGrid.getHeight());
 		}
 		for (int x = 0; x < this.width; x++) {
 			for (int y = 0; y < this.height; y++) {
