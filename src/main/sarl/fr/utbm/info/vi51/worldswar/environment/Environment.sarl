@@ -28,6 +28,7 @@ import io.sarl.core.Destroy
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
+import io.sarl.util.OpenEventSpace
 import io.sarl.util.Scopes
 import java.awt.Point
 import java.util.Collections
@@ -35,12 +36,14 @@ import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
 import java.util.UUID
+import io.sarl.util.OpenEventSpaceSpecification
+import io.sarl.core.Behaviors
 
 /**
  * While it does not appear obvious, this agent manages the environment.
  * */
 agent Environment {
-	uses Logging, DefaultContextInteractions, Lifecycle
+	uses Logging, DefaultContextInteractions, Lifecycle, Behaviors
 	
 	val AGENTS_MAP_INITIAL_SIZE : int = 1000
 	
@@ -60,6 +63,8 @@ agent Environment {
 	/** True if and only if the environment is waiting one or more agents to finish their initialization before finishing its step. */
 	var waitingAgentsInitialization : boolean
 	
+	var agentEventSpaces : HashMap<UUID,OpenEventSpace>
+	
 	
 
 	on Initialize {
@@ -77,6 +82,8 @@ agent Environment {
 			info("Creating agents map...")
 			this.agentBodies = new HashMap(AGENTS_MAP_INITIAL_SIZE)
 			info("Map created")
+			
+			this.agentEventSpaces = new HashMap()
 			
 			this.uninitializedAgents = new LinkedList
 			this.waitingAgentsInitialization = false
@@ -150,6 +157,7 @@ agent Environment {
 	 */
 	private def applyInfluences {
 		
+		var time = System.currentTimeMillis();
 		var shuffledUuids = new LinkedList(agentBodies.keySet)
 		Collections.shuffle(shuffledUuids)
 		for(uuid : shuffledUuids) {
@@ -161,6 +169,8 @@ agent Environment {
 				antBody.influence = null
 			}
 		}
+		var time2 = System.currentTimeMillis();
+		info("time : "+(time2-time))
 	}
 	
 	private def applyAntInfluence(ant : AntBody) {
@@ -258,7 +268,13 @@ agent Environment {
 	
 	on AgentInitializedEvent {
 		synchronized(this) {
-			var agentUUID = occurrence.source.UUID
+			var agentUUID = occurrence.source.UUID	
+			var space = defaultContext.getOrCreateSpaceWithSpec(
+	      					typeof(OpenEventSpaceSpecification),
+	      					agentUUID)
+			this.agentEventSpaces.put(agentUUID, space)
+			space.register(asEventListener)
+			
 			if(!uninitializedAgents.remove(agentUUID)) {
 				error("Agent #" + agentUUID + "said he was just initialized, but we didn't expect him to initialize now")
 			}
@@ -282,14 +298,21 @@ agent Environment {
 			applyStep
 			return
 		}
-		
+//		var time = System.currentTimeMillis();
 		for(agentBody : agentBodies.values()) {
 			
 			if(agentBody instanceof AntBody) {
 				val agentPerceptionGrid = perceptionGrid.computeAgentPerception(agentBody)
 				val agentPerception = new AntPerception(new PerceivableAnt(agentBody), agentPerceptionGrid)
 				
-				emit(new PerceptionEvent(this.defaultAddress, agentPerception), 
+//				emit(new PerceptionEvent(this.defaultAddress, agentPerception), 
+//					Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
+//				)
+				var space = this.agentEventSpaces.get(agentBody.uuid)
+				var evt = new PerceptionEvent(this.defaultAddress, agentPerception)
+
+				evt.setSource(space.getAddress(getID))
+				space.emit(evt, 
 					Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
 				)
 			} else {
@@ -297,6 +320,8 @@ agent Environment {
 			}
 			
 		}
+//		var time2 = System.currentTimeMillis();
+//		info("time : "+(time2-time))
 	}
 	
 	

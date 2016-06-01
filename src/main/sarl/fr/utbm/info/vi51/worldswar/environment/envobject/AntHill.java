@@ -15,9 +15,9 @@ import io.sarl.lang.core.Agent;
 public class AntHill extends StaticObject {
 
 	/** Number of steps between the spawn of two ants in the anthill */
-	public static final int SPAWN_COOLDOWN = 20;
+	public static final int SPAWN_COOLDOWN = 3;
 	/** Food consumed by the spawn of a new ant */
-	public static final int SPAWN_COST = 5;
+	public static final int SPAWN_COST = 0;
 	/** Food available in the ant hill at the beginning of the simulation **/
 	private static final int INITIAL_FOOD_STOCK = 500;
 
@@ -25,7 +25,6 @@ public class AntHill extends StaticObject {
 	private static final int GATHERER_FREQUENCY = 12;
 	private static final int EXPLORER_FREQUENCY = 1;
 	private static final int TOTAL_FREQUENCIES = GATHERER_FREQUENCY + EXPLORER_FREQUENCY;
-
 	private final Stock foodStock;
 
 	private Colony colony;

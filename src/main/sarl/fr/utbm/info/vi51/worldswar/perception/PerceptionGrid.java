@@ -38,7 +38,7 @@ public class PerceptionGrid {
 		final int xMax = envObjectCellGrid.getXMax();
 		final int yMin = envObjectCellGrid.getYMin();
 		final int yMax = envObjectCellGrid.getYMax();
-
+		
 		final Grid<PerceptionCell> perceptionCellGrid = new Grid<>(xMin, xMax, yMin, yMax);
 
 		for (int x = xMin; x <= xMax; x++) {
