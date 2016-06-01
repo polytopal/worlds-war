@@ -10,6 +10,7 @@ import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.environment.influence.DoNothingInfluence;
 import fr.utbm.info.vi51.worldswar.environment.influence.Influence;
 import fr.utbm.info.vi51.worldswar.perception.AntPerception;
+import fr.utbm.info.vi51.worldswar.utils.Direction;
 
 /**
  * Define basic tactical behaviour for ants.
@@ -186,15 +187,21 @@ public class AntTacticalBehaviour {
 		if (perception.isAtHome()) {
 			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.HOME);
 		}
-		/*
-		 * TODO : if ennemy on an adjacent cell, attack the corresponding
-		 * direction -> forces the ant to attack all the ennemies that surrounds
-		 * it, using or not an algo to determine the best target. calls
-		 * AntOperationalBehaviour#attackTarget
-		 */
+
+		if (perception.isEnnemyInMeleeRange()) {
+			/*
+			 * TODO : Need improvement Stupidest behavior ever : atm, only
+			 * attacks a random target, without considering HPs or the previous
+			 * target focused.
+			 */
+			return this.operationalBehaviour.attackMeleeTarget(Direction.fromPoint(perception.getClosestEnnemyPos()));
+		}
 		if (perception.isEnnemyInSight()) {
-			this.startDangerTrail(perception, memory);
-			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getStrongestEnnemyPos());
+			// TODO find a way to ask other warriors to follow this way (if
+			// starts a Danger Trail here, highest pheromone will return the
+			// coords of the cell where the chase began, not the actual position
+			// of the fight
+			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getClosestEnnemyPos());
 		}
 		final Point highestDangerPheromonePos = perception.getHighestPheromonePos(PheromoneType.DANGER);
 		if (highestDangerPheromonePos != null) {

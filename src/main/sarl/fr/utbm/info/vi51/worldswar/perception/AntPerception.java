@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import fr.utbm.info.vi51.worldswar.environment.Caste;
 import fr.utbm.info.vi51.worldswar.environment.Colony;
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.environment.envobject.AntBody;
@@ -191,36 +190,33 @@ public class AntPerception {
 	}
 
 	private static final int CLOSEST_ENNEMIES_LIST_SIZE = 8;
-	private static final Object STRONGEST_ANT_CASTE = Caste.WARRIOR;
 
-	private Point strongestEnnemyPosCache = null;
-	private boolean strongestEnnemyPosCalculated = false;
+	private Point closestEnnemyPosCache = null;
+	private boolean closestEnnemyPosCalculated = false;
 
 	/**
-	 * Serches in the perceptions the strongest ennemy (Warrior > others) If no
-	 * warrior found, focuses the other ants without distinction
+	 * Serches in the perceptions the closest ennemy without any caste
+	 * distinction, only the distance counts
 	 * 
 	 * @return the Point corresponding to the position (in the local
 	 *         coordinates) of one of the priority targets found
 	 */
-	public Point getStrongestEnnemyPos() {
-		if(this.strongestEnnemyPosCalculated){
-			return this.strongestEnnemyPosCache;
+	public Point getClosestEnnemyPos() {
+		if (this.closestEnnemyPosCalculated) {
+			return this.closestEnnemyPosCache;
 		}
-		this.strongestEnnemyPosCalculated = true;
+		this.closestEnnemyPosCalculated = true;
 
 
 		// TODO Doesn't manage the ennemy anthill yet, which would be considered
-		// here as an unique ant of the strongest caste represented in the hill
-		// -> if there is at least a warrior in the hill, it will become a
+		// here as an unique ant
+		// -> if the hill is the closest target to the ant, it will become a
 		// priority target, and this might cause some kamikaze attacks on the
-		// hill :/
+		// hill #PearlHarbor:/
 
 		final List<Point> closestPositions = new ArrayList<>(CLOSEST_ENNEMIES_LIST_SIZE);
 		int minDistance = Integer.MAX_VALUE;
 
-		// default caste, anything but the strongest
-		Object strongestCasteSeen = Caste.GATHERER;
 
 		int distance;
 		// searching in the perception grid in local coordinates
@@ -230,26 +226,16 @@ public class AntPerception {
 				if (this.grid.getCell(x, y) != null)  {
 					PerceivableAnt ant = this.grid.getCell(x, y).getAnt();
 					// if there is an ant of another colony on this cell
-					if (ant != null && ant.getColony() != this.myBody.getColony()){
-						// no matter the distance, if the current ant has a
-						// higher priority than those previously seen, it gets
-						// focused and all the others are forgotten
-						if (ant.getCaste() == STRONGEST_ANT_CASTE && strongestCasteSeen != STRONGEST_ANT_CASTE){
+					if (ant != null && ant.getColony() != this.myBody.getColony()) {
+						distance = Math.abs(x) + Math.abs(y);
+						if (distance < minDistance) {
+							minDistance = distance;
 							closestPositions.clear();
-							closestPositions.add(new Point(x,y));
-						} else {
-							// if the ant isn't a priority target, we consider
-							// the distance
-							distance = Math.abs(x) + Math.abs(y);
-							if (distance < minDistance) {
-								minDistance = distance;
-								closestPositions.clear();
-								closestPositions.add(new Point(x, y));
-							} else if (distance == minDistance) {
-								// if several ants are at the same distance,
-								// their positions are all added to the list
-								closestPositions.add(new Point(x, y));
-							}
+							closestPositions.add(new Point(x, y));
+						} else if (distance == minDistance) {
+							// if several ants are at the same distance,
+							// their positions are all added to the list
+							closestPositions.add(new Point(x, y));
 						}
 					}
 				}
@@ -259,22 +245,23 @@ public class AntPerception {
 			return null;
 		}
 		Point result = closestPositions.get(new Random().nextInt(closestPositions.size()));
-		this.strongestEnnemyPosCache = result;
+		this.closestEnnemyPosCache = result;
 		return result;
 	}
 
 	/**
 	 * @return {@code true} if there is an ant of an ennemy colony in the field
 	 *         of perceptions
-	 * @see AntPerception#getStrongestEnnemyPos()
+	 * @see AntPerception#getClosestEnnemyPos()
 	 */
 	public boolean isEnnemyInSight() {
-		return this.getStrongestEnnemyPos() != null;
+		return this.getClosestEnnemyPos() != null;
 	}
 
 	/**
 	 * 
-	 * @return {code true} if there is either an ennemy in sight, or some danger pheromones in the field of perceptions
+	 * @return {code true} if there is either an ennemy in sight, or some danger
+	 *         pheromones in the field of perceptions
 	 */
 	public boolean isDangerNearby(){
 		return (this.isEnnemyInSight()
@@ -289,7 +276,7 @@ public class AntPerception {
 	public int countEnnemiesInSight() {
 		// TODO si on décide de modifier la qté de phéro DANGER déposées en
 		// fonction de la qté d'ennemis perçus, pr gérer notamment la
-		// fourmilière
+		// fourmilière ennemie
 		return 0;
 	}
 
@@ -343,5 +330,30 @@ public class AntPerception {
 	public boolean isAtHome() {
 		final Point homePos = this.getHomePos();
 		return (homePos != null && homePos.equals(MY_POSITION));
+	}
+
+	/**
+	 * Checks whether there are any ennemies in melee range or not
+	 * 
+	 * @return {code true} if there is at least one ennemie within the attack
+	 *         range
+	 */
+	public boolean isEnnemyInMeleeRange() {
+		if (!this.isEnnemyInSight()){
+			return false;
+		}
+
+		int range = this.myBody.getCaste().getMeleeRange();
+		assert range <= this.myBody.getCaste().getPerceptionRange();
+		/*
+		 * Comparing the closest ennemy pos (fast thanks to the cache system) to
+		 * the attack range of the ants
+		 */
+		if (Math.abs(this.getClosestEnnemyPos().getX()) <= range
+				&& Math.abs(this.getClosestEnnemyPos().getY()) <= range) {
+			return true;
+		}
+
+		return false;
 	}
 }

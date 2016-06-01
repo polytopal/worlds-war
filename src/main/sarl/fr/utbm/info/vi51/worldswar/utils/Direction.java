@@ -56,6 +56,36 @@ public enum Direction {
 		return new Point(this.x, this.y);
 	}
 
+	public static Direction fromPoint(Point point) {
+		/*
+		 * Right now, succession of if (max 4). Might be optimized by forcing
+		 * the points coords in [(-1,-1),(1,1)]
+		 */
+		if (point.x < 0) {
+			if (point.y < 0) { // (-1,-1)
+				return NORTH_WEST;
+			} else if (point.y > 0) { // (-1,1)
+				return SOUTH_WEST;
+			} else { // (-1,0)
+				return WEST;
+			}
+		} else if (point.x > 0) {
+			if (point.y < 0) { // (1,-1)
+				return NORTH_EAST;
+			} else if (point.y > 0) { // (1,1)
+				return SOUTH_EAST;
+			} else { // (1,0)
+				return EAST;
+			}
+		} else if (point.y < 0) { // (0,-1)
+			return NORTH;
+		} else if (point.y > 0) { // (0,1)
+			return SOUTH;
+		} else { // (0,0)
+			return null;
+		}
+	}
+
 	public Direction adjacentDirection(RotationDirection rotation, int delta) {
 		Direction d = this;
 		for (int i = 0; i < delta; i++) {

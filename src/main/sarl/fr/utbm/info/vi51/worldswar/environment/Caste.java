@@ -32,7 +32,9 @@ public enum Caste {
 	WARRIOR {
 		@Override
 		public int getAttackDamage() {
-			return super.getAttackDamage() + 20;
+			// TODO remettre à +20 apres les tests
+			return super.getAttackDamage() + 9000;
+			// wtf is this ant ? its attack dmg is OVER 9000 !
 		}
 
 		@Override
@@ -83,5 +85,12 @@ public enum Caste {
 	 */
 	public int getPerceptionRange() {
 		return 3;
+	}
+
+	/**
+	 * @return the default melee attack range of the ant
+	 */
+	public int getMeleeRange() {
+		return 1;
 	}
 }

@@ -1,6 +1,7 @@
 package fr.utbm.info.vi51.worldswar.environment.envobject;
 
 import java.awt.Point;
+import java.util.Random;
 
 import fr.utbm.info.vi51.worldswar.environment.Caste;
 import fr.utbm.info.vi51.worldswar.environment.Colony;
@@ -14,16 +15,16 @@ import io.sarl.lang.core.Agent;
 public class AntHill extends StaticObject {
 
 	/** Number of steps between the spawn of two ants in the anthill */
-	// public static final int SPAWN_COOLDOWN = 20;
-	public static final int SPAWN_COOLDOWN = 50;
+	public static final int SPAWN_COOLDOWN = 20;
+	// public static final int SPAWN_COOLDOWN = 50;
 	/** Food consumed by the spawn of a new ant */
-	public static final int SPAWN_COST = 500;
+	public static final int SPAWN_COST = 10;
 	/** Food available in the ant hill at the beginning of the simulation **/
 	private static final int INITIAL_FOOD_STOCK = 500;
 
 	/** These numbers define the probability of each caste to be spawned **/
 	private static final int GATHERER_FREQUENCY = 12;
-	private static final int EXPLORER_FREQUENCY = 1;
+	private static final int EXPLORER_FREQUENCY = 0;
 	private static final int WARRIOR_FREQUENCY = 5;
 	private static final int TOTAL_FREQUENCIES = GATHERER_FREQUENCY + EXPLORER_FREQUENCY + WARRIOR_FREQUENCY;
 
@@ -54,22 +55,21 @@ public class AntHill extends StaticObject {
 	 */
 	@SuppressWarnings("static-method")
 	public Caste casteToSpawn() {
-		// final int rand = new Random().nextInt(TOTAL_FREQUENCIES);
-		// assert rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY +
-		// WARRIOR_FREQUENCY;
-		// if (rand < GATHERER_FREQUENCY) {
-		// return Caste.GATHERER;
-		// }
-		// if (rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY) {
-		// return Caste.EXPLORER;
-		// }
-		// if (rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY +
-		// WARRIOR_FREQUENCY) {
-		// return Caste.WARRIOR;
-		// }
-		// throw new RuntimeException("Random number for caste choice was out of
-		// bound. rand = " + rand);
-		return Caste.GATHERER;
+		final int rand = new Random().nextInt(TOTAL_FREQUENCIES);
+		assert rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY +
+		WARRIOR_FREQUENCY;
+		if (rand < GATHERER_FREQUENCY) {
+			return Caste.GATHERER;
+		}
+		if (rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY) {
+			return Caste.EXPLORER;
+		}
+		if (rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY +
+				WARRIOR_FREQUENCY) {
+			return Caste.WARRIOR;
+		}
+		throw new RuntimeException("Random number for caste choice was out of bound. rand = " + rand);
+		//		return Caste.GATHERER;
 	}
 
 	////////////////////////////////////////

@@ -29,7 +29,8 @@ public class WarriorStrategicBehaviour implements AntStrategicBehaviour {
 		if (perception.isDangerNearby()) {
 			return this.tacticalBehaviour.chaseAndFight(perception, memory);
 		}
-		// If not, they patrol until they find some.
+		// If not, they patrol until they find some. Maybe they should keep some
+		// troops stationnated on the hill aswell
 		return this.tacticalBehaviour.patrol(perception, memory);
 	}
 
