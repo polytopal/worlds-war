@@ -38,6 +38,7 @@ import java.util.List
 import java.util.UUID
 import io.sarl.util.OpenEventSpaceSpecification
 import io.sarl.core.Behaviors
+import java.util.ArrayList
 
 /**
  * While it does not appear obvious, this agent manages the environment.
@@ -45,7 +46,7 @@ import io.sarl.core.Behaviors
 agent Environment {
 	uses Logging, DefaultContextInteractions, Lifecycle, Behaviors
 	
-	val AGENTS_MAP_INITIAL_SIZE : int = 1000
+	val AGENTS_MAP_INITIAL_SIZE : int = 1500
 	
 	private var listeners : List<SimulatorListener>
 	
@@ -56,6 +57,7 @@ agent Environment {
 	var antHills : List<AntHill>
 
 	var agentBodies : HashMap<UUID, AgentBody>
+	var agentBodiesArray : ArrayList<AgentBody>
 	var influencesReceived : int
 
 	/** List of the UUID of agents that have been spawned, but are not initialized yet */
@@ -81,6 +83,7 @@ agent Environment {
 			
 			info("Creating agents map...")
 			this.agentBodies = new HashMap(AGENTS_MAP_INITIAL_SIZE)
+			this.agentBodiesArray = new ArrayList()
 			info("Map created")
 			
 			this.agentEventSpaces = new HashMap()
@@ -157,7 +160,6 @@ agent Environment {
 	 */
 	private def applyInfluences {
 		
-		var time = System.currentTimeMillis();
 		var shuffledUuids = new LinkedList(agentBodies.keySet)
 		Collections.shuffle(shuffledUuids)
 		for(uuid : shuffledUuids) {
@@ -169,8 +171,7 @@ agent Environment {
 				antBody.influence = null
 			}
 		}
-		var time2 = System.currentTimeMillis();
-		info("time : "+(time2-time))
+
 	}
 	
 	private def applyAntInfluence(ant : AntBody) {
@@ -245,6 +246,7 @@ agent Environment {
 		//Add the new body in the proper cell of the grid, and in the agentBodies table
 		this.grid.get(position).addEnvObject(body)
 		this.agentBodies.put(antUuid, body)
+		this.agentBodiesArray.add(body)
 		this.uninitializedAgents.add(antUuid)
 	}
 	
@@ -256,6 +258,9 @@ agent Environment {
 		}
 		if(this.agentBodies.remove(uuid) === null) {
 			error("Body not found in hashmap when killing agent #" + uuid)
+		}
+		if(!this.agentBodiesArray.remove(body)){
+			error("Body not found in arraylist when killing agent #" + uuid)
 		}
 		// This is unlikely to happen, but an agent can theoretically be "spawn killed", killed in the same step is was spawned, 
 		// hence potentially killed before its initialization was complete.
@@ -299,29 +304,46 @@ agent Environment {
 			return
 		}
 //		var time = System.currentTimeMillis();
-		for(agentBody : agentBodies.values()) {
-			
-			if(agentBody instanceof AntBody) {
-				val agentPerceptionGrid = perceptionGrid.computeAgentPerception(agentBody)
-				val agentPerception = new AntPerception(new PerceivableAnt(agentBody), agentPerceptionGrid)
-				
-//				emit(new PerceptionEvent(this.defaultAddress, agentPerception), 
+		var totalTime = 0.0;
+//		for(agentBody : agentBodiesArray) {
+//			
+//			if(agentBody instanceof AntBody) {
+//
+//				val agentPerceptionGrid = perceptionGrid.computeAgentPerception(agentBody)
+//				val agentPerception = new AntPerception(new PerceivableAnt(agentBody), agentPerceptionGrid)
+//
+//
+////				emit(new PerceptionEvent(this.defaultAddress, agentPerception), 
+////					Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
+////				)
+//				var space = this.agentEventSpaces.get(agentBody.uuid)
+//				var evt = new PerceptionEvent(space.getAddress(getID), agentPerception)
+//
+//				evt.setSource(space.getAddress(getID))
+//				var time = System.currentTimeMillis()
+//				space.emit(evt, 
 //					Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
 //				)
-				var space = this.agentEventSpaces.get(agentBody.uuid)
-				var evt = new PerceptionEvent(this.defaultAddress, agentPerception)
-
-				evt.setSource(space.getAddress(getID))
-				space.emit(evt, 
-					Scopes.addresses(defaultSpace.getAddress(agentBody.uuid))
-				)
-			} else {
-				error("Perceptions are unimplemented for non-ant agent bodies")
+//				var time2 = System.currentTimeMillis()
+//				totalTime = totalTime +(time2-time)
+//			} else {
+//				error("Perceptions are unimplemented for non-ant agent bodies")
+//			}
+//			
+//		}
+		val antPerceptions = new HashMap<UUID, AntPerception>
+		for(agentBody : agentBodiesArray) {
+			if (agentBody instanceof AntBody) {
+				val agentPerceptionGrid = perceptionGrid.computeAgentPerception(agentBody)
+				val agentPerception = new AntPerception(new PerceivableAnt(agentBody), agentPerceptionGrid)
+				antPerceptions.put(agentBody.uuid, agentPerception)
 			}
-			
 		}
+		var evt = new PerceptionEvent(this.defaultAddress, antPerceptions)
+		emit(evt)
 //		var time2 = System.currentTimeMillis();
 //		info("time : "+(time2-time))
+//		info("totalTime : "+totalTime)
 	}
 	
 	

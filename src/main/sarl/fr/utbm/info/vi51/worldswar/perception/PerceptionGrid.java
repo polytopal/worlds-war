@@ -65,13 +65,13 @@ public class PerceptionGrid {
 			 * Remove this if we need to compute the manhattan distance
 			 */
 			// manhattanDistanceCircle(range, localCellGrid);
-
 			return new PerceptionGrid(localCellGrid);
 		} catch (final InvalidAttributesException e) {
 			// TODO - use an other logger
 			System.err.println("Error : the body is not in the grid : " + e); //$NON-NLS-1$
 			return null;
 		}
+
 	}
 
 	@SuppressWarnings("unused")

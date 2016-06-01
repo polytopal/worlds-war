@@ -4,6 +4,8 @@ import fr.utbm.info.vi51.worldswar.^agent.AntAgent
 import fr.utbm.info.vi51.worldswar.environment.Environment
 import fr.utbm.info.vi51.worldswar.perception.AntPerception
 import io.sarl.lang.core.Address
+import java.util.UUID
+import java.util.HashMap
 
 /**
  * Event emitted by the {@link Environment} to a specific {@link AntAgent}.
@@ -13,13 +15,13 @@ event PerceptionEvent {
 	
 	val callbackAddress : Address
 	
-	val perception : AntPerception
+	val perception : HashMap<UUID, AntPerception>
 	
 	/**
 	 * @param callbackAddress : the address to send the influence to
 	 * @param perceptionGrid : the collection of perceivable that will be sent to the agent
 	 */	
-	new(callbackAddress : Address, antPerception : AntPerception) {
+	new(callbackAddress : Address, antPerception : HashMap<UUID, AntPerception>) {
 		this.callbackAddress = callbackAddress
 		this.perception = antPerception
 	}

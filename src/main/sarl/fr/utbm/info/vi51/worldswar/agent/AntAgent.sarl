@@ -53,7 +53,8 @@ agent AntAgent {
 	on PerceptionEvent {
 		synchronized(this) {
 			
-			val perception = occurrence.perception
+			val perceptions = occurrence.perception
+			val perception = perceptions.get(this.getID)
 			if(behaviour !== null ){
 				
 				// The influence is computed by the behaviour
@@ -61,8 +62,11 @@ agent AntAgent {
 //				emit(new InfluenceEvent(this.getID(), influence),
 //					Scopes.addresses(occurrence.callbackAddress))
 				var evt = new InfluenceEvent(this.getID(), influence)
-				evt.setSource(space.getAddress(getID))
-				space.emit(evt, 
+//				evt.setSource(space.getAddress(getID))
+//				space.emit(evt, 
+//					Scopes.addresses(occurrence.callbackAddress)
+//				)
+				emit(evt, 
 					Scopes.addresses(occurrence.callbackAddress)
 				)
 			}else{
