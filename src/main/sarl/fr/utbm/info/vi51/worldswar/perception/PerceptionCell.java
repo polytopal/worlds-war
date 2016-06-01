@@ -57,25 +57,25 @@ public class PerceptionCell {
 	 * The cache of the function {@link PerceptionCell#getAntHill()}
 	 */
 	private PerceivableAntHill antHillCache = null;
-	private boolean antHillCaclulated = false;
+	private boolean antHillCalculated = false;
 
 	/**
 	 * @return the antFill found, or null otherwise
 	 */
 	public PerceivableAntHill getAntHill() {
-		if (this.antHillCaclulated) {
+		if (this.antHillCalculated) {
 			return this.antHillCache;
 		}
-		this.antHillCaclulated = true;
 
 		for (final Perceivable perceivable : this.perceptionList) {
 			if (perceivable instanceof PerceivableAntHill) {
 				final PerceivableAntHill result = (PerceivableAntHill) perceivable;
+				this.antHillCalculated = true;
 				this.antHillCache = result;
 				return result;
 			}
 		}
-
+		this.antHillCalculated = true;
 		return null;
 	}
 
@@ -92,7 +92,6 @@ public class PerceptionCell {
 		if (this.antsCalculated) {
 			return this.antsCache;
 		}
-		this.antsCalculated = true;
 
 		final ArrayList<PerceivableAnt> antList = new ArrayList<>();
 		for (final Perceivable perceivable : this.perceptionList) {
@@ -100,6 +99,7 @@ public class PerceptionCell {
 				antList.add((PerceivableAnt) perceivable);
 			}
 		}
+		this.antsCalculated = true;
 		this.antsCache = antList;
 		return antList;
 	}
@@ -115,6 +115,9 @@ public class PerceptionCell {
 		return null;
 	}
 
+	/**
+	 * the cache of the function {@link PerceptionCell#getFood()}
+	 */
 	private PerceivableFood foodCache = null;
 	private boolean foodCalculated = false;
 
@@ -125,17 +128,22 @@ public class PerceptionCell {
 		if (this.foodCalculated) {
 			return this.foodCache;
 		}
-		this.foodCalculated = true;
+
 		for (final Perceivable perceivable : this.perceptionList) {
 			if (perceivable instanceof PerceivableFood) {
 				final PerceivableFood result = (PerceivableFood) perceivable;
+				this.foodCalculated = true;
 				this.foodCache = result;
 				return result;
 			}
 		}
+		this.foodCalculated = true;
 		return null;
 	}
 
+	/**
+	 * the cache of the function {@link PerceptionCell#getWall()}
+	 */
 	private PerceivableWall wallCache = null;
 	private boolean wallCalculated = false;
 
@@ -146,14 +154,16 @@ public class PerceptionCell {
 		if (this.wallCalculated) {
 			return this.wallCache;
 		}
-		this.wallCalculated = true;
+
 		for (final Perceivable perceivable : this.perceptionList) {
 			if (perceivable instanceof PerceivableWall) {
 				final PerceivableWall wall = (PerceivableWall) perceivable;
+				this.wallCalculated = true;
 				this.wallCache = wall;
 				return wall;
 			}
 		}
+		this.wallCalculated = true;
 		return null;
 	}
 
@@ -216,6 +226,9 @@ public class PerceptionCell {
 		return qty;
 	}
 
+	/**
+	 * The cache of the function {@link PerceptionCell#isTraversable()}
+	 */
 	private boolean TaversableCache = false;
 	private boolean TaversableCalculated = false;
 
@@ -223,12 +236,14 @@ public class PerceptionCell {
 		if (this.TaversableCalculated) {
 			return this.TaversableCache;
 		}
-		this.TaversableCalculated = true;
+
 		for (final Perceivable p : this.perceptionList) {
 			if (!p.isTraversable()) {
+				this.TaversableCalculated = true;
 				return false;
 			}
 		}
+		this.TaversableCalculated = true;
 		this.TaversableCache = true;
 		return true;
 	}

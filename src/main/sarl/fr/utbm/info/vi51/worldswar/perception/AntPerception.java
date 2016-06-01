@@ -105,7 +105,7 @@ public class AntPerception {
 	 * {@link AntPerception#getClosestAvailableFoodPos()}
 	 */
 	private Point closestAvailableFoodPosCache = null;
-	private boolean closestAvailableFoodPosCalulated = false;
+	private boolean closestAvailableFoodPosCalculated = false;
 	/**
 	 * Size of the list used in
 	 * {@link AntPerception#getClosestAvailableFoodPos()} to store the closest
@@ -125,10 +125,9 @@ public class AntPerception {
 	 *         take into account the food that is stored in an {@ink AntHill}.
 	 */
 	public Point getClosestAvailableFoodPos() {
-		if (this.closestAvailableFoodPosCalulated) {
+		if (this.closestAvailableFoodPosCalculated) {
 			return this.closestAvailableFoodPosCache;
 		}
-		this.closestAvailableFoodPosCalulated = true;
 
 		final List<Point> closestPositions = new ArrayList<>(CLOSEST_FOOD_LIST_SIZE);
 		int minDistance = Integer.MAX_VALUE;
@@ -150,9 +149,11 @@ public class AntPerception {
 			}
 		}
 		if (closestPositions.isEmpty()) {
+			this.closestAvailableFoodPosCalculated = true;
 			return null;
 		}
 		final Point result = closestPositions.get(new Random().nextInt(closestPositions.size()));
+		this.closestAvailableFoodPosCalculated = true;
 		this.closestAvailableFoodPosCache = result;
 		return result;
 	}
@@ -167,9 +168,18 @@ public class AntPerception {
 	}
 
 	/**
+	 * The cache of the function {@link AntPerception#countFoodInSight()}
+	 */
+	private int foodInSightCache = 0;
+	private boolean foodInSightCalculated = false;
+
+	/**
 	 * @return the total number of food units in sight.
 	 */
 	public int countFoodInSight() {
+		if (this.foodInSightCalculated) {
+			return this.foodInSightCache;
+		}
 		int totalFood = 0;
 		PerceivableFood food = null;
 
@@ -183,6 +193,8 @@ public class AntPerception {
 				}
 			}
 		}
+		this.foodInSightCalculated = true;
+		this.foodInSightCache = totalFood;
 		return totalFood;
 	}
 
@@ -207,7 +219,6 @@ public class AntPerception {
 		if (this.homePosCaclulated) {
 			return this.homePosCache;
 		}
-		this.homePosCaclulated = true;
 
 		PerceivableAntHill antHill;
 		for (int x = this.grid.getXMin(); x <= this.grid.getXMax(); x++) {
@@ -216,12 +227,14 @@ public class AntPerception {
 					antHill = this.grid.getCell(x, y).getAntHill();
 					if (antHill != null && antHill.getColony() == this.myBody.getColony()) {
 						final Point homePos = new Point(x, y);
+						this.homePosCaclulated = true;
 						this.homePosCache = homePos;
 						return homePos;
 					}
 				}
 			}
 		}
+		this.homePosCaclulated = true;
 		return null;
 	}
 
