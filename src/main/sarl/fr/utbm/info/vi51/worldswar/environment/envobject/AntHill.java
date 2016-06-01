@@ -17,7 +17,7 @@ public class AntHill extends StaticObject {
 	// public static final int SPAWN_COOLDOWN = 20;
 	public static final int SPAWN_COOLDOWN = 50;
 	/** Food consumed by the spawn of a new ant */
-	public static final int SPAWN_COST = 5;
+	public static final int SPAWN_COST = 500;
 	/** Food available in the ant hill at the beginning of the simulation **/
 	private static final int INITIAL_FOOD_STOCK = 500;
 

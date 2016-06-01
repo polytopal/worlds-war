@@ -14,6 +14,7 @@ import fr.utbm.info.vi51.worldswar.perception.AntPerception;
  */
 public class GathererStrategicBehaviour implements AntStrategicBehaviour {
 
+	private static final String ENCOUNTERED_DANGER = "encounteredDanger"; //$NON-NLS-1$
 	private final AntTacticalBehaviour tacticalBehaviour;
 
 	/**
@@ -28,6 +29,13 @@ public class GathererStrategicBehaviour implements AntStrategicBehaviour {
 		//Survivability prevails : first the ant checks if there is an ennemy in sight
 		if(perception.isEnnemyInSight()){
 			//default choice if an ennemy is seen is to flee
+			memory.put(ENCOUNTERED_DANGER, new Boolean(true));
+			return this.tacticalBehaviour.flee(perception, memory);
+		}
+		if (memory.containsKey(ENCOUNTERED_DANGER)) {
+			if (perception.isAtHome()) {
+				memory.remove(ENCOUNTERED_DANGER);
+			}
 			return this.tacticalBehaviour.flee(perception, memory);
 		}
 		if (perception.getMyBody().getFoodCarried() > 0) {
