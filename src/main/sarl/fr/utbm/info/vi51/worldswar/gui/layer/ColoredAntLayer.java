@@ -108,7 +108,7 @@ public class ColoredAntLayer implements GuiLayer {
 			case EXPLORER:
 				s = Shape.TRIANGLE;
 				break;
-			case SOLDIER:
+			case WARRIOR:
 				s = Shape.DIAMOND;
 				break;
 			default:

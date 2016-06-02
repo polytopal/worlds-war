@@ -33,7 +33,7 @@ public class SimulationParameters {
 	/** List of breeds used to set up the default colonies **/
 	public static final Breed[] DEFAULT_BREED_LIST = { Breed.DARK_ANTS, Breed.RED_ANTS };
 	/** Maximum number of different colonies in a simulation **/
-	public static final int MAX_COLONY_NUMBER = 10;
+	public static final int MAX_COLONY_NUMBER = 5;
 	/** Minimum number of different colonies in a simulation **/
 	public static final int MIN_COLONY_NUMBER = 1;
 
