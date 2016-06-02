@@ -7,7 +7,7 @@ import fr.utbm.info.vi51.worldswar.^agent.AntAgent
 import fr.utbm.info.vi51.worldswar.environment.Environment
 
 /**
- * Emitted each step by every {@link AntAgent} to the {@link Environment}.
+ * Emitted once each step by one {@link AntAgent} to the {@link Environment}.
  * Contains nothing.
  */
 event InfluenceEvent {

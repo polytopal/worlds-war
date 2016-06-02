@@ -62,7 +62,7 @@ agent Environment {
 	/** True if and only if the environment is waiting one or more agents to finish their initialization before finishing its step. */
 	var waitingAgentsInitialization : boolean
 	
-	var antInfluences : ConcurrentHashMap<UUID, Influence>
+	var agentInfluences : ConcurrentHashMap<UUID, Influence>
 	
 	var perceptionGrid : PerceptionGrid
 
@@ -80,7 +80,7 @@ agent Environment {
 			
 			info("Creating agents map...")
 			this.agentBodies = new HashMap(AGENTS_MAP_INITIAL_SIZE)
-			this.antInfluences = new ConcurrentHashMap(AGENTS_MAP_INITIAL_SIZE)
+			this.agentInfluences = new ConcurrentHashMap(AGENTS_MAP_INITIAL_SIZE)
 			info("Map created")
 
 			this.uninitializedAgents = new LinkedList
@@ -127,18 +127,9 @@ agent Environment {
 		EnvironmentUtils.applyPheromoneDissipation(grid)
 		antsAging
 		spawnAntsInAntHills
-		antInfluences.clear()
+		agentInfluences.clear()
 		emit(new EnvironmentReadyEvent)
 	}
-	
-	/**
-	 * Invoked when all the computation for the current step is done. This will tell the environment is ready to compute a new one.
-	 */
-//	private def finishStep {
-//		this.waitingAgentsInitialization = false
-//		antInfluences.clear()
-//		emit(new EnvironmentReadyEvent)
-//	}
 	
 	////////////////////////////////////////
 	///            INFLUENCES            ///
@@ -211,8 +202,8 @@ agent Environment {
 				if(body.influence !== null) {
 					error("Agent #" + body.uuid + " has sent multiple influences in the same step")
 				}
-				else if (body instanceof AntBody){
-					body.influence = antInfluences.get(body.uuid)
+				else{
+					body.influence = agentInfluences.get(body.uuid)
 					if(body.influence === null) {
 						error("bodyinfluence null")
 					}
@@ -231,13 +222,14 @@ agent Environment {
 	private def spawnAnt(colony : Colony, caste : Caste, position : Point) {
 		
 		// the ant behaviour is passed as a parameters
-		var antUuid : UUID = spawn(typeof(AntAgent), behaviourHandler.getStrategicBehaviour(caste), antInfluences)
+		var antUuid : UUID = spawn(typeof(AntAgent), behaviourHandler.getStrategicBehaviour(caste), agentInfluences)
 		var body : AntBody = new AntBody(position, antUuid, colony, caste)
 		
 		//Add the new body in the proper cell of the grid, and in the agentBodies table
 		this.grid.get(position).addEnvObject(body)
 		this.agentBodies.put(antUuid, body)
 		this.uninitializedAgents.add(antUuid)
+		return
 	}
 	
 	private def killAgent(uuid : UUID) {
@@ -248,10 +240,8 @@ agent Environment {
 		}
 		if(this.agentBodies.remove(uuid) === null) {
 			error("Body not found in hashmap when killing agent #" + uuid)
-		} else if (body instanceof AntBody) {
-			if(this.antInfluences.remove(uuid) === null) {
-				error("antInfluence not found in hashmap when killing ant #" + uuid)
-			}
+		} else if(this.agentInfluences.remove(uuid) === null) {
+			error("agentInfluence not found in hashmap when killing agent #" + uuid)
 		}
 		// This is unlikely to happen, but an agent can theoretically be "spawn killed", killed in the same step is was spawned, 
 		// hence potentially killed before its initialization was complete.

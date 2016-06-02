@@ -15,16 +15,16 @@ event PerceptionEvent {
 	
 	val callbackAddress : Address
 	
-	val perception : ConcurrentHashMap<UUID, AntPerception>
+	val perceptions : ConcurrentHashMap<UUID, AntPerception>
 	val nbAgents : int
 	
 	/**
 	 * @param callbackAddress : the address to send the influence to
 	 * @param perceptionGrid : the collection of perceivable that will be sent to the agent
 	 */	
-	new(callbackAddress : Address, antPerception : ConcurrentHashMap<UUID, AntPerception>, nbAgents : int) {
+	new(callbackAddress : Address, antPerceptions : ConcurrentHashMap<UUID, AntPerception>, nbAgents : int) {
 		this.callbackAddress = callbackAddress
-		this.perception = antPerception
+		this.perceptions = antPerceptions
 		this.nbAgents = nbAgents
 	}
 }
