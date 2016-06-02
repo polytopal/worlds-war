@@ -248,8 +248,7 @@ public class GuiActionsManager {
 	 * This action allows to display information related to the simulation map
 	 */
 	private class MapInfoAction extends AbstractAction {
-		private static final long serialVersionUID = 2286692516797367038L;
-		
+		private static final long serialVersionUID = 1818051679709294284L;
 		private MapInformation mapInfo;
 
 		public MapInfoAction() {

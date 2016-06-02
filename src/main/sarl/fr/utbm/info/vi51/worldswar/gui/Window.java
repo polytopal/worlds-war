@@ -28,8 +28,6 @@ public class Window extends JFrame implements SimulatorListener {
 	private long lastStepStart;
 	private SimulationState simState;
 	private int stepNumber;
-	
-	private MapInformation mapInfo;
 
 	private final CentralPanel centralPanel;
 
@@ -114,7 +112,6 @@ public class Window extends JFrame implements SimulatorListener {
 		this.simState = SimulationState.RUNNING;
 		this.infoPanel.setSimulationStateLabel(this.simState);
 		this.guiActionsManager.getPauseSimulationAction().setEnabled(true);
-		this.mapInfo = mapInfo;
 		this.guiActionsManager.updateMapInfo(mapInfo);
 		this.guiActionsManager.getMapInfoAction().setEnabled(true);
 	}
