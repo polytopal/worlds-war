@@ -19,7 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
-import fr.utbm.info.vi51.worldswar.gui.layer.AntLayer;
+import fr.utbm.info.vi51.worldswar.gui.layer.ColoredAntLayer;
 import fr.utbm.info.vi51.worldswar.gui.layer.DebugFilter;
 import fr.utbm.info.vi51.worldswar.gui.layer.GuiLayer;
 import fr.utbm.info.vi51.worldswar.gui.layer.MapLayer;
@@ -86,7 +86,8 @@ public class CentralPanel extends JPanel {
 
 		// !! the order is important
 		this.layers.add(new MapLayer());
-		this.layers.add(new AntLayer());
+		// TODO : allow to swap from an ant layer to another
+		this.layers.add(new ColoredAntLayer());
 		for (final PheromoneType pheromoneType : PheromoneType.values()) {
 			this.layers.add(new PheromoneFilter(pheromoneType));
 		}

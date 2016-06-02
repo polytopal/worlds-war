@@ -33,7 +33,7 @@ public class SimulationParameters {
 	/** List of breeds used to set up the default colonies **/
 	public static final Breed[] DEFAULT_BREED_LIST = { Breed.DARK_ANTS, Breed.RED_ANTS };
 	/** Maximum number of different colonies in a simulation **/
-	public static final int MAX_COLONY_NUMBER = 5;
+	public static final int MAX_COLONY_NUMBER = 10;
 	/** Minimum number of different colonies in a simulation **/
 	public static final int MIN_COLONY_NUMBER = 1;
 
@@ -50,7 +50,7 @@ public class SimulationParameters {
 	public static final int MIN_ROCK_PROPORTION = 0;
 	/** Maximum proportion of rocks on the map (in percents) must be <= 100 **/
 	public static final int MAX_ROCK_PROPORTION = 50;
-	
+
 	// -----
 
 	private final int gridWidth;
@@ -115,6 +115,7 @@ public class SimulationParameters {
 	public float getRockProportion() {
 		return this.rockProportion;
 	}
+
 	/**
 	 * @return the seed used for the map generation
 	 */
