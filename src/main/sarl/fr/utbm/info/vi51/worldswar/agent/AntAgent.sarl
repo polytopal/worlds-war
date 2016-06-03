@@ -24,7 +24,7 @@ agent AntAgent {
 	uses Lifecycle, Schedules, DefaultContextInteractions, Logging
 	
 	val memory : HashMap<String, Object> = new HashMap()
-	var antInfluences : ConcurrentHashMap<UUID, Influence>
+	var agentInfluenceHashMap : ConcurrentHashMap<UUID, Influence>
 	var behaviour : AntStrategicBehaviour
 	var alive : boolean = false
 	
@@ -32,7 +32,7 @@ agent AntAgent {
 		synchronized(this) {
 			// the strategic behaviour is get from the parameters
 			this.behaviour = occurrence.parameters.get(0) as AntStrategicBehaviour
-			this.antInfluences = occurrence.parameters.get(1) as ConcurrentHashMap<UUID, Influence>
+			this.agentInfluenceHashMap = occurrence.parameters.get(1) as ConcurrentHashMap<UUID, Influence>
 			this.alive = true
 			
 			emit(new AgentInitializedEvent)
@@ -51,9 +51,9 @@ agent AntAgent {
 	
 	on PerceptionEvent {
 		synchronized(this) {
-			val perceptions = occurrence.perceptions
+			val perceptionHashMap = occurrence.perceptionHashMap
 			val nbAgents = occurrence.nbAgents
-			val perception = perceptions.get(this.getID)
+			val perception = perceptionHashMap.get(this.getID)
 			if(alive && behaviour !== null ){
 				// The influence is computed by the behaviour
 				val influence = behaviour.computeInfluence(perception, memory)
@@ -61,16 +61,16 @@ agent AntAgent {
 					error("an agent behavior returned null instead of an influence")
 				}
 				
-				if(this.antInfluences.get(this.getID) === null) {
-					synchronized(antInfluences) {
+				if(this.agentInfluenceHashMap.get(this.getID) === null) {
+					synchronized(agentInfluenceHashMap) {
 						/**
 						 * The emit function being too slow for our purposes, we sidestep
 						 * this problem by sending the influence of every agent in a
 						 * common hashmap, thus using only 1 emit call to send agent's
 						 * influences.
 						 */
-						this.antInfluences.put(this.getID, influence)
-						if(this.antInfluences.size == nbAgents) {// if all other agents have sent their influence
+						this.agentInfluenceHashMap.put(this.getID, influence)
+						if(this.agentInfluenceHashMap.size == nbAgents) {// if all other agents have sent their influence
 							
 							var evt = new InfluenceEvent()
 							emit(evt, 
@@ -80,7 +80,7 @@ agent AntAgent {
 					}
 					
 				} else {
-					println("AntAgent::PerceptionEvent : antInfluence already placed "+ influence+" ||| "+this.antInfluences.get(this.getID))
+					println("AntAgent::PerceptionEvent : antInfluence already placed "+ influence+" ||| "+this.agentInfluenceHashMap.get(this.getID))
 				}
 			} else if (alive) {
 				println("AntAgent::PerceptionEvent : ant agent doesn't have a behaviour")

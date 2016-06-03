@@ -15,7 +15,7 @@ event PerceptionEvent {
 	
 	val callbackAddress : Address
 	
-	val perceptions : ConcurrentHashMap<UUID, AntPerception>
+	val perceptionHashMap : ConcurrentHashMap<UUID, AntPerception>
 	val nbAgents : int
 	
 	/**
@@ -24,7 +24,7 @@ event PerceptionEvent {
 	 */	
 	new(callbackAddress : Address, antPerceptions : ConcurrentHashMap<UUID, AntPerception>, nbAgents : int) {
 		this.callbackAddress = callbackAddress
-		this.perceptions = antPerceptions
+		this.perceptionHashMap = antPerceptions
 		this.nbAgents = nbAgents
 	}
 }

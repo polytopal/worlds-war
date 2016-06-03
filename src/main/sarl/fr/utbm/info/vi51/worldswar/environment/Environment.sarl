@@ -62,7 +62,7 @@ agent Environment {
 	/** True if and only if the environment is waiting one or more agents to finish their initialization before finishing its step. */
 	var waitingAgentsInitialization : boolean
 	
-	var agentInfluences : ConcurrentHashMap<UUID, Influence>
+	var agentInfluenceHashMap : ConcurrentHashMap<UUID, Influence>
 	
 	var perceptionGrid : PerceptionGrid
 
@@ -80,7 +80,7 @@ agent Environment {
 			
 			info("Creating agents map...")
 			this.agentBodies = new HashMap(AGENTS_MAP_INITIAL_SIZE)
-			this.agentInfluences = new ConcurrentHashMap(AGENTS_MAP_INITIAL_SIZE)
+			this.agentInfluenceHashMap = new ConcurrentHashMap(AGENTS_MAP_INITIAL_SIZE)
 			info("Map created")
 
 			this.uninitializedAgents = new LinkedList
@@ -127,7 +127,7 @@ agent Environment {
 		EnvironmentUtils.applyPheromoneDissipation(grid)
 		antsAging
 		spawnAntsInAntHills
-		agentInfluences.clear()
+		agentInfluenceHashMap.clear()
 		emit(new EnvironmentReadyEvent)
 	}
 	
@@ -154,7 +154,7 @@ agent Environment {
 	}
 	
 	private def applyAntInfluence(ant : AntBody) {
-		val influence = agentInfluences.get(ant.uuid)
+		val influence = agentInfluenceHashMap.get(ant.uuid)
 		
 		if(influence instanceof DropFoodInfluence) {
 			EnvironmentUtils.dropFood(ant, influence.droppedAmount, grid)
@@ -209,7 +209,7 @@ agent Environment {
 	private def spawnAnt(colony : Colony, caste : Caste, position : Point) {
 		
 		// the ant behaviour is passed as a parameters
-		var antUuid : UUID = spawn(typeof(AntAgent), behaviourHandler.getStrategicBehaviour(caste), agentInfluences)
+		var antUuid : UUID = spawn(typeof(AntAgent), behaviourHandler.getStrategicBehaviour(caste), agentInfluenceHashMap)
 		var body : AntBody = new AntBody(position, antUuid, colony, caste)
 		
 		//Add the new body in the proper cell of the grid, and in the agentBodies table
@@ -227,7 +227,7 @@ agent Environment {
 		}
 		if(this.agentBodies.remove(uuid) === null) {
 			error("Body not found in hashmap when killing agent #" + uuid)
-		} else if(this.agentInfluences.remove(uuid) === null) {
+		} else if(this.agentInfluenceHashMap.remove(uuid) === null) {
 			error("agentInfluence not found in hashmap when killing agent #" + uuid)
 		}
 		// This is unlikely to happen, but an agent can theoretically be "spawn killed", killed in the same step is was spawned, 
