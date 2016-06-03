@@ -63,6 +63,12 @@ agent AntAgent {
 				
 				if(this.antInfluences.get(this.getID) === null) {
 					synchronized(antInfluences) {
+						/**
+						 * The emit function being too slow for our purposes, we sidestep
+						 * this problem by sending the influence of every agent in a
+						 * common hashmap, thus using only 1 emit call to send agent's
+						 * influences.
+						 */
 						this.antInfluences.put(this.getID, influence)
 						if(this.antInfluences.size == nbAgents) {// if all other agents have sent their influence
 							

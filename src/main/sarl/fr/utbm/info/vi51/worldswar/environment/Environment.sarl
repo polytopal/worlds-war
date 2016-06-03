@@ -121,8 +121,8 @@ agent Environment {
 	 * Once this is done, the environment is ready for a new step.
 	 */
 	
-	private def applyStep {
-		applyInfluences
+	private def applyStep() {
+		applyInfluences()
 		
 		EnvironmentUtils.applyPheromoneDissipation(grid)
 		antsAging
@@ -138,7 +138,7 @@ agent Environment {
 	/**
 	 * Applies the ant influence stored in their bodies, then clear them.
 	 */
-	private def applyInfluences {
+	private def applyInfluences() {
 		
 		var shuffledUuids = new LinkedList(agentBodies.keySet)
 		Collections.shuffle(shuffledUuids)
@@ -148,14 +148,13 @@ agent Environment {
 			val antBody = agentBodies.get(uuid) as AntBody
 			if(antBody !== null) {
 				applyAntInfluence(antBody)
-				antBody.influence = null
 			}
 		}
 
 	}
 	
 	private def applyAntInfluence(ant : AntBody) {
-		val influence = ant.influence
+		val influence = agentInfluences.get(ant.uuid)
 		
 		if(influence instanceof DropFoodInfluence) {
 			EnvironmentUtils.dropFood(ant, influence.droppedAmount, grid)
@@ -198,19 +197,7 @@ agent Environment {
 	 */
 	on InfluenceEvent {
 		synchronized(this) {
-			for(body : this.agentBodies.values){
-				if(body.influence !== null) {
-					error("Agent #" + body.uuid + " has sent multiple influences in the same step")
-				}
-				else{
-					body.influence = agentInfluences.get(body.uuid)
-					if(body.influence === null) {
-						error("bodyinfluence null")
-					}
-				}
-			}
 			applyStep
-
 		}
 	}
 	
@@ -282,6 +269,11 @@ agent Environment {
 			applyStep
 			return
 			}
+			/** The emit function being slow for our purposes, we sidestep
+			 * this problem by sending the perceptions of every agent
+			 * in a common HashMap that every agent will access, thus using only
+			 * 1 emit call for sending perceptions
+			 */
 			val antPerceptions = new ConcurrentHashMap<UUID, AntPerception>
 			for(agentBody : agentBodies.values()) {
 				if (agentBody instanceof AntBody) {
