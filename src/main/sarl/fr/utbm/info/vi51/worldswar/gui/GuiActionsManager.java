@@ -35,6 +35,7 @@ public class GuiActionsManager {
 	private final Map<PheromoneType, Action> pheromoneFilterActionsMap;
 
 	private final Action debugFilterAction;
+	private final Action coloredAntLayerAction;
 
 	GuiActionsManager(final Controller controller, final CentralPanel centralPanel) {
 		this.newSimulationAction = new NewSimulationAction(controller);
@@ -54,6 +55,7 @@ public class GuiActionsManager {
 		}
 
 		this.debugFilterAction = new DebugFilterAction(centralPanel);
+		this.coloredAntLayerAction = new ColoredAntLayerAction(centralPanel);
 	}
 
 	/**
@@ -92,6 +94,10 @@ public class GuiActionsManager {
 
 	public Action getDebugFilterAction() {
 		return this.debugFilterAction;
+	}
+
+	public Action getColoredAntLayerAction() {
+		return this.coloredAntLayerAction;
 	}
 
 	/**
@@ -267,6 +273,26 @@ public class GuiActionsManager {
 			if (ae.getSource() instanceof JCheckBoxMenuItem) {
 				final boolean selected = ((JCheckBoxMenuItem) ae.getSource()).isSelected();
 				this.centralPanel.setDebugFilterEnabled(selected);
+			}
+		}
+
+	}
+
+	private class ColoredAntLayerAction extends AbstractAction {
+		private static final long serialVersionUID = -9163474662975136163L;
+
+		private final CentralPanel centralPanel;
+
+		public ColoredAntLayerAction(CentralPanel centralPanel) {
+			super(Messages.getString("MenuBar.coloredAnts")); //$NON-NLS-1$
+			this.centralPanel = centralPanel;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			if (ae.getSource() instanceof JCheckBoxMenuItem) {
+				final boolean selected = ((JCheckBoxMenuItem) ae.getSource()).isSelected();
+				this.centralPanel.setColoredAntLayer(selected);
 			}
 		}
 

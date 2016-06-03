@@ -19,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
+import fr.utbm.info.vi51.worldswar.gui.layer.AntLayer;
 import fr.utbm.info.vi51.worldswar.gui.layer.ColoredAntLayer;
 import fr.utbm.info.vi51.worldswar.gui.layer.DebugFilter;
 import fr.utbm.info.vi51.worldswar.gui.layer.GuiLayer;
@@ -86,8 +87,10 @@ public class CentralPanel extends JPanel {
 
 		// !! the order is important
 		this.layers.add(new MapLayer());
-		// TODO : allow to swap from an ant layer to another
-		this.layers.add(new ColoredAntLayer());
+		this.layers.add(new AntLayer());
+		final ColoredAntLayer coloredAntLayer = new ColoredAntLayer();
+		coloredAntLayer.setEnabled(false);
+		this.layers.add(coloredAntLayer);
 		for (final PheromoneType pheromoneType : PheromoneType.values()) {
 			this.layers.add(new PheromoneFilter(pheromoneType));
 		}
@@ -175,6 +178,17 @@ public class CentralPanel extends JPanel {
 	public void setDebugFilterEnabled(boolean selected) {
 		for (final GuiLayer guiLayer : this.layers) {
 			if (guiLayer instanceof DebugFilter) {
+				guiLayer.setEnabled(selected);
+			}
+		}
+	}
+
+	public void setColoredAntLayer(boolean selected) {
+		for (final GuiLayer guiLayer : this.layers) {
+			if (guiLayer instanceof AntLayer) {
+				guiLayer.setEnabled(!selected);
+			}
+			if (guiLayer instanceof ColoredAntLayer) {
 				guiLayer.setEnabled(selected);
 			}
 		}
