@@ -58,7 +58,7 @@ agent AntAgent {
 				// The influence is computed by the behaviour
 				val influence = behaviour.computeInfluence(perception, memory)
 				if(influence === null) {
-					println("NULL")
+					error("an agent behavior returned null instead of an influence")
 				}
 				
 				if(this.antInfluences.get(this.getID) === null) {
