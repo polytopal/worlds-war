@@ -19,17 +19,16 @@ public class Colony {
 		this.breed = breed;
 	}
 
+	/**
+	 * @return the breed of the colony
+	 */
 	public Breed getBreed() {
 		return this.breed;
 	}
 
-	public void setBreed(Breed breed) {
-		this.breed = breed;
-	}
-
 	@Override
 	public String toString() {
-		return "Colony [breed=" + breed + "]";
+		return "Colony [breed=" + this.breed + "]";
 	}
 
 }

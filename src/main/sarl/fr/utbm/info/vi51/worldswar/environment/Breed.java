@@ -7,8 +7,14 @@ import fr.utbm.info.vi51.worldswar.gui.Messages;
  *
  */
 public enum Breed {
-	// TODO - all the stats have to be adjusted
-	DARK_ANTS("Breed.darkAnts", 1.0f, 1.0f, 1.0f, 1.0f, 1.0f), RED_ANTS("Breed.redAnts", 1.2f, 1.3f, 0.8f, 0.9f, 1.0f); //$NON-NLS-2$
+	/**
+	 * Most common European ants.
+	 */
+	DARK_ANTS("Breed.darkAnts", 1.0f, 1.0f, 1.0f, 1.0f, 1.0f),
+	/**
+	 * Strong fighters, but less effective workers
+	 */
+	RED_ANTS("Breed.redAnts", 1.2f, 1.3f, 0.8f, 0.9f, 1.0f);
 
 	private String propertyKey;
 
@@ -29,22 +35,37 @@ public enum Breed {
 
 	}
 
+	/**
+	 * @return the health multiplier of the breed
+	 */
 	public float getHealthMultiplier() {
 		return this.healthMultiplier;
 	}
 
+	/**
+	 * @return the attack damage multiplier of the breed
+	 */
 	public float getAttackDamageMultiplier() {
 		return this.attackDamageMultiplier;
 	}
 
+	/**
+	 * @return the capacity multiplier of the breed
+	 */
 	public float getCapacityMultiplier() {
 		return this.capacityMultiplier;
 	}
 
+	/**
+	 * @return the life time multiplier of the breed
+	 */
 	public float getLifeTimeMultiplier() {
 		return this.lifeTimeMultiplier;
 	}
 
+	/**
+	 * @return the perception range multiplier of the breed
+	 */
 	public float getPerceptionRangeMultiplier() {
 		return this.perceptionRangeMultiplier;
 	}

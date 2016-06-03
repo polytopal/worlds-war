@@ -119,7 +119,7 @@ agent Simulator {
 	 *	execute the next step in the simulation loop if the environment is ready and enough time
 	 * has passed since the last one.
 	 */
-	private def simulationLoop {
+	private def simulationLoop : void {
 		if(this.stepTimerReady && this.environmentReady) {
 			executeStep
 			this.stepTimerTask = in(this.simulationSpeed.milliseconds) [ setStepTimerReady ]

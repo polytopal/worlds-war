@@ -12,6 +12,11 @@ public class PerceivableAnt extends Perceivable {
 
 	private final AntBody ant;
 
+	/**
+	 * Builds the perceivable version of an {@link AntBody}
+	 * 
+	 * @param ant
+	 */
 	public PerceivableAnt(AntBody ant) {
 		super(ant);
 		this.ant = ant;

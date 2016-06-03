@@ -68,7 +68,6 @@ public class PerceptionGrid {
 
 			return new PerceptionGrid(localCellGrid);
 		} catch (final InvalidAttributesException e) {
-			// TODO - use an other logger
 			System.err.println("Error : the body is not in the grid : " + e); //$NON-NLS-1$
 			return null;
 		}
