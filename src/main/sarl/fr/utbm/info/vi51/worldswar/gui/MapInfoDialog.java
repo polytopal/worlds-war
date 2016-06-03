@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
+import javax.swing.WindowConstants;
 
 import fr.utbm.info.vi51.worldswar.environment.MapInformation;
 
@@ -29,6 +30,7 @@ public class MapInfoDialog extends JDialog {
 			final JLabel labelNoiseSeed = new JLabel(Messages.getString("MapInfoDialog.noiseSeed")); //$NON-NLS-1$
 			getContentPane().add(labelNoiseSeed, BorderLayout.WEST);
 			final JTextArea textAreaNoiseSeed = new JTextArea(Integer.toString(mapInformations.getNoiseSeed()));
+			textAreaNoiseSeed.setEditable(false);
 			getContentPane().add(textAreaNoiseSeed, BorderLayout.EAST);
 		} else {
 			final JLabel labelNoInfo = new JLabel(Messages.getString("MapInfoDialog.noMapInfo")); //$NON-NLS-1$
@@ -39,6 +41,8 @@ public class MapInfoDialog extends JDialog {
 		this.setMinimumSize(new Dimension(200, 20));
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
+		this.setModal(true);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		
 	}
 
