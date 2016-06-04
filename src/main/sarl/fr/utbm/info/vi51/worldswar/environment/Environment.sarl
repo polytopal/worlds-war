@@ -121,13 +121,13 @@ agent Environment {
 	 * Once this is done, the environment is ready for a new step.
 	 */
 	
-	private def applyStep() {
-		applyInfluences()
+	private def applyStep {
+		applyInfluences
 		
 		EnvironmentUtils.applyPheromoneDissipation(grid)
 		antsAging
 		spawnAntsInAntHills
-		agentInfluenceHashMap.clear()
+		agentInfluenceHashMap.clear
 		emit(new EnvironmentReadyEvent)
 	}
 	
@@ -138,7 +138,7 @@ agent Environment {
 	/**
 	 * Applies the ant influence stored in their bodies, then clear them.
 	 */
-	private def applyInfluences() {
+	private def applyInfluences {
 		
 		var shuffledUuids = new LinkedList(agentBodies.keySet)
 		Collections.shuffle(shuffledUuids)
@@ -275,7 +275,7 @@ agent Environment {
 			 * 1 emit call for sending perceptions
 			 */
 			val antPerceptions = new ConcurrentHashMap<UUID, AntPerception>
-			for(agentBody : agentBodies.values()) {
+			for(agentBody : agentBodies.values) {
 				if (agentBody instanceof AntBody) {
 					val agentPerceptionGrid = perceptionGrid.computeAgentPerception(agentBody)
 					val agentPerception = new AntPerception(new PerceivableAnt(agentBody), agentPerceptionGrid)

@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap
 agent AntAgent {
 	uses Lifecycle, Schedules, DefaultContextInteractions, Logging
 	
-	val memory : HashMap<String, Object> = new HashMap()
+	val memory : HashMap<String, Object> = new HashMap
 	var agentInfluenceHashMap : ConcurrentHashMap<UUID, Influence>
 	var behaviour : AntStrategicBehaviour
 	var alive : boolean = false
@@ -72,7 +72,7 @@ agent AntAgent {
 						this.agentInfluenceHashMap.put(this.getID, influence)
 						if(this.agentInfluenceHashMap.size == nbAgents) {// if all other agents have sent their influence
 							
-							var evt = new InfluenceEvent()
+							var evt = new InfluenceEvent
 							emit(evt, 
 								Scopes.addresses(occurrence.callbackAddress)
 								)

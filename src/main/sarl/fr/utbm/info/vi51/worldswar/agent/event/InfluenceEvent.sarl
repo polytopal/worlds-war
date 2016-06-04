@@ -8,7 +8,8 @@ import fr.utbm.info.vi51.worldswar.environment.Environment
 
 /**
  * Emitted once each step by one {@link AntAgent} to the {@link Environment}.
- * Contains nothing.
+ * Send when every agent sent its influence to the environment. Thus, the
+ * environment will apply the influences once this event is sent.
  */
 event InfluenceEvent {
 }
