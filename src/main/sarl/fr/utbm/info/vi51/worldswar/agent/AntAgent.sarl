@@ -30,9 +30,11 @@ agent AntAgent {
 	
 	on Initialize{
 		synchronized(this) {
-			// the strategic behaviour is get from the parameters
+			// the strategic behaviour is obtained from the parameters
 			this.behaviour = occurrence.parameters.get(0) as AntStrategicBehaviour
+			// same for the agentInfluenceHashMap
 			this.agentInfluenceHashMap = occurrence.parameters.get(1) as ConcurrentHashMap<UUID, Influence>
+			
 			this.alive = true
 			
 			emit(new AgentInitializedEvent)
@@ -64,7 +66,7 @@ agent AntAgent {
 				if(this.agentInfluenceHashMap.get(this.getID) === null) {
 					synchronized(agentInfluenceHashMap) {
 						/**
-						 * The emit function being too slow for our purposes, we sidestep
+						 * The emit function being too slow for our purposes, we workaround
 						 * this problem by sending the influence of every agent in a
 						 * common hashmap, thus using only 1 emit call to send agent's
 						 * influences.

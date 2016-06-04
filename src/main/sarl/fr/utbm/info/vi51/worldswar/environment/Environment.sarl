@@ -116,7 +116,7 @@ agent Environment {
 	}
 	
 	/**
-	 * Invoked when all influences have been received.
+	 * Invoked when all influences have been received in the agentInfluenceHashMap.
 	 * Performs the changes to the envObjects for this step.
 	 * Once this is done, the environment is ready for a new step.
 	 */
@@ -170,7 +170,7 @@ agent Environment {
 		} else if (influence instanceof DoNothingInfluence) {
 			// do nothing
 		} else {
-			error("unrecognized influence")
+			error("unrecognized influence : "+influence)
 		}
 		return
 	}
@@ -193,7 +193,8 @@ agent Environment {
 	}
 	
 	/**
-	 * Receive an influence : store it in the proper agentBody and increase the count of influences received for the current step
+	 * Receive an influenceEvent : that means every agent sent its influence,
+	 * and they can now be applied.
 	 */
 	on InfluenceEvent {
 		synchronized(this) {
@@ -269,7 +270,7 @@ agent Environment {
 			applyStep
 			return
 			}
-			/** The emit function being slow for our purposes, we sidestep
+			/** The emit function being too slow for our purposes, we workaround
 			 * this problem by sending the perceptions of every agent
 			 * in a common HashMap that every agent will access, thus using only
 			 * 1 emit call for sending perceptions
