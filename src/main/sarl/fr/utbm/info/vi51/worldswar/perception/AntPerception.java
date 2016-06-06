@@ -208,7 +208,7 @@ public class AntPerception {
 	/**
 	 * The cache of the function {@link AntPerception#getHomePos()}
 	 */
-	private boolean homePosCaclulated = false;
+	private boolean homePosCalculated = false;
 	private Point homePosCache = null;
 
 	/**
@@ -216,7 +216,7 @@ public class AntPerception {
 	 *         {@code null} if it is not perceived by the ant
 	 */
 	public Point getHomePos() {
-		if (this.homePosCaclulated) {
+		if (this.homePosCalculated) {
 			return this.homePosCache;
 		}
 
@@ -227,14 +227,14 @@ public class AntPerception {
 					antHill = this.grid.getCell(x, y).getAntHill();
 					if (antHill != null && antHill.getColony() == this.myBody.getColony()) {
 						final Point homePos = new Point(x, y);
-						this.homePosCaclulated = true;
+						this.homePosCalculated = true;
 						this.homePosCache = homePos;
 						return homePos;
 					}
 				}
 			}
 		}
-		this.homePosCaclulated = true;
+		this.homePosCalculated = true;
 		return null;
 	}
 

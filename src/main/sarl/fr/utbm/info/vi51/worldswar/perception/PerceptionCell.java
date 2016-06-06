@@ -229,22 +229,22 @@ public class PerceptionCell {
 	/**
 	 * The cache of the function {@link PerceptionCell#isTraversable()}
 	 */
-	private boolean TaversableCache = false;
-	private boolean TaversableCalculated = false;
+	private boolean traversableCache = false;
+	private boolean traversableCalculated = false;
 
 	public boolean isTraversable() {
-		if (this.TaversableCalculated) {
-			return this.TaversableCache;
+		if (this.traversableCalculated) {
+			return this.traversableCache;
 		}
 
 		for (final Perceivable p : this.perceptionList) {
 			if (!p.isTraversable()) {
-				this.TaversableCalculated = true;
+				this.traversableCalculated = true;
 				return false;
 			}
 		}
-		this.TaversableCalculated = true;
-		this.TaversableCache = true;
+		this.traversableCalculated = true;
+		this.traversableCache = true;
 		return true;
 	}
 
