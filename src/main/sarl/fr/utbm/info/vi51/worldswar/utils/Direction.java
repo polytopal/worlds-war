@@ -11,21 +11,21 @@ import java.util.Random;
  */
 public enum Direction {
 
-	NORTH_WEST(-1, -1),
+	@SuppressWarnings("javadoc") NORTH_WEST(-1, -1),
 
-	NORTH(0, -1),
+	@SuppressWarnings("javadoc") NORTH(0, -1),
 
-	NORTH_EAST(1, -1),
+	@SuppressWarnings("javadoc") NORTH_EAST(1, -1),
 
-	EAST(1, 0),
+	@SuppressWarnings("javadoc") EAST(1, 0),
 
-	SOUTH_EAST(1, 1),
+	@SuppressWarnings("javadoc") SOUTH_EAST(1, 1),
 
-	SOUTH(0, 1),
+	@SuppressWarnings("javadoc") SOUTH(0, 1),
 
-	SOUTH_WEST(-1, 1),
+	@SuppressWarnings("javadoc") SOUTH_WEST(-1, 1),
 
-	WEST(-1, 0);
+	@SuppressWarnings("javadoc") WEST(-1, 0);
 
 	private final int x;
 	private final int y;
@@ -56,16 +56,27 @@ public enum Direction {
 		return new Point(this.x, this.y);
 	}
 
-	public Direction adjacentDirection(RotationDirection rotation, int delta) {
+	/**
+	 * @param rotationDirection
+	 * @param delta
+	 * @return the direction after performing delta times a 1/8 turn in the
+	 *         given rotation direction
+	 */
+	public Direction adjacentDirection(RotationDirection rotationDirection, int delta) {
 		Direction d = this;
 		for (int i = 0; i < delta; i++) {
-			d = d.adjacentDirection(rotation);
+			d = d.adjacentDirection(rotationDirection);
 		}
 		return d;
 	}
 
-	public Direction adjacentDirection(RotationDirection rotation) {
-		switch (rotation) {
+	/**
+	 * @param rotationDirection
+	 * @return the direction after performing a 1/8 turn in the given rotation
+	 *         direction
+	 */
+	public Direction adjacentDirection(RotationDirection rotationDirection) {
+		switch (rotationDirection) {
 		case CLOCKWISE:
 			switch (this) {
 			case NORTH:
@@ -109,7 +120,7 @@ public enum Direction {
 				throw new RuntimeException("undefined Direction : " + this); //$NON-NLS-1$
 			}
 		default:
-			throw new RuntimeException("undefined RotationDirection : " + rotation); //$NON-NLS-1$
+			throw new RuntimeException("undefined RotationDirection : " + rotationDirection); //$NON-NLS-1$
 		}
 	}
 
@@ -128,13 +139,22 @@ public enum Direction {
 		return adjacentDirections;
 	}
 
+	/**
+	 * @return a random direction
+	 */
 	public static Direction random() {
 		return Direction.values()[new Random().nextInt(Direction.values().length)];
 	}
 
+	/**
+	 * Represent an angular direction : clockwise or counter clockwise
+	 */
 	public enum RotationDirection {
-		CLOCKWISE, COUNTER_CLOCKWISE;
+		@SuppressWarnings("javadoc") CLOCKWISE, @SuppressWarnings("javadoc") COUNTER_CLOCKWISE;
 
+		/**
+		 * @return the opposite direction
+		 */
 		public RotationDirection getOpposite() {
 			switch (this) {
 			case CLOCKWISE:
@@ -146,6 +166,9 @@ public enum Direction {
 			}
 		}
 
+		/**
+		 * @return a random rotation direction
+		 */
 		public static RotationDirection random() {
 			return RotationDirection.values()[new Random().nextInt(RotationDirection.values().length)];
 		}

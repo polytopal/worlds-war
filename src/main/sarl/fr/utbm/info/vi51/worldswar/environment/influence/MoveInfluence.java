@@ -3,8 +3,9 @@ package fr.utbm.info.vi51.worldswar.environment.influence;
 import fr.utbm.info.vi51.worldswar.utils.Direction;
 
 /**
- * Move in the specified {@link Direction}. {@see Influence}
- *
+ * Move in the specified {@link Direction}.
+ * 
+ * @see Influence
  */
 public class MoveInfluence implements Influence {
 

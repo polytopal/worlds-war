@@ -5,7 +5,21 @@ package fr.utbm.info.vi51.worldswar.environment;
  * 
  */
 public enum PheromoneType {
-	HOME("PheromoneType.home"), FOOD("PheromoneType.food"), DANGER("PheromoneType.danger"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+	/**
+	 * Used to give the direction to the colony's home
+	 */
+	HOME("PheromoneType.home"),
+
+	/**
+	 * Give a direction to some food
+	 */
+	FOOD("PheromoneType.food"),
+
+	/**
+	 * Alerts about potential dangers
+	 */
+	DANGER("PheromoneType.danger"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	private String propertyKey;
 

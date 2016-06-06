@@ -1,8 +1,9 @@
 package fr.utbm.info.vi51.worldswar.environment.influence;
 
 /**
- * Pick the specified amount of food on the current location. {@see Influence}
- *
+ * Pick the specified amount of food on the current location.
+ * 
+ * @see Influence
  */
 public class PickFoodInfluence implements Influence {
 

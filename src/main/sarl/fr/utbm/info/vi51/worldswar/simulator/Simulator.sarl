@@ -3,8 +3,11 @@ package fr.utbm.info.vi51.worldswar.simulator
 import fr.utbm.info.vi51.worldswar.controller.Controller
 import fr.utbm.info.vi51.worldswar.controller.ControllerCommandEvent
 import fr.utbm.info.vi51.worldswar.controller.NewSimulationCommand
+import fr.utbm.info.vi51.worldswar.controller.PauseSimulationCommand
+import fr.utbm.info.vi51.worldswar.controller.ResumeSimulationCommand
 import fr.utbm.info.vi51.worldswar.controller.SimulationParameters
 import fr.utbm.info.vi51.worldswar.controller.SimulationSpeedCommand
+import fr.utbm.info.vi51.worldswar.controller.StepSimulationCommand
 import fr.utbm.info.vi51.worldswar.controller.StopProgramCommand
 import fr.utbm.info.vi51.worldswar.controller.StopSimulationCommand
 import fr.utbm.info.vi51.worldswar.environment.Environment
@@ -20,9 +23,6 @@ import io.sarl.core.Logging
 import io.sarl.core.Schedules
 import java.util.LinkedList
 import java.util.List
-import fr.utbm.info.vi51.worldswar.controller.PauseSimulationCommand
-import fr.utbm.info.vi51.worldswar.controller.ResumeSimulationCommand
-import fr.utbm.info.vi51.worldswar.controller.StepSimulationCommand
 
 /**
  * Main agent of the software.
@@ -118,7 +118,7 @@ agent Simulator {
 	 *	execute the next step in the simulation loop if the environment is ready and enough time
 	 * has passed since the last one.
 	 */
-	private def simulationLoop {
+	private def simulationLoop : void {
 		if(this.stepTimerReady && this.environmentReady) {
 			executeStep
 			this.stepTimerTask = in(this.simulationSpeed.milliseconds) [ setStepTimerReady ]
