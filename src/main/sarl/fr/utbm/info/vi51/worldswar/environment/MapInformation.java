@@ -32,7 +32,7 @@ public class MapInformation {
 	/**
 	 * @return colonyMap a collection of the colonies in the simulation
 	 */
-	public List<Colony> getColonyMap() {
+	public List<Colony> getColonies() {
 		return this.colonyMap;
 	}
 

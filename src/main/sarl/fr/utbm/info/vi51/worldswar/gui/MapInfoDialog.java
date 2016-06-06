@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 
+import fr.utbm.info.vi51.worldswar.environment.Colony;
 import fr.utbm.info.vi51.worldswar.environment.MapInformation;
 
 /**
@@ -31,11 +32,12 @@ public class MapInfoDialog extends JDialog {
 			getContentPane().add(labelNoiseSeed, BorderLayout.WEST);
 			final JTextArea textAreaNoiseSeed = new JTextArea(Integer.toString(mapInformations.getNoiseSeed()));
 			textAreaNoiseSeed.setEditable(false);
-			getContentPane().add(textAreaNoiseSeed, BorderLayout.EAST);
+			getContentPane().add(textAreaNoiseSeed, BorderLayout.EAST);	
 		} else {
 			final JLabel labelNoInfo = new JLabel(Messages.getString("MapInfoDialog.noMapInfo")); //$NON-NLS-1$
 			getContentPane().add(labelNoInfo);
 		}
+		
 		
 		this.pack();
 		this.setMinimumSize(new Dimension(200, 20));
