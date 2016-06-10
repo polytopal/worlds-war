@@ -140,7 +140,7 @@ public class AntTacticalBehaviour {
 	 * @param perception
 	 * @param memory
 	 */
-	private void startDangerTrail(AntPerception perception, HashMap<String, Object> memory) {
+	public void startDangerTrail(AntPerception perception, HashMap<String, Object> memory) {
 		// TODO prendre en compte la qté d'ennemis
 		this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.DANGER);
 	}
@@ -159,19 +159,36 @@ public class AntTacticalBehaviour {
 			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.HOME);
 		}
 		// TODO implement a real patrolling behaviour
-		return this.operationalBehaviour.wander(perception, memory);
+		return new DoNothingInfluence();
+		// return this.operationalBehaviour.wander(perception, memory);
 	}
 
 	/**
-	 * The ant runs back home, dropping Danger pheromones on its way
+	 * Simple flee behaviour : the ant simply runs back home, without avoiding
+	 * the ennemies on its way
 	 * 
 	 * @param perception
 	 * @param memory
 	 * @return the resulting influence
 	 */
 	public Influence flee(AntPerception perception, HashMap<String, Object> memory) {
-		// TODO Auto-generated method stub
-		this.startDangerTrail(perception, memory);
+		/*
+		 * TODO La suite c ptet pabojeu : l'idée stratégique, c que qd le fourmi
+		 * voit un ennemi, elle prenne la fuite -> call flee(). et c ds flee
+		 * qu'on définit le comportement par défaut de la fuite, ici c rentrer
+		 * maison en lachant des phero DANGER. Pb : pr éviter qu'à chaq step la
+		 * fourmi refresh sa dangerTrail et donc que la qté de phéro drop
+		 * repasse o max, need un check mémoire, et la constante liée est
+		 * définie dans l'interface stratégique. La solution que j'ai choisie c
+		 * de passer le startDangerTrail en public et le call dans le strategic.
+		 * le flee ne contient alors plus qu'un simple goHome(). J'aurais
+		 * préféré que tout se fasse dans le flee, pour éviter de devoir répéter
+		 * le code pour chaque caste qui veut fuire. Ya mieux ? Genre rajouter
+		 * une deuxieme constante stratégique publik (stratsFleeing) qui vaut
+		 * true o premier ennemi rencontré, et qui déclenche la trail dans le
+		 * flee, puis qui est passée à false dans le flee ? ca me parait pas
+		 * génialissime non plus
+		 */
 		return this.goHome(perception, memory);
 	}
 
@@ -190,7 +207,7 @@ public class AntTacticalBehaviour {
 
 		if (perception.isEnnemyInMeleeRange()) {
 			/*
-			 * TODO : Need improvement Stupidest behavior ever : atm, only
+			 * TODO : Need improvement. Stupidest behavior ever : atm, only
 			 * attacks a random target, without considering HPs or the previous
 			 * target focused.
 			 */
@@ -208,5 +225,14 @@ public class AntTacticalBehaviour {
 			return this.operationalBehaviour.moveToTarget(perception, memory, highestDangerPheromonePos);
 		}
 		return this.operationalBehaviour.wander(perception, memory);
+		/*
+		 * TODO : atm si 2 gatherer se rencontrent au milieu de nulle part et
+		 * rentrent à la maison, chacune des fourmilières va balancer toutes les
+		 * guerrières du coin sur la pheroTrail -> fight vers le pt de rencontre
+		 * des gatherer. Si 1 des 2 fourmilières n'envoit pas de guerriers, les
+		 * guerriers de l'autre fourmilière vont arriver au point de rencontre
+		 * (fin de la pheroTrail), et vont attendre la dispertion des phero
+		 * avant de wander -> inactivité, à améliorer ?
+		 */
 	}
 }

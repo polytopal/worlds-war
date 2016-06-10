@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
@@ -39,18 +40,16 @@ public class DebugFilter implements GuiLayer {
 		}
 
 		// uncomment this to show pheromone quantity
-
-		// float maxPheroQty = 0;
-		// for (final PheromoneType pheromoneType : PheromoneType.values()) {
-		// final float totalPheromoneQuantity =
-		// cell.getTotalPheromoneQuantity(pheromoneType);
-		// if (totalPheromoneQuantity > maxPheroQty) {
-		// maxPheroQty = totalPheromoneQuantity;
-		// }
-		// }
-		// if (maxPheroQty > 0) {
-		// return String.format("p:%.1f", maxPheroQty); //$NON-NLS-1$
-		// }
+		float maxPheroQty = 0;
+		for (final PheromoneType pheromoneType : PheromoneType.values()) {
+			final float totalPheromoneQuantity = cell.getTotalPheromoneQuantity(pheromoneType);
+			if (totalPheromoneQuantity > maxPheroQty) {
+				maxPheroQty = totalPheromoneQuantity;
+			}
+		}
+		if (maxPheroQty > 0) {
+			return String.format("p:%.1f", maxPheroQty); //$NON-NLS-1$
+		}
 
 		return null;
 	}
@@ -68,7 +67,7 @@ public class DebugFilter implements GuiLayer {
 	@Override
 	public void update(PerceptionGrid perceptionGrid) {
 		if (this.width != perceptionGrid.getWidth() || this.height != perceptionGrid.getHeight()) {
-			resizeGrid(perceptionGrid.getWidth(), perceptionGrid.getHeight());
+			this.resizeGrid(perceptionGrid.getWidth(), perceptionGrid.getHeight());
 		}
 		for (int x = 0; x < this.width; x++) {
 			for (int y = 0; y < this.height; y++) {

@@ -14,7 +14,6 @@ import fr.utbm.info.vi51.worldswar.perception.AntPerception;
  */
 public class GathererStrategicBehaviour implements AntStrategicBehaviour {
 
-	private static final String ENCOUNTERED_DANGER = "encounteredDanger"; //$NON-NLS-1$
 	private final AntTacticalBehaviour tacticalBehaviour;
 
 	/**
@@ -30,6 +29,8 @@ public class GathererStrategicBehaviour implements AntStrategicBehaviour {
 		if(perception.isEnnemyInSight()){
 			//default choice if an ennemy is seen is to flee
 			memory.put(ENCOUNTERED_DANGER, new Boolean(true));
+			// voir commentaire flee pour expliquer le startDangerTrail ici
+			this.tacticalBehaviour.startDangerTrail(perception, memory); 
 			return this.tacticalBehaviour.flee(perception, memory);
 		}
 		if (memory.containsKey(ENCOUNTERED_DANGER)) {

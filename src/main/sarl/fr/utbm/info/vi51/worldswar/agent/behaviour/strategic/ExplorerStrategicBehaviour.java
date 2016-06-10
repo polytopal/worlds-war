@@ -29,6 +29,15 @@ public class ExplorerStrategicBehaviour implements AntStrategicBehaviour {
 		// before doing anything else
 		if (perception.isEnnemyInSight()) {
 			// default choice if an ennemy is seen is to flee
+			memory.put(ENCOUNTERED_DANGER, new Boolean(true));
+			// voir commentaire flee pour expliquer le startDangerTrail ici
+			this.tacticalBehaviour.startDangerTrail(perception, memory);
+			return this.tacticalBehaviour.flee(perception, memory);
+		}
+		if (memory.containsKey(ENCOUNTERED_DANGER)) {
+			if (perception.isAtHome()) {
+				memory.remove(ENCOUNTERED_DANGER);
+			}
 			return this.tacticalBehaviour.flee(perception, memory);
 		}
 		if (perception.getMyBody().getFoodCarried() > 0) {
