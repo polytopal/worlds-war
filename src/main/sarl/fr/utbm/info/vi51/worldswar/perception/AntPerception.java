@@ -4,7 +4,9 @@ import static fr.utbm.info.vi51.worldswar.perception.PerceptionGrid.MY_POSITION;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import fr.utbm.info.vi51.worldswar.environment.Colony;
@@ -45,6 +47,13 @@ public class AntPerception {
 	}
 
 	/**
+	 * The cache of the function
+	 * {@link AntPerception#getHighestPheromonePos(PheromoneType, Colony)}
+	 */
+	private final Map<PheromoneType, Point> highestPheromonePosCache = new HashMap<>();
+	private final Map<PheromoneType, Boolean> highestPheromoneCalculated = new HashMap<>();
+
+	/**
 	 * @param type
 	 * @param colony
 	 * @return the position (in local coordinates) where there is the most
@@ -52,6 +61,10 @@ public class AntPerception {
 	 *         or {@code null} if no relevant pheromone is perceived
 	 */
 	public Point getHighestPheromonePos(PheromoneType type, Colony colony) {
+		if (colony == this.myBody.getColony() && this.highestPheromoneCalculated.get(type) != null) {
+			return this.highestPheromonePosCache.get(type);
+		}
+
 		float highestValue = 0;
 		Point highestPos = null;
 
@@ -66,6 +79,11 @@ public class AntPerception {
 					}
 				}
 			}
+		}
+
+		if (colony == this.myBody.getColony()) {
+			this.highestPheromoneCalculated.put(type, true);
+			this.highestPheromonePosCache.put(type, highestPos);
 		}
 		return highestPos;
 	}
@@ -82,6 +100,12 @@ public class AntPerception {
 		return this.getHighestPheromonePos(type, this.myBody.getColony());
 	}
 
+	/**
+	 * The cache of the function
+	 * {@link AntPerception#getClosestAvailableFoodPos()}
+	 */
+	private Point closestAvailableFoodPosCache = null;
+	private boolean closestAvailableFoodPosCalculated = false;
 	/**
 	 * Size of the list used in
 	 * {@link AntPerception#getClosestAvailableFoodPos()} to store the closest
@@ -101,13 +125,9 @@ public class AntPerception {
 	 *         take into account the food that is stored in an {@ink AntHill}.
 	 */
 	public Point getClosestAvailableFoodPos() {
-		// TODO rewrite this if we allow diagonal movements. In this case, it
-		// could be optimized by iterating on the distance from the ant rather
-		// than on the grid
-
-		// TODO this looks like a good candidate to implement a cache system :
-		// this should not be computed more than once for each ant perception.
-		// Think about it after we have made the first simulations.
+		if (this.closestAvailableFoodPosCalculated) {
+			return this.closestAvailableFoodPosCache;
+		}
 
 		final List<Point> closestPositions = new ArrayList<>(CLOSEST_FOOD_LIST_SIZE);
 		int minDistance = Integer.MAX_VALUE;
@@ -129,9 +149,13 @@ public class AntPerception {
 			}
 		}
 		if (closestPositions.isEmpty()) {
+			this.closestAvailableFoodPosCalculated = true;
 			return null;
 		}
-		return closestPositions.get(new Random().nextInt(closestPositions.size()));
+		final Point result = closestPositions.get(new Random().nextInt(closestPositions.size()));
+		this.closestAvailableFoodPosCalculated = true;
+		this.closestAvailableFoodPosCache = result;
+		return result;
 	}
 
 	/**
@@ -144,9 +168,18 @@ public class AntPerception {
 	}
 
 	/**
+	 * The cache of the function {@link AntPerception#countFoodInSight()}
+	 */
+	private int foodInSightCache = 0;
+	private boolean foodInSightCalculated = false;
+
+	/**
 	 * @return the total number of food units in sight.
 	 */
 	public int countFoodInSight() {
+		if (this.foodInSightCalculated) {
+			return this.foodInSightCache;
+		}
 		int totalFood = 0;
 		PerceivableFood food = null;
 
@@ -160,6 +193,8 @@ public class AntPerception {
 				}
 			}
 		}
+		this.foodInSightCalculated = true;
+		this.foodInSightCache = totalFood;
 		return totalFood;
 	}
 
@@ -171,21 +206,35 @@ public class AntPerception {
 	}
 
 	/**
+	 * The cache of the function {@link AntPerception#getHomePos()}
+	 */
+	private boolean homePosCalculated = false;
+	private Point homePosCache = null;
+
+	/**
 	 * @return the position (in local coordinates) of the ant's anthill, or
 	 *         {@code null} if it is not perceived by the ant
 	 */
 	public Point getHomePos() {
+		if (this.homePosCalculated) {
+			return this.homePosCache;
+		}
+
 		PerceivableAntHill antHill;
 		for (int x = this.grid.getXMin(); x <= this.grid.getXMax(); x++) {
 			for (int y = this.grid.getYMin(); y <= this.grid.getYMax(); y++) {
 				if (this.grid.getCell(x, y) != null) {
 					antHill = this.grid.getCell(x, y).getAntHill();
 					if (antHill != null && antHill.getColony() == this.myBody.getColony()) {
-						return new Point(x, y);
+						final Point homePos = new Point(x, y);
+						this.homePosCalculated = true;
+						this.homePosCache = homePos;
+						return homePos;
 					}
 				}
 			}
 		}
+		this.homePosCalculated = true;
 		return null;
 	}
 
