@@ -1,5 +1,6 @@
 package fr.utbm.info.vi51.worldswar.simulator;
 
+import fr.utbm.info.vi51.worldswar.environment.MapInformation;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
 /**
@@ -19,8 +20,9 @@ public interface SimulatorListener {
 
 	/**
 	 * Invoked when the simulation start
+	 * @param mapInfo information on the map (seed etc...)
 	 */
-	public void simulationStarted();
+	public void simulationStarted(MapInformation mapInfo);
 
 	/**
 	 * Invoked when the simulation is paused

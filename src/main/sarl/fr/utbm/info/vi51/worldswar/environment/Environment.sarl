@@ -36,6 +36,7 @@ import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
 import java.util.UUID
+import java.util.ArrayList
 import java.util.concurrent.ConcurrentHashMap
 import fr.utbm.info.vi51.worldswar.environment.influence.DoNothingInfluence
 
@@ -86,7 +87,13 @@ agent Environment {
 			this.uninitializedAgents = new LinkedList
 			this.waitingAgentsInitialization = false
 			
-			emit(new EnvironmentInitializedEvent)
+			val colonyMap = new ArrayList<Colony>()
+			for(antHill : this.antHills) {
+				colonyMap.add(antHill.colony)
+			}
+			
+			var mapInfos = new MapInformation(simParameters.getNoiseSeed(), colonyMap)
+			emit(new EnvironmentInitializedEvent(mapInfos))
 		}
 	}
 	
