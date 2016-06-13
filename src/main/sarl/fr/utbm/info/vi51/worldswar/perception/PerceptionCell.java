@@ -184,20 +184,22 @@ public class PerceptionCell {
 	 * @return the pheromone quantity
 	 */
 	public float getPheromoneQuantity(PheromoneType type, Colony colony) {
-		if (this.pheromoneQuantityCache.get(new Pair<>(type, colony)) != null) {
-			return this.pheromoneQuantityCache.get(new Pair<>(type, colony));
-		}
-
-		for (final Perceivable perceivable : this.perceptionList) {
-			if (perceivable instanceof PerceivablePheromone && ((PerceivablePheromone) perceivable).getType() == type
-					&& ((PerceivablePheromone) perceivable).getColony() == colony) {
-				final float qty = ((PerceivablePheromone) perceivable).getQty();
-				this.pheromoneQuantityCache.put(new Pair<>(type, colony), qty);
-				return qty;
+		synchronized(pheromoneQuantityCache) {
+			if (this.pheromoneQuantityCache.get(new Pair<>(type, colony)) != null) {
+				return this.pheromoneQuantityCache.get(new Pair<>(type, colony));
 			}
+
+			for (final Perceivable perceivable : this.perceptionList) {
+				if (perceivable instanceof PerceivablePheromone && ((PerceivablePheromone) perceivable).getType() == type
+						&& ((PerceivablePheromone) perceivable).getColony() == colony) {
+					final float qty = ((PerceivablePheromone) perceivable).getQty();
+					this.pheromoneQuantityCache.put(new Pair<>(type, colony), qty);
+					return qty;
+				}
+			}
+			this.pheromoneQuantityCache.put(new Pair<>(type, colony), (float) 0);
+			return 0;
 		}
-		this.pheromoneQuantityCache.put(new Pair<>(type, colony), (float) 0);
-		return 0;
 	}
 
 	/**
