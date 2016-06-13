@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.utbm.info.vi51.worldswar.environment.MapInformation;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
@@ -51,6 +52,11 @@ public abstract class DefaultColorLayer implements GuiLayer {
 	}
 
 	@Override
+	public void simulationStarted(MapInformation mapInfo) {
+		// Do nothing
+	}
+
+	@Override
 	public void update(PerceptionGrid perceptionGrid) {
 		if (this.width != perceptionGrid.getWidth() || this.height != perceptionGrid.getHeight()) {
 			resizeGrid(perceptionGrid.getWidth(), perceptionGrid.getHeight());
@@ -64,8 +70,8 @@ public abstract class DefaultColorLayer implements GuiLayer {
 	}
 
 	/**
-	 * Methods used only when a new environment with a different size of the
-	 * older environment
+	 * Methods used when a new environment is created with a different size from
+	 * the previous
 	 */
 	private void resizeGrid(int w, int h) {
 		this.width = w;

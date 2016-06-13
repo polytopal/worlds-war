@@ -5,26 +5,37 @@ import fr.utbm.info.vi51.worldswar.^agent.^event.AgentInitializedEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.InfluenceEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.KillAgentEvent
 import fr.utbm.info.vi51.worldswar.^agent.^event.PerceptionEvent
+import fr.utbm.info.vi51.worldswar.environment.influence.Influence
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
+import io.sarl.core.Schedules
 import io.sarl.util.Scopes
 import java.util.HashMap
+import java.util.Random
+import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Abstract agent inherited by every other ants agents
  */
 agent AntAgent {
-	uses Lifecycle, DefaultContextInteractions, Logging
+	uses Lifecycle, Schedules, DefaultContextInteractions, Logging
 	
-	val memory : HashMap<String, Object> = new HashMap()
+	val memory : HashMap<String, Object> = new HashMap
+	var agentInfluenceHashMap : ConcurrentHashMap<UUID, Influence>
 	var behaviour : AntStrategicBehaviour
+	var alive : boolean = false
 	
 	on Initialize{
 		synchronized(this) {
-			// the strategic behaviour is get from the parameters
+			// the strategic behaviour is obtained from the parameters
 			this.behaviour = occurrence.parameters.get(0) as AntStrategicBehaviour
+			// same for the agentInfluenceHashMap
+			this.agentInfluenceHashMap = occurrence.parameters.get(1) as ConcurrentHashMap<UUID, Influence>
+			
+			this.alive = true
 			
 			emit(new AgentInitializedEvent)
 		}
@@ -32,24 +43,50 @@ agent AntAgent {
 	
 	on KillAgentEvent {
 		synchronized(this) {
-			killMe
+			// Agent is killed after a random delay.
+			// When too many agents are killed at the same time, a memory leak can occur.
+			// This is a workaround to prevent this problem.
+			this.alive = false
+			in(new Random().nextInt(3000)) [killMe]
 		}
 	}
 	
 	on PerceptionEvent {
 		synchronized(this) {
-			
-			val perception = occurrence.perception
-			if(behaviour !== null ){
-				
+			val perceptionHashMap = occurrence.perceptionHashMap
+			val nbAgents = occurrence.nbAgents
+			val perception = perceptionHashMap.get(this.getID)
+			if(alive && behaviour !== null ){
 				// The influence is computed by the behaviour
 				val influence = behaviour.computeInfluence(perception, memory)
-				emit(new InfluenceEvent(this.getID(), influence),
-					Scopes.addresses(occurrence.callbackAddress))
-			}else{
-				error("ant agent doesn't have behaviour")
+				if(influence === null) {
+					error("an agent behavior returned null instead of an influence")
+				}
+				
+				if(this.agentInfluenceHashMap.get(this.getID) === null) {
+					synchronized(agentInfluenceHashMap) {
+						/**
+						 * The emit function being too slow for our purposes, we workaround
+						 * this problem by sending the influence of every agent in a
+						 * common hashmap, thus using only 1 emit call to send agent's
+						 * influences.
+						 */
+						this.agentInfluenceHashMap.put(this.getID, influence)
+						if(this.agentInfluenceHashMap.size == nbAgents) {// if all other agents have sent their influence
+							
+							var evt = new InfluenceEvent
+							emit(evt, 
+								Scopes.addresses(occurrence.callbackAddress)
+								)
+						}
+					}
+					
+				} else {
+					println("AntAgent::PerceptionEvent : antInfluence already placed "+ influence+" ||| "+this.agentInfluenceHashMap.get(this.getID))
+				}
+			} else if (alive) {
+				println("AntAgent::PerceptionEvent : ant agent doesn't have a behaviour")
 			}
-			
 		}
 	}
 }

@@ -5,7 +5,9 @@ import fr.utbm.info.vi51.worldswar.utils.Direction;
 
 /**
  * Places pheromone on the current location, then move in the specified
- * {@link Direction}. {@see Influence}
+ * {@link Direction}.
+ * 
+ * @see Influence
  *
  */
 public class PheromoneAndMoveInfluence implements Influence {

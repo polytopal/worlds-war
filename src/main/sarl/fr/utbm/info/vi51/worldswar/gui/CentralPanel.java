@@ -18,8 +18,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import fr.utbm.info.vi51.worldswar.environment.MapInformation;
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.gui.layer.AntLayer;
+import fr.utbm.info.vi51.worldswar.gui.layer.ColoredAntLayer;
 import fr.utbm.info.vi51.worldswar.gui.layer.DebugFilter;
 import fr.utbm.info.vi51.worldswar.gui.layer.GuiLayer;
 import fr.utbm.info.vi51.worldswar.gui.layer.MapLayer;
@@ -38,6 +40,9 @@ public class CentralPanel extends JPanel {
 	private static final int CAMERA_MOVE_SPEED = 20;
 	private static final int CELL_SIZE_MIN = 2;
 	private static final int CELL_SIZE_MAX = 70;
+
+	private static final int DEFAULT_WIDTH = 800;
+	private static final int DEFAULT_HEIGHT = 600;
 
 	private int width;
 	private int height;
@@ -84,6 +89,9 @@ public class CentralPanel extends JPanel {
 		// !! the order is important
 		this.layers.add(new MapLayer());
 		this.layers.add(new AntLayer());
+		final ColoredAntLayer coloredAntLayer = new ColoredAntLayer();
+		coloredAntLayer.setEnabled(false);
+		this.layers.add(coloredAntLayer);
 		for (final PheromoneType pheromoneType : PheromoneType.values()) {
 			this.layers.add(new PheromoneFilter(pheromoneType));
 		}
@@ -100,15 +108,15 @@ public class CentralPanel extends JPanel {
 
 		this.add(this.scrollPane, BorderLayout.CENTER);
 
-		this.setPreferredSize(new Dimension(400, 400));
+		this.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 
 		final MouseWheelListener mouseWheelListener = new MouseWheelListener() {
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				if (e.getPreciseWheelRotation() > 0) {
-					zoomOut();
+					CentralPanel.this.zoomOut();
 				} else {
-					zoomIn();
+					CentralPanel.this.zoomIn();
 				}
 			}
 		};
@@ -120,22 +128,22 @@ public class CentralPanel extends JPanel {
 
 				switch (e.getExtendedKeyCode()) {
 				case KeyEvent.VK_LEFT: // left arrow
-					moveCameraLeft(CAMERA_MOVE_SPEED);
+					CentralPanel.this.moveCameraLeft(CAMERA_MOVE_SPEED);
 					break;
 				case KeyEvent.VK_UP:// up arrow
-					moveCameraUp(CAMERA_MOVE_SPEED);
+					CentralPanel.this.moveCameraUp(CAMERA_MOVE_SPEED);
 					break;
 				case KeyEvent.VK_RIGHT:// right arrow
-					moveCameraRight(CAMERA_MOVE_SPEED);
+					CentralPanel.this.moveCameraRight(CAMERA_MOVE_SPEED);
 					break;
 				case KeyEvent.VK_DOWN:// down arrow
-					moveCameraDown(CAMERA_MOVE_SPEED);
+					CentralPanel.this.moveCameraDown(CAMERA_MOVE_SPEED);
 					break;
 				case KeyEvent.VK_ADD:// + button
-					zoomIn();
+					CentralPanel.this.zoomIn();
 					break;
 				case KeyEvent.VK_SUBTRACT:// - button
-					zoomOut();
+					CentralPanel.this.zoomOut();
 					break;
 				default:
 					break;
@@ -145,6 +153,12 @@ public class CentralPanel extends JPanel {
 		};
 		window.addKeyListener(keyListener);
 
+	}
+
+	public void simulationStarted(MapInformation mapInfo) {
+		for (final GuiLayer guiLayer : this.layers) {
+			guiLayer.simulationStarted(mapInfo);
+		}
 	}
 
 	public void updateGrid(PerceptionGrid perceptionGrid) {
@@ -171,6 +185,17 @@ public class CentralPanel extends JPanel {
 	public void setDebugFilterEnabled(boolean selected) {
 		for (final GuiLayer guiLayer : this.layers) {
 			if (guiLayer instanceof DebugFilter) {
+				guiLayer.setEnabled(selected);
+			}
+		}
+	}
+
+	public void setColoredAntLayer(boolean selected) {
+		for (final GuiLayer guiLayer : this.layers) {
+			if (guiLayer instanceof AntLayer) {
+				guiLayer.setEnabled(!selected);
+			}
+			if (guiLayer instanceof ColoredAntLayer) {
 				guiLayer.setEnabled(selected);
 			}
 		}

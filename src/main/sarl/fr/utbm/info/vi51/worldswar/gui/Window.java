@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import fr.utbm.info.vi51.worldswar.controller.Controller;
+import fr.utbm.info.vi51.worldswar.environment.MapInformation;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 import fr.utbm.info.vi51.worldswar.simulator.SimulatorListener;
 
@@ -82,8 +83,8 @@ public class Window extends JFrame implements SimulatorListener {
 		this.stepsPerSecond = 1000.f / stepDuration;
 
 		this.infoPanel.setSimulationStateLabel(this.simState);
-		this.infoPanel.setStepPerSecondLabel(this.stepsPerSecond);
-		this.infoPanel.setStepNumberLabel(this.stepNumber);
+		this.infoPanel.setSimulationSpeedLabel(this.stepsPerSecond);
+		this.infoPanel.setSimulationTimeLabel(this.stepNumber);
 
 		this.stepNumber++;
 
@@ -102,14 +103,18 @@ public class Window extends JFrame implements SimulatorListener {
 		this.infoPanel.setSimulationStateLabel(this.simState);
 		this.guiActionsManager.getPauseSimulationAction().setEnabled(false);
 		this.guiActionsManager.getResumeSimulationAction().setEnabled(false);
+		this.guiActionsManager.getMapInfoAction().setEnabled(false);
 	}
 
 	@Override
-	public void simulationStarted() {
+	public void simulationStarted(MapInformation mapInfo) {
 		this.stepNumber = 0;
 		this.simState = SimulationState.RUNNING;
 		this.infoPanel.setSimulationStateLabel(this.simState);
 		this.guiActionsManager.getPauseSimulationAction().setEnabled(true);
+		this.guiActionsManager.updateMapInfo(mapInfo);
+		this.guiActionsManager.getMapInfoAction().setEnabled(true);
+		this.centralPanel.simulationStarted(mapInfo);
 	}
 
 	@Override

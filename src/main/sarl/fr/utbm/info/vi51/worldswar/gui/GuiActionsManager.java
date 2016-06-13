@@ -13,6 +13,7 @@ import javax.swing.KeyStroke;
 
 import fr.utbm.info.vi51.worldswar.controller.Controller;
 import fr.utbm.info.vi51.worldswar.controller.SimulationParameters;
+import fr.utbm.info.vi51.worldswar.environment.MapInformation;
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.simulator.SimulationSpeed;
 
@@ -29,12 +30,14 @@ public class GuiActionsManager {
 	private final Action pauseSimulationAction;
 	private final Action resumeSimulationAction;
 	private final Action stepSimulationAction;
+	private final MapInfoAction mapInfoAction;
 
 	private final Map<SimulationSpeed, Action> speedActionsMap;
 
 	private final Map<PheromoneType, Action> pheromoneFilterActionsMap;
 
 	private final Action debugFilterAction;
+	private final Action coloredAntLayerAction;
 
 	GuiActionsManager(final Controller controller, final CentralPanel centralPanel) {
 		this.newSimulationAction = new NewSimulationAction(controller);
@@ -42,6 +45,7 @@ public class GuiActionsManager {
 		this.pauseSimulationAction = new PauseSimulationAction(controller);
 		this.resumeSimulationAction = new ResumeSimulationAction(controller);
 		this.stepSimulationAction = new StepSimulationAction(controller);
+		this.mapInfoAction = new MapInfoAction();
 
 		this.speedActionsMap = new HashMap<>();
 		for (final SimulationSpeed simSpeed : SimulationSpeed.values()) {
@@ -54,6 +58,7 @@ public class GuiActionsManager {
 		}
 
 		this.debugFilterAction = new DebugFilterAction(centralPanel);
+		this.coloredAntLayerAction = new ColoredAntLayerAction(centralPanel);
 	}
 
 	/**
@@ -70,28 +75,77 @@ public class GuiActionsManager {
 		return this.stopSimulationAction;
 	}
 
+	/**
+	 * @return the action corresponding to pausing the simulation
+	 */
 	public Action getPauseSimulationAction() {
 		return this.pauseSimulationAction;
 	}
 
+	/**
+	 * @return the action corresponding to resuming the simulation after it was
+	 *         paused
+	 */
 	public Action getResumeSimulationAction() {
 		return this.resumeSimulationAction;
 	}
 
+	/**
+	 * @return the action corresponding to executing the next simulation step.
+	 *         Only usable when the simulation is paused.
+	 */
 	public Action getStepSimulationAction() {
 		return this.stepSimulationAction;
 	}
 
+	/**
+	 * @return the action corresponding to displaying a popup showing
+	 *         informations related to the map
+	 */
+	public Action getMapInfoAction() {
+		return this.mapInfoAction;
+	}
+
+	/**
+	 * This method update the map information needed for display of the
+	 * MapInfoDialog in MapInfoAction
+	 * 
+	 * @param mapInfo
+	 *            informations related to the simulation map
+	 */
+
+	public void updateMapInfo(MapInformation mapInfo) {
+		this.mapInfoAction.setMapInfo(mapInfo);
+	}
+
+	/**
+	 * @param simSpeed
+	 * @return the action corresponding to setting the simulation to a certain
+	 *         speed
+	 */
 	public Action getSpeedAction(SimulationSpeed simSpeed) {
 		return this.speedActionsMap.get(simSpeed);
 	}
 
+	/**
+	 * @param pheromoneType
+	 * @return the action corresponding to activating or deactivating a
+	 *         pheromone of a certain type
+	 */
 	public Action getPheromoneFilterActions(PheromoneType pheromoneType) {
 		return this.pheromoneFilterActionsMap.get(pheromoneType);
 	}
 
+	/**
+	 * @return the action corresponding to activating or deactivating the debug
+	 *         filter
+	 */
 	public Action getDebugFilterAction() {
 		return this.debugFilterAction;
+	}
+
+	public Action getColoredAntLayerAction() {
+		return this.coloredAntLayerAction;
 	}
 
 	/**
@@ -203,6 +257,29 @@ public class GuiActionsManager {
 	}
 
 	/**
+	 * This action allows to display information related to the simulation map
+	 */
+	private class MapInfoAction extends AbstractAction {
+		private static final long serialVersionUID = 1818051679709294284L;
+		private MapInformation mapInfo;
+
+		public MapInfoAction() {
+			super(Messages.getString("MenuBar.mapInfo")); //$NON-NLS-1$
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_I, 0));
+			this.setEnabled(false);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			MapInfoDialog.showMapInfoDialog(this.mapInfo);
+		}
+
+		public void setMapInfo(MapInformation mapInfo) {
+			this.mapInfo = mapInfo;
+		}
+	}
+
+	/**
 	 * @author Leo
 	 * 
 	 *         This action allows to modify the simulation speed, with the speed
@@ -238,6 +315,9 @@ public class GuiActionsManager {
 
 		public PheromoneFilterAction(CentralPanel centralPanel, PheromoneType pheromoneType) {
 			super(Messages.getString(pheromoneType.getPropertyKey()));
+			if (pheromoneType.getKeyStroke() != null) {
+				putValue(ACCELERATOR_KEY, pheromoneType.getKeyStroke());
+			}
 			this.centralPanel = centralPanel;
 			this.pheromoneType = pheromoneType;
 		}
@@ -267,6 +347,26 @@ public class GuiActionsManager {
 			if (ae.getSource() instanceof JCheckBoxMenuItem) {
 				final boolean selected = ((JCheckBoxMenuItem) ae.getSource()).isSelected();
 				this.centralPanel.setDebugFilterEnabled(selected);
+			}
+		}
+
+	}
+
+	private class ColoredAntLayerAction extends AbstractAction {
+		private static final long serialVersionUID = -9163474662975136163L;
+
+		private final CentralPanel centralPanel;
+
+		public ColoredAntLayerAction(CentralPanel centralPanel) {
+			super(Messages.getString("MenuBar.coloredAnts")); //$NON-NLS-1$
+			this.centralPanel = centralPanel;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			if (ae.getSource() instanceof JCheckBoxMenuItem) {
+				final boolean selected = ((JCheckBoxMenuItem) ae.getSource()).isSelected();
+				this.centralPanel.setColoredAntLayer(selected);
 			}
 		}
 

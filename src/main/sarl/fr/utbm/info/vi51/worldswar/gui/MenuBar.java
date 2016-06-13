@@ -39,7 +39,10 @@ public class MenuBar extends JMenuBar {
 
 		final JMenuItem stepSimulationItem = new JMenuItem(guiActionsManager.getStepSimulationAction());
 		simulationMenu.add(stepSimulationItem);
-
+		
+		final JMenuItem mapInfoItem = new JMenuItem(guiActionsManager.getMapInfoAction());
+		simulationMenu.add(mapInfoItem);
+		
 		// -------- speed menu --------
 
 		final JMenu speedMenu = new JMenu(Messages.getString("MenuBar.Speed")); //$NON-NLS-1$
@@ -72,5 +75,9 @@ public class MenuBar extends JMenuBar {
 
 		final JCheckBoxMenuItem debugFilterButton = new JCheckBoxMenuItem(guiActionsManager.getDebugFilterAction());
 		otherFiltersMenu.add(debugFilterButton);
+		final JCheckBoxMenuItem coloredAntLayerButton = new JCheckBoxMenuItem(
+				guiActionsManager.getColoredAntLayerAction());
+		otherFiltersMenu.add(coloredAntLayerButton);
+
 	}
 }

@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.utbm.info.vi51.worldswar.environment.MapInformation;
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
@@ -32,11 +33,11 @@ public class DebugFilter implements GuiLayer {
 	private static String computeString(PerceptionCell cell) {
 		if (cell.getAntHill() != null) {
 			final int availableFood = cell.getAntHill().getAvailableFood();
-			return String.format("f:%d", availableFood); //$NON-NLS-1$
+			return String.format("f:%d", new Integer(availableFood)); //$NON-NLS-1$
 		}
 		if (cell.getAnt() != null) {
 			final int foodCarried = cell.getAnt().getFoodCarried();
-			return String.format("f:%d", foodCarried); //$NON-NLS-1$
+			return String.format("f:%d", new Integer(foodCarried)); //$NON-NLS-1$
 		}
 
 		// uncomment this to show pheromone quantity
@@ -62,6 +63,11 @@ public class DebugFilter implements GuiLayer {
 	@Override
 	public boolean isEnabled() {
 		return this.enabled;
+	}
+
+	@Override
+	public void simulationStarted(MapInformation mapInfo) {
+		// do nothing
 	}
 
 	@Override

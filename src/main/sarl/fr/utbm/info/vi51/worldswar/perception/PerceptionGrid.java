@@ -65,13 +65,12 @@ public class PerceptionGrid {
 			 * Remove this if we need to compute the manhattan distance
 			 */
 			// manhattanDistanceCircle(range, localCellGrid);
-
 			return new PerceptionGrid(localCellGrid);
 		} catch (final InvalidAttributesException e) {
-			// TODO - use an other logger
 			System.err.println("Error : the body is not in the grid : " + e); //$NON-NLS-1$
 			return null;
 		}
+
 	}
 
 	@SuppressWarnings("unused")
@@ -123,32 +122,28 @@ public class PerceptionGrid {
 	}
 
 	/**
-	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.utils.Grid#getXMin()
+	 * @return {@link fr.utbm.info.vi51.worldswar.utils.Grid#getXMin()}
 	 */
 	public int getXMin() {
 		return this.perceptionCellGrid.getXMin();
 	}
 
 	/**
-	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.utils.Grid#getYMin()
+	 * @return {@link fr.utbm.info.vi51.worldswar.utils.Grid#getYMin()}
 	 */
 	public int getYMin() {
 		return this.perceptionCellGrid.getYMin();
 	}
 
 	/**
-	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.utils.Grid#getXMax()
+	 * @return {@link fr.utbm.info.vi51.worldswar.utils.Grid#getXMax()}
 	 */
 	public int getXMax() {
 		return this.perceptionCellGrid.getXMax();
 	}
 
 	/**
-	 * @return
-	 * @see fr.utbm.info.vi51.worldswar.utils.Grid#getYMax()
+	 * @return {fr.utbm.info.vi51.worldswar.utils.Grid#getYMax()}
 	 */
 	public int getYMax() {
 		return this.perceptionCellGrid.getYMax();

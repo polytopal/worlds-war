@@ -7,7 +7,7 @@ package fr.utbm.info.vi51.worldswar.environment;
  */
 public class Colony {
 
-	private Breed breed;
+	private final Breed breed;
 
 	/**
 	 * Create a new ant Colony
@@ -19,17 +19,16 @@ public class Colony {
 		this.breed = breed;
 	}
 
+	/**
+	 * @return the breed of the colony
+	 */
 	public Breed getBreed() {
 		return this.breed;
 	}
 
-	public void setBreed(Breed breed) {
-		this.breed = breed;
-	}
-
 	@Override
 	public String toString() {
-		return "Colony [breed=" + breed + "]";
+		return "Colony [breed=" + this.breed + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

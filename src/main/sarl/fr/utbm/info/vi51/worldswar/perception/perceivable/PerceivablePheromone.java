@@ -11,13 +11,18 @@ public class PerceivablePheromone extends Perceivable {
 
 	private final Pheromone pheromone;
 
+	/***
+	 * Builds the perceivable version of a {@link Pheromone}
+	 * 
+	 * @param pheromone
+	 */
 	public PerceivablePheromone(Pheromone pheromone) {
 		super(pheromone);
 		this.pheromone = pheromone;
 	}
 
 	/**
-	 * @return
+	 * @return the quantity of pheromone
 	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone#getQty()
 	 */
 	public float getQty() {
@@ -25,7 +30,7 @@ public class PerceivablePheromone extends Perceivable {
 	}
 
 	/**
-	 * @return
+	 * @return the type of pheromone
 	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone#getType()
 	 */
 	public PheromoneType getType() {
@@ -33,7 +38,7 @@ public class PerceivablePheromone extends Perceivable {
 	}
 
 	/**
-	 * @return
+	 * @return the colony that placed this pheromone
 	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.Pheromone#getColony()
 	 */
 	public Colony getColony() {
