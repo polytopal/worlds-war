@@ -56,7 +56,7 @@ agent AntAgent {
 			val perceptionHashMap = occurrence.perceptionHashMap
 			val nbAgents = occurrence.nbAgents
 			val perception = perceptionHashMap.get(this.getID)
-			if(alive && behaviour !== null ){
+			if(alive && behaviour !== null && perception !== null){
 				// The influence is computed by the behaviour
 				val influence = behaviour.computeInfluence(perception, memory)
 				if(influence === null) {
