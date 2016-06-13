@@ -87,12 +87,12 @@ agent Environment {
 			this.uninitializedAgents = new LinkedList
 			this.waitingAgentsInitialization = false
 			
-			val colonyMap = new ArrayList<Colony>()
+			val colonyList = new ArrayList<Colony>()
 			for(antHill : this.antHills) {
-				colonyMap.add(antHill.colony)
+				colonyList.add(antHill.colony)
 			}
 			
-			var mapInfos = new MapInformation(simParameters.getNoiseSeed(), colonyMap)
+			var mapInfos = new MapInformation(simParameters.getNoiseSeed(), colonyList)
 			emit(new EnvironmentInitializedEvent(mapInfos))
 		}
 	}

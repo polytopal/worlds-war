@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.utbm.info.vi51.worldswar.environment.MapInformation;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
@@ -63,6 +64,11 @@ public class DebugFilter implements GuiLayer {
 	@Override
 	public boolean isEnabled() {
 		return this.enabled;
+	}
+
+	@Override
+	public void simulationStarted(MapInformation mapInfo) {
+		// do nothing
 	}
 
 	@Override

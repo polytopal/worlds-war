@@ -62,7 +62,7 @@ public class Stock {
 
 	@Override
 	public String toString() {
-		return "Stock [available=" + this.available + "]";
+		return "Stock [available=" + this.available + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

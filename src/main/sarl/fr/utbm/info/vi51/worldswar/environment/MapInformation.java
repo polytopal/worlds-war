@@ -10,16 +10,16 @@ import java.util.List;
 public class MapInformation {
 	
 	private final int noiseSeed;
-	private final List<Colony> colonyMap;
+	private final List<Colony> colonyList;
 	
 	/**
 	 * Constructor
 	 * @param noiseSeed
-	 * @param colonyMap 
+	 * @param colonyList 
 	 */
-	public MapInformation(int noiseSeed, List<Colony> colonyMap){
+	public MapInformation(int noiseSeed, List<Colony> colonyList){
 		this.noiseSeed = noiseSeed;
-		this.colonyMap = colonyMap;
+		this.colonyList = colonyList;
 	}
 	
 	/**
@@ -33,7 +33,7 @@ public class MapInformation {
 	 * @return colonyMap a collection of the colonies in the simulation
 	 */
 	public List<Colony> getColonies() {
-		return this.colonyMap;
+		return this.colonyList;
 	}
 
 }

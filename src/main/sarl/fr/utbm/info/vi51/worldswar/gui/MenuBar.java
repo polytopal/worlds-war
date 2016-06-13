@@ -75,5 +75,9 @@ public class MenuBar extends JMenuBar {
 
 		final JCheckBoxMenuItem debugFilterButton = new JCheckBoxMenuItem(guiActionsManager.getDebugFilterAction());
 		otherFiltersMenu.add(debugFilterButton);
+		final JCheckBoxMenuItem coloredAntLayerButton = new JCheckBoxMenuItem(
+				guiActionsManager.getColoredAntLayerAction());
+		otherFiltersMenu.add(coloredAntLayerButton);
+
 	}
 }

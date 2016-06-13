@@ -48,7 +48,7 @@ public class LaunchSimulationDialog extends JDialog {
 		setTitle(Messages.getString("LaunchSimulation.newSimulation")); //$NON-NLS-1$
 		this.setModal(true);
 		this.setResizable(false);
-		setBounds(100, 100, 400, 300);
+		this.setBounds(100, 100, 400, 300);
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		this.simulationParameters = null;
@@ -243,9 +243,9 @@ public class LaunchSimulationDialog extends JDialog {
 				rockProportionDisplayer.setText(rockSlider.getValue() + "%"); //$NON-NLS-1$
 			}
 		});
-		
+
 		// --------- Seed textbox ---------
-		
+
 		final JLabel noiseSeedLabel = new JLabel(
 				String.format("%s :", Messages.getString("LaunchSimulation.noiseSeed"))); //$NON-NLS-1$ //$NON-NLS-2$
 		final GridBagConstraints gbc_noiseSeedLabel = new GridBagConstraints();
@@ -256,14 +256,14 @@ public class LaunchSimulationDialog extends JDialog {
 		contentPanel.add(noiseSeedLabel, gbc_noiseSeedLabel);
 
 		final JFormattedTextField noiseSeedTextField = new JFormattedTextField(new Integer(new Random().nextInt()));
-		
+
 		final GridBagConstraints gbc_noiseSeedTextField = new GridBagConstraints();
 		gbc_noiseSeedTextField.insets = new Insets(0, 0, 5, 5);
 		gbc_noiseSeedTextField.gridwidth = 4;
 		gbc_noiseSeedTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_noiseSeedTextField.gridx = 1;
 		gbc_noiseSeedTextField.gridy = 5;
-		
+
 		contentPanel.add(noiseSeedTextField, gbc_noiseSeedTextField);
 
 		// --------- OK / Cancel buttons ---------
@@ -289,7 +289,7 @@ public class LaunchSimulationDialog extends JDialog {
 					final Breed breed = (Breed) coloniesTableModel.getValueAt(i, 0);
 					coloniesList.add(new Colony(breed));
 				}
-				final int noiseSeed = (int)noiseSeedTextField.getValue();
+				final int noiseSeed = (int) noiseSeedTextField.getValue();
 				// Conversion from percent to float
 				final float foodProportion = foodSlider.getValue() / 100.0f;
 				final float rockProportion = rockSlider.getValue() / 100.0f;

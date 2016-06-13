@@ -37,6 +37,7 @@ public class GuiActionsManager {
 	private final Map<PheromoneType, Action> pheromoneFilterActionsMap;
 
 	private final Action debugFilterAction;
+	private final Action coloredAntLayerAction;
 
 	GuiActionsManager(final Controller controller, final CentralPanel centralPanel) {
 		this.newSimulationAction = new NewSimulationAction(controller);
@@ -57,6 +58,7 @@ public class GuiActionsManager {
 		}
 
 		this.debugFilterAction = new DebugFilterAction(centralPanel);
+		this.coloredAntLayerAction = new ColoredAntLayerAction(centralPanel);
 	}
 
 	/**
@@ -81,7 +83,8 @@ public class GuiActionsManager {
 	}
 
 	/**
-	 * @return the action corresponding to resuming the simulation after it was paused
+	 * @return the action corresponding to resuming the simulation after it was
+	 *         paused
 	 */
 	public Action getResumeSimulationAction() {
 		return this.resumeSimulationAction;
@@ -89,51 +92,60 @@ public class GuiActionsManager {
 
 	/**
 	 * @return the action corresponding to executing the next simulation step.
-	 * Only usable when the simulation is paused.
+	 *         Only usable when the simulation is paused.
 	 */
 	public Action getStepSimulationAction() {
 		return this.stepSimulationAction;
 	}
-	
+
 	/**
-	 * @return the action corresponding to displaying a popup showing informations
-	 * related to the map
+	 * @return the action corresponding to displaying a popup showing
+	 *         informations related to the map
 	 */
 	public Action getMapInfoAction() {
 		return this.mapInfoAction;
 	}
+
 	/**
-	 * This method update the map information needed for 
-	 * display of the MapInfoDialog in MapInfoAction
-	 * @param mapInfo informations related to the simulation map
+	 * This method update the map information needed for display of the
+	 * MapInfoDialog in MapInfoAction
+	 * 
+	 * @param mapInfo
+	 *            informations related to the simulation map
 	 */
-	
+
 	public void updateMapInfo(MapInformation mapInfo) {
 		this.mapInfoAction.setMapInfo(mapInfo);
 	}
 
 	/**
 	 * @param simSpeed
-	 * @return the action corresponding to setting the simulation to a certain speed
+	 * @return the action corresponding to setting the simulation to a certain
+	 *         speed
 	 */
 	public Action getSpeedAction(SimulationSpeed simSpeed) {
 		return this.speedActionsMap.get(simSpeed);
 	}
-	
+
 	/**
 	 * @param pheromoneType
-	 * @return the action corresponding to activating or deactivating a pheromone
-	 * of a certain type
+	 * @return the action corresponding to activating or deactivating a
+	 *         pheromone of a certain type
 	 */
 	public Action getPheromoneFilterActions(PheromoneType pheromoneType) {
 		return this.pheromoneFilterActionsMap.get(pheromoneType);
 	}
 
 	/**
-	 * @return the action corresponding to activating or deactivating the debug filter
+	 * @return the action corresponding to activating or deactivating the debug
+	 *         filter
 	 */
 	public Action getDebugFilterAction() {
 		return this.debugFilterAction;
+	}
+
+	public Action getColoredAntLayerAction() {
+		return this.coloredAntLayerAction;
 	}
 
 	/**
@@ -243,7 +255,7 @@ public class GuiActionsManager {
 			this.controller.stepSimulation();
 		}
 	}
-	
+
 	/**
 	 * This action allows to display information related to the simulation map
 	 */
@@ -259,10 +271,10 @@ public class GuiActionsManager {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			final MapInfoDialog mapInfoDialog = new MapInfoDialog(this.mapInfo);
+			MapInfoDialog.showMapInfoDialog(this.mapInfo);
 		}
-		
-		public void setMapInfo(MapInformation mapInfo){
+
+		public void setMapInfo(MapInformation mapInfo) {
 			this.mapInfo = mapInfo;
 		}
 	}
@@ -303,6 +315,9 @@ public class GuiActionsManager {
 
 		public PheromoneFilterAction(CentralPanel centralPanel, PheromoneType pheromoneType) {
 			super(Messages.getString(pheromoneType.getPropertyKey()));
+			if (pheromoneType.getKeyStroke() != null) {
+				putValue(ACCELERATOR_KEY, pheromoneType.getKeyStroke());
+			}
 			this.centralPanel = centralPanel;
 			this.pheromoneType = pheromoneType;
 		}
@@ -332,6 +347,26 @@ public class GuiActionsManager {
 			if (ae.getSource() instanceof JCheckBoxMenuItem) {
 				final boolean selected = ((JCheckBoxMenuItem) ae.getSource()).isSelected();
 				this.centralPanel.setDebugFilterEnabled(selected);
+			}
+		}
+
+	}
+
+	private class ColoredAntLayerAction extends AbstractAction {
+		private static final long serialVersionUID = -9163474662975136163L;
+
+		private final CentralPanel centralPanel;
+
+		public ColoredAntLayerAction(CentralPanel centralPanel) {
+			super(Messages.getString("MenuBar.coloredAnts")); //$NON-NLS-1$
+			this.centralPanel = centralPanel;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			if (ae.getSource() instanceof JCheckBoxMenuItem) {
+				final boolean selected = ((JCheckBoxMenuItem) ae.getSource()).isSelected();
+				this.centralPanel.setColoredAntLayer(selected);
 			}
 		}
 
