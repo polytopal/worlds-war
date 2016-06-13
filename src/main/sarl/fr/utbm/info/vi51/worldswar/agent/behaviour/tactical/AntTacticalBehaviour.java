@@ -188,7 +188,7 @@ public class AntTacticalBehaviour {
 
 		if (perception.isEnemyInMeleeRange()) {
 			Direction direction = Direction.fromPoint(perception.getClosestEnemyPos());
-			if (null == direction) {
+			if (null != direction) {
 				return this.operationalBehaviour.attackMeleeTarget(direction);
 			}
 		}
