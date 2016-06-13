@@ -10,13 +10,18 @@ public class PerceivableAntHill extends Perceivable {
 
 	private final AntHill antHill;
 
+	/**
+	 * Builds the perceivable version of an {@link AntHill}
+	 * 
+	 * @param antHill
+	 */
 	public PerceivableAntHill(AntHill antHill) {
 		super(antHill);
 		this.antHill = antHill;
 	}
 
 	/**
-	 * @return
+	 * @return the colony of the ant hill
 	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.AntHill#getColony()
 	 */
 	public Colony getColony() {
@@ -24,7 +29,7 @@ public class PerceivableAntHill extends Perceivable {
 	}
 
 	/**
-	 * @return
+	 * @return the food currently stored in the ant hill
 	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.AntHill#getAvailableFood()
 	 */
 	public int getAvailableFood() {
@@ -32,7 +37,7 @@ public class PerceivableAntHill extends Perceivable {
 	}
 
 	/**
-	 * @return
+	 * @return true if there is no food in the ant hill
 	 * @see fr.utbm.info.vi51.worldswar.environment.envobject.AntHill#isFoodEmpty()
 	 */
 	public boolean isFoodEmpty() {

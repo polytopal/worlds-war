@@ -14,10 +14,16 @@ import fr.utbm.info.vi51.worldswar.environment.envobject.EnvironmentObject;
 public class EnvCell {
 	private final List<EnvironmentObject> envObjects;
 
+	/**
+	 * Build a new empty cell
+	 */
 	public EnvCell() {
 		this.envObjects = new LinkedList<>();
 	}
 
+	/**
+	 * @return the list of all contained {@link EnvironmentObject}
+	 */
 	public List<EnvironmentObject> getEnvObjects() {
 		return this.envObjects;
 	}

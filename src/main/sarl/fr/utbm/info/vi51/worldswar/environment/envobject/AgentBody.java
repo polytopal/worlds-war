@@ -3,7 +3,6 @@ package fr.utbm.info.vi51.worldswar.environment.envobject;
 import java.awt.Point;
 import java.util.UUID;
 
-import fr.utbm.info.vi51.worldswar.environment.influence.Influence;
 import io.sarl.lang.core.Agent;
 
 /**
@@ -11,12 +10,6 @@ import io.sarl.lang.core.Agent;
  *
  */
 public abstract class AgentBody extends DynamicObject {
-
-	/**
-	 * The {@link Environment} stores here the {@link Influence} he received for
-	 * the current step
-	 */
-	private Influence influence;
 
 	/**
 	 * The UUID of the agent
@@ -38,21 +31,6 @@ public abstract class AgentBody extends DynamicObject {
 	 * @return the perception range of the agent body
 	 */
 	public abstract int getPerceptionRange();
-
-	/**
-	 * @return the influence
-	 */
-	public Influence getInfluence() {
-		return this.influence;
-	}
-
-	/**
-	 * @param influence
-	 *            the influence to set
-	 */
-	public void setInfluence(Influence influence) {
-		this.influence = influence;
-	}
 
 	/**
 	 * @return the uuid

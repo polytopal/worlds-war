@@ -15,6 +15,10 @@ public abstract class Perceivable {
 		this.envObject = envObject;
 	}
 
+	/**
+	 * @return whether the object can be stacked with other non traversable
+	 *         objects or not
+	 */
 	public boolean isTraversable() {
 		return this.envObject.isTraversable();
 	}

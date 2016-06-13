@@ -78,10 +78,6 @@ agent Simulator {
 	 */
 	private def newSimulation(params : SimulationParameters) {
 		spawn(typeof(Environment), {params}, listeners)
-		
-		for(l : listeners) {
-			l.simulationStarted
-		}
 	}
 	
 	/**
@@ -89,6 +85,9 @@ agent Simulator {
 	 */
 	on EnvironmentInitializedEvent {
 		synchronized(this) {
+			for(l : listeners) {
+				l.simulationStarted(occurrence.mapInfo);
+			}
 			this.environmentExists = true
 			this.environmentReady = true
 			this.stepTimerReady = true
@@ -119,7 +118,7 @@ agent Simulator {
 	 *	execute the next step in the simulation loop if the environment is ready and enough time
 	 * has passed since the last one.
 	 */
-	private def simulationLoop {
+	private def simulationLoop : void {
 		if(this.stepTimerReady && this.environmentReady) {
 			executeStep
 			this.stepTimerTask = in(this.simulationSpeed.milliseconds) [ setStepTimerReady ]

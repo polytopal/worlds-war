@@ -70,6 +70,7 @@ public class SimulationParameters {
 	 * @param coloniesList
 	 * @param foodProportion
 	 * @param rockProportion
+	 * @param noiseSeed
 	 */
 	public SimulationParameters(int gridWidth, int gridHeight, List<Colony> coloniesList, float foodProportion,
 			float rockProportion, int noiseSeed) {
