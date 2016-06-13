@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -203,7 +204,7 @@ public class PerceptionCell {
 	 * The cache of the function
 	 * {@link PerceptionCell#getTotalPheromoneQuantity(PheromoneType)}
 	 */
-	private final Map<PheromoneType, Float> totalPheromoneQuantityCache = new HashMap<>();
+	private final ConcurrentHashMap<PheromoneType, Float> totalPheromoneQuantityCache = new ConcurrentHashMap<>();
 
 	/**
 	 * 
@@ -212,18 +213,21 @@ public class PerceptionCell {
 	 *         pheromone of each colony
 	 */
 	public float getTotalPheromoneQuantity(PheromoneType type) {
-		if (this.totalPheromoneQuantityCache.get(type) != null) {
-			return this.totalPheromoneQuantityCache.get(type);
-		}
-
-		float qty = 0;
-		for (final Perceivable perceivable : this.perceptionList) {
-			if (perceivable instanceof PerceivablePheromone && ((PerceivablePheromone) perceivable).getType() == type) {
-				qty += ((PerceivablePheromone) perceivable).getQty();
+		synchronized(totalPheromoneQuantityCache) {
+			if (this.totalPheromoneQuantityCache.get(type) != null) {
+				return this.totalPheromoneQuantityCache.get(type);
 			}
+
+			float qty = 0;
+			for (final Perceivable perceivable : this.perceptionList) {
+				if (perceivable instanceof PerceivablePheromone && ((PerceivablePheromone) perceivable).getType() == type) {
+					qty += ((PerceivablePheromone) perceivable).getQty();
+				}
+			}
+			this.totalPheromoneQuantityCache.put(type, qty);
+			return qty;
 		}
-		this.totalPheromoneQuantityCache.put(type, qty);
-		return qty;
+		
 	}
 
 	/**
