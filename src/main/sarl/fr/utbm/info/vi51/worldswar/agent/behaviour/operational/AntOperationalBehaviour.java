@@ -214,7 +214,7 @@ public class AntOperationalBehaviour {
 	private Influence move(Direction d, HashMap<String, Object> memory) {
 		if (memory.containsKey(PHEROMONE_TYPE) && memory.containsKey(PHEROMONE_QTY)) {
 			// Retrieve pheromone to put from memory
-			PheromoneType pheromoneType = (PheromoneType) (memory.get(PHEROMONE_TYPE));
+			final PheromoneType pheromoneType = (PheromoneType) (memory.get(PHEROMONE_TYPE));
 			float pheromoneQty = ((Float) memory.get(PHEROMONE_QTY)).floatValue();
 
 			// Update pheromone quantity
@@ -247,7 +247,7 @@ public class AntOperationalBehaviour {
 	 * @return a {@link MoveInfluence}
 	 */
 	private Influence moveWithoutPheromone(HashMap<String, Object> memory, Direction d) {
-		memory.put("lastMoveDirection", d);
+		memory.put("lastMoveDirection", d); //$NON-NLS-1$
 		return new MoveInfluence(d);
 	}
 }

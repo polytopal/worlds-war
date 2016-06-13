@@ -60,7 +60,7 @@ public class AntHill extends StaticObject {
 		if (rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY) {
 			return Caste.EXPLORER;
 		}
-		throw new RuntimeException("Random number for caste choice was out of bound. rand = " + rand);
+		throw new RuntimeException("Random number for caste choice was out of bound. rand = " + rand); //$NON-NLS-1$
 	}
 
 	////////////////////////////////////////

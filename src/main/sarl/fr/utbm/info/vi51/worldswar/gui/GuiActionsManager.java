@@ -315,6 +315,9 @@ public class GuiActionsManager {
 
 		public PheromoneFilterAction(CentralPanel centralPanel, PheromoneType pheromoneType) {
 			super(Messages.getString(pheromoneType.getPropertyKey()));
+			if (pheromoneType.getKeyStroke() != null) {
+				putValue(ACCELERATOR_KEY, pheromoneType.getKeyStroke());
+			}
 			this.centralPanel = centralPanel;
 			this.pheromoneType = pheromoneType;
 		}

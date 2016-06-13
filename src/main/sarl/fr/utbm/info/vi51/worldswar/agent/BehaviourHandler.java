@@ -43,7 +43,7 @@ public class BehaviourHandler {
 		case EXPLORER:
 			return this.explorerStrategicBehaviour;
 		default:
-			throw new IllegalArgumentException("No behaviour set for caste " + caste);
+			throw new IllegalArgumentException("No behaviour set for caste " + caste); //$NON-NLS-1$
 		}
 	}
 }

@@ -7,7 +7,7 @@ package fr.utbm.info.vi51.worldswar.environment;
  */
 public class Colony {
 
-	private Breed breed;
+	private final Breed breed;
 
 	/**
 	 * Create a new ant Colony
@@ -28,7 +28,7 @@ public class Colony {
 
 	@Override
 	public String toString() {
-		return "Colony [breed=" + this.breed + "]";
+		return "Colony [breed=" + this.breed + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

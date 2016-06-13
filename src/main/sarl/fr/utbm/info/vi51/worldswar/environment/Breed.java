@@ -10,11 +10,11 @@ public enum Breed {
 	/**
 	 * Most common European ants.
 	 */
-	DARK_ANTS("Breed.darkAnts", 1.0f, 1.0f, 1.0f, 1.0f, 1.0f),
+	DARK_ANTS("Breed.darkAnts", 1.0f, 1.0f, 1.0f, 1.0f, 1.0f), //$NON-NLS-1$
 	/**
 	 * Strong fighters, but less effective workers
 	 */
-	RED_ANTS("Breed.redAnts", 1.2f, 1.3f, 0.8f, 0.9f, 1.0f);
+	RED_ANTS("Breed.redAnts", 1.2f, 1.3f, 0.8f, 0.9f, 1.0f); //$NON-NLS-1$
 
 	private String propertyKey;
 

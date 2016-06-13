@@ -29,7 +29,6 @@ public class MapInfoDialog extends JDialog {
 		setTitle(Messages.getString("MapInfoDialog.mapInfoDialog")); //$NON-NLS-1$
 		this.setModal(true);
 		this.setResizable(false);
-		this.setResizable(false);
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		final GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWeights = new double[] { 0.0, 0.0 };
