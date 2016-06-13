@@ -32,7 +32,7 @@ public enum Caste {
 	WARRIOR {
 		@Override
 		public int getAttackDamage() {
-			return super.getAttackDamage() + +20;
+			return super.getAttackDamage() + 20;
 		}
 
 		@Override
