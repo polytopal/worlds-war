@@ -108,12 +108,6 @@ public class ColoredAntLayer implements GuiLayer {
 		final PerceivableAnt ant = cell.getAnt();
 		if (ant != null && !ant.isBurrowed()) {
 			final Colony colony = ant.getColony();
-			if (!this.colonyMap.containsKey(colony)) {
-				// TODO : actualy, the colony of the last simulation are never
-				// removed from this map
-				this.colonyMap.put(colony,
-						new Color(new Float(Math.random()), new Float(Math.random()), new Float(Math.random())));
-			}
 			c = this.colonyMap.get(colony);
 		}
 		return c;
