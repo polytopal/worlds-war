@@ -184,7 +184,7 @@ public class PerceptionCell {
 	 * @return the pheromone quantity
 	 */
 	public float getPheromoneQuantity(PheromoneType type, Colony colony) {
-		synchronized(pheromoneQuantityCache) {
+		synchronized(this.pheromoneQuantityCache) {
 			if (this.pheromoneQuantityCache.get(new Pair<>(type, colony)) != null) {
 				return this.pheromoneQuantityCache.get(new Pair<>(type, colony));
 			}
@@ -215,7 +215,7 @@ public class PerceptionCell {
 	 *         pheromone of each colony
 	 */
 	public float getTotalPheromoneQuantity(PheromoneType type) {
-		synchronized(totalPheromoneQuantityCache) {
+		synchronized(this.totalPheromoneQuantityCache) {
 			if (this.totalPheromoneQuantityCache.get(type) != null) {
 				return this.totalPheromoneQuantityCache.get(type);
 			}
