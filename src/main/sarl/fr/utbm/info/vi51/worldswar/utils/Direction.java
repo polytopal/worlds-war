@@ -57,6 +57,40 @@ public enum Direction {
 	}
 
 	/**
+	 * @param point
+	 * @return the Direction corresponding to the Point
+	 */
+	public static Direction fromPoint(Point point) {
+		/*
+		 * Right now, succession of if (max 4). Might be optimized by forcing
+		 * the points coords in [(-1,-1),(1,1)]
+		 */
+		if (point.x < 0) {
+			if (point.y < 0) { // (-1,-1)
+				return NORTH_WEST;
+			} else if (point.y > 0) { // (-1,1)
+				return SOUTH_WEST;
+			} else { // (-1,0)
+				return WEST;
+			}
+		} else if (point.x > 0) {
+			if (point.y < 0) { // (1,-1)
+				return NORTH_EAST;
+			} else if (point.y > 0) { // (1,1)
+				return SOUTH_EAST;
+			} else { // (1,0)
+				return EAST;
+			}
+		} else if (point.y < 0) { // (0,-1)
+			return NORTH;
+		} else if (point.y > 0) { // (0,1)
+			return SOUTH;
+		} else { // (0,0)
+			return null;
+		}
+	}
+
+	/**
 	 * @param rotationDirection
 	 * @param delta
 	 * @return the direction after performing delta times a 1/8 turn in the
@@ -147,7 +181,7 @@ public enum Direction {
 	}
 
 	/**
-	 * Represent an angular direction : clockwise or counter clockwise
+	 * Represents an angular direction : clockwise or counter clockwise
 	 */
 	public enum RotationDirection {
 		@SuppressWarnings("javadoc") CLOCKWISE, @SuppressWarnings("javadoc") COUNTER_CLOCKWISE;

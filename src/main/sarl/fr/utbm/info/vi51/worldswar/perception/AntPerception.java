@@ -238,6 +238,86 @@ public class AntPerception {
 		return null;
 	}
 
+	private static final int CLOSEST_ENEMIES_LIST_SIZE = 8;
+
+	private Point closestEnemyPosCache = null;
+	private boolean closestEnemyPosCalculated = false;
+
+	/**
+	 * Serches in the perceptions the closest enemy without any caste
+	 * distinction, only the distance counts
+	 * 
+	 * @return the Point corresponding to the position (in the local
+	 *         coordinates) of one of the priority targets found
+	 */
+	public Point getClosestEnemyPos() {
+		if (this.closestEnemyPosCalculated) {
+			return this.closestEnemyPosCache;
+		}
+		this.closestEnemyPosCalculated = true;
+
+		final List<Point> closestPositions = new ArrayList<>(CLOSEST_ENEMIES_LIST_SIZE);
+		int minDistance = Integer.MAX_VALUE;
+
+		int distance;
+		// searching in the perception grid in local coordinates
+		for (int x = this.grid.getXMin(); x <= this.grid.getXMax(); x++) {
+			for (int y = this.grid.getYMin(); y <= this.grid.getYMax(); y++) {
+				// if there is a cell defined by those x and y coordinates
+				if (this.grid.getCell(x, y) != null)  {
+					PerceivableAnt ant = this.grid.getCell(x, y).getAnt();
+					// if there is an ant of another colony on this cell
+					if (ant != null && ant.getColony() != this.myBody.getColony()) {
+						distance = Math.abs(x) + Math.abs(y);
+						if (distance < minDistance) {
+							minDistance = distance;
+							closestPositions.clear();
+							closestPositions.add(new Point(x, y));
+						} else if (distance == minDistance) {
+							// if several ants are at the same distance,
+							// their positions are all added to the list
+							closestPositions.add(new Point(x, y));
+						}
+					}
+				}
+			}
+		}
+		if (closestPositions.isEmpty()) {
+			return null;
+		}
+		Point result = closestPositions.get(new Random().nextInt(closestPositions.size()));
+		this.closestEnemyPosCache = result;
+		return result;
+	}
+
+	/**
+	 * @return {@code true} if there is an ant of an enemy colony in the field
+	 *         of perceptions
+	 * @see AntPerception#getClosestEnemyPos()
+	 */
+	public boolean isEnemyInSight() {
+		return this.getClosestEnemyPos() != null;
+	}
+
+	/**
+	 * 
+	 * @return {code true} if there is either an enemy in sight, or some danger
+	 *         pheromones in the field of perceptions
+	 */
+	public boolean isDangerNearby(){
+		return (this.isEnemyInSight()
+				|| this.getHighestPheromonePos(PheromoneType.DANGER, this.myBody.getColony()) != null);
+	}
+
+	/**
+	 * @return a danger ratio based on the number and the caste of each enemy
+	 *         nearby
+	 */
+	public int determineEnemiesDangerRatio() {
+		// coming soon
+		return 0;
+	}
+
 	/**
 	 * @param position
 	 *            the position in local coordinates to check
@@ -288,5 +368,30 @@ public class AntPerception {
 	public boolean isAtHome() {
 		final Point homePos = this.getHomePos();
 		return (homePos != null && homePos.equals(MY_POSITION));
+	}
+
+	/**
+	 * Checks whether there are any enemies in melee range or not
+	 * 
+	 * @return {code true} if there is at least one enemy within the attack
+	 *         range
+	 */
+	public boolean isEnemyInMeleeRange() {
+		if (!this.isEnemyInSight()){
+			return false;
+		}
+
+		int range = this.myBody.getCaste().getMeleeRange();
+		assert range <= this.myBody.getCaste().getPerceptionRange();
+		/*
+		 * Comparing the closest enemy pos (fast thanks to the cache system) to
+		 * the attack range of the ants
+		 */
+		if (Math.abs(this.getClosestEnemyPos().getX()) <= range
+				&& Math.abs(this.getClosestEnemyPos().getY()) <= range) {
+			return true;
+		}
+
+		return false;
 	}
 }

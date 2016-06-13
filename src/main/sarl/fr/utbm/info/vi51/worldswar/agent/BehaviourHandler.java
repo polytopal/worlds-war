@@ -4,6 +4,7 @@ import fr.utbm.info.vi51.worldswar.agent.behaviour.operational.AntOperationalBeh
 import fr.utbm.info.vi51.worldswar.agent.behaviour.strategic.AntStrategicBehaviour;
 import fr.utbm.info.vi51.worldswar.agent.behaviour.strategic.ExplorerStrategicBehaviour;
 import fr.utbm.info.vi51.worldswar.agent.behaviour.strategic.GathererStrategicBehaviour;
+import fr.utbm.info.vi51.worldswar.agent.behaviour.strategic.WarriorStrategicBehaviour;
 import fr.utbm.info.vi51.worldswar.agent.behaviour.tactical.AntTacticalBehaviour;
 import fr.utbm.info.vi51.worldswar.environment.Caste;
 
@@ -14,6 +15,7 @@ public class BehaviourHandler {
 
 	private final GathererStrategicBehaviour gathererStrategicBehaviour;
 	private final ExplorerStrategicBehaviour explorerStrategicBehaviour;
+	private final WarriorStrategicBehaviour warriorStrategicBehaviour;
 
 	/**
 	 * Instantiates all behaviour objects, resolving dependencies between them
@@ -29,6 +31,7 @@ public class BehaviourHandler {
 		// Strategic layer
 		this.gathererStrategicBehaviour = new GathererStrategicBehaviour(antTacticalBehaviour);
 		this.explorerStrategicBehaviour = new ExplorerStrategicBehaviour(antTacticalBehaviour);
+		this.warriorStrategicBehaviour = new WarriorStrategicBehaviour(antTacticalBehaviour);
 	}
 
 	/**
@@ -42,6 +45,8 @@ public class BehaviourHandler {
 			return this.gathererStrategicBehaviour;
 		case EXPLORER:
 			return this.explorerStrategicBehaviour;
+		case WARRIOR:
+			return this.warriorStrategicBehaviour;
 		default:
 			throw new IllegalArgumentException("No behaviour set for caste " + caste); //$NON-NLS-1$
 		}

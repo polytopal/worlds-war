@@ -9,6 +9,7 @@ import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.environment.influence.DoNothingInfluence;
 import fr.utbm.info.vi51.worldswar.environment.influence.DropFoodInfluence;
 import fr.utbm.info.vi51.worldswar.environment.influence.Influence;
+import fr.utbm.info.vi51.worldswar.environment.influence.MeleeAttackInfluence;
 import fr.utbm.info.vi51.worldswar.environment.influence.MoveInfluence;
 import fr.utbm.info.vi51.worldswar.environment.influence.PheromoneAndMoveInfluence;
 import fr.utbm.info.vi51.worldswar.environment.influence.PickFoodInfluence;
@@ -28,6 +29,7 @@ public class AntOperationalBehaviour {
 	private static final String PHEROMONE_QTY = "pheromoneQty"; //$NON-NLS-1$
 	private static final String PHEROMONE_TYPE = "pheromoneType"; //$NON-NLS-1$
 	private static final String LAST_MOVE_DIRECTION = "lastMoveDirection"; //$NON-NLS-1$
+	private static final String LAST_ATTACK_DIRECTION = "lastAttackDirection"; //$NON-NLS-1$
 
 	/**
 	 * Chances that a wandering ant will choose a new direction instead of going
@@ -46,40 +48,14 @@ public class AntOperationalBehaviour {
 	 *         with a direction to the target
 	 */
 	public Influence moveToTarget(AntPerception perception, HashMap<String, Object> memory, Point target) {
-		/*
-		 * The direction corresponding to the target received
-		 */
+
+		// The direction corresponding to the target received
 		Direction primaryDirection = null;
-		/*
-		 * The direction that will be chosen by this method
-		 */
+
+		// The direction that will be chosen by this method
 		Direction chosenDirection = null;
 
-		/*
-		 * Right now, succession of if (max 4). Might be optimized by packing
-		 * the target's coords in [(-1,-1),(1,1)]
-		 */
-		if (target.x < 0) {
-			if (target.y < 0) { // (-1,-1)
-				primaryDirection = Direction.NORTH_WEST;
-			} else if (target.y > 0) { // (-1,1)
-				primaryDirection = Direction.SOUTH_WEST;
-			} else { // (-1,0)
-				primaryDirection = Direction.WEST;
-			}
-		} else if (target.x > 0) {
-			if (target.y < 0) { // (1,-1)
-				primaryDirection = Direction.NORTH_EAST;
-			} else if (target.y > 0) { // (1,1)
-				primaryDirection = Direction.SOUTH_EAST;
-			} else { // (1,0)
-				primaryDirection = Direction.EAST;
-			}
-		} else if (target.y < 0) { // (0,-1)
-			primaryDirection = Direction.NORTH;
-		} else if (target.y > 0) { // (0,1)
-			primaryDirection = Direction.SOUTH;
-		}
+		primaryDirection = Direction.fromPoint(target);
 
 		if (primaryDirection == null) {
 			// Target is (0,0), this means we already reached it
@@ -197,7 +173,7 @@ public class AntOperationalBehaviour {
 	 * @param type
 	 */
 	public void startPheromoneTrail(HashMap<String, Object> memory, PheromoneType type) {
-		this.startPheromoneTrail(memory, type, 1.f);
+		this.startPheromoneTrail(memory, type, 0.35f);
 	}
 
 	/**
@@ -247,7 +223,17 @@ public class AntOperationalBehaviour {
 	 * @return a {@link MoveInfluence}
 	 */
 	private Influence moveWithoutPheromone(HashMap<String, Object> memory, Direction d) {
-		memory.put("lastMoveDirection", d); //$NON-NLS-1$
+		memory.put(LAST_MOVE_DIRECTION, d); // $NON-NLS-1$
 		return new MoveInfluence(d);
+	}
+
+	/**
+	 * Attacks the target whose direction was given as parameter
+	 * 
+	 * @param d
+	 * @return a {@link MeleeAttackInfluence}
+	 */
+	public Influence attackMeleeTarget(Direction d) {
+		return new MeleeAttackInfluence(d);
 	}
 }

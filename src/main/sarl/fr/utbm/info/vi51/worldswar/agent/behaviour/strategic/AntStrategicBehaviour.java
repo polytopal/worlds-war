@@ -17,6 +17,13 @@ import fr.utbm.info.vi51.worldswar.perception.AntPerception;
 public interface AntStrategicBehaviour {
 
 	/**
+	 * {@code true} if the ant has encountered something perceived as danger
+	 * recently, {@code false} else. Reset to {@code false} when the ant reaches
+	 * its hill.
+	 */
+	public static final String ENCOUNTERED_DANGER = "encounteredDanger"; //$NON-NLS-1$
+
+	/**
 	 * 
 	 * @param perception
 	 *            the perception of the ant

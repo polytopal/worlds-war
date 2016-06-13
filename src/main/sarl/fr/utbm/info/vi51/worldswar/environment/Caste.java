@@ -29,7 +29,7 @@ public enum Caste {
 	/**
 	 * Patrols the ant hill to fight potential threats.
 	 */
-	SOLDIER {
+	WARRIOR {
 		@Override
 		public int getAttackDamage() {
 			return super.getAttackDamage() + 20;
@@ -43,6 +43,11 @@ public enum Caste {
 		@Override
 		public int getCapacity() {
 			return 1;
+		}
+
+		@Override
+		public boolean isCombattant() {
+			return true;
 		}
 	};
 
@@ -83,5 +88,19 @@ public enum Caste {
 	 */
 	public int getPerceptionRange() {
 		return 3;
+	}
+
+	/**
+	 * @return the default melee attack range of the ant
+	 */
+	public int getMeleeRange() {
+		return 1;
+	}
+
+	/**
+	 * @return the default combattant status of the ant
+	 */
+	public boolean isCombattant() {
+		return false;
 	}
 }

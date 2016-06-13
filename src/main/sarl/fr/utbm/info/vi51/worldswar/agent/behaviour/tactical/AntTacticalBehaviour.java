@@ -10,6 +10,7 @@ import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.environment.influence.DoNothingInfluence;
 import fr.utbm.info.vi51.worldswar.environment.influence.Influence;
 import fr.utbm.info.vi51.worldswar.perception.AntPerception;
+import fr.utbm.info.vi51.worldswar.utils.Direction;
 
 /**
  * Define basic tactical behaviour for ants.
@@ -130,5 +131,75 @@ public class AntTacticalBehaviour {
 		trailCoeff = Math.min(trailCoeff, 1);
 		trailCoeff = Math.max(trailCoeff, 0);
 		this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.FOOD, trailCoeff);
+	}
+
+	/**
+	 * Starts a danger trail. The quantity of pheromones dropped depends on the
+	 * number/caste of enemies spotted
+	 * 
+	 * @param perception
+	 * @param memory
+	 */
+	public void startDangerTrail(AntPerception perception, HashMap<String, Object> memory) {
+		// TODO should take acocunt of the qty/caste of the ennemies
+		this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.DANGER);
+	}
+
+	/**
+	 * Patrols around the hill.
+	 * 
+	 * @param perception
+	 * @param memory
+	 * @return the resulting influence
+	 */
+	public Influence patrol(AntPerception perception, HashMap<String, Object> memory) {
+		if (perception.isAtHome()) {
+			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.HOME);
+		}
+		// TODO implement a real patrolling behaviour, atm the warriors camp
+		return new DoNothingInfluence();
+
+	}
+
+	/**
+	 * Simple flee behaviour : the ant simply runs back home, without avoiding
+	 * the enemies on its way
+	 * 
+	 * @param perception
+	 * @param memory
+	 * @return the resulting influence
+	 */
+	public Influence flee(AntPerception perception, HashMap<String, Object> memory) {
+		return this.goHome(perception, memory);
+	}
+
+	/**
+	 * The ant will pursue its enemies, using the danger trails left by the
+	 * other ants to find them
+	 * 
+	 * @param perception
+	 * @param memory
+	 * @return the resulting influence
+	 */
+	public Influence chaseAndFight(AntPerception perception, HashMap<String, Object> memory) {
+		if (perception.isAtHome()) {
+			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.HOME);
+		}
+
+		if (perception.isEnemyInMeleeRange()) {
+			Direction direction = Direction.fromPoint(perception.getClosestEnemyPos());
+			if (null == direction) {
+				return this.operationalBehaviour.attackMeleeTarget(direction);
+			}
+		}
+		if (perception.isEnemyInSight()) {
+
+			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getClosestEnemyPos());
+		}
+		final Point highestDangerPheromonePos = perception.getHighestPheromonePos(PheromoneType.DANGER);
+		if (highestDangerPheromonePos != null) {
+			return this.operationalBehaviour.moveToTarget(perception, memory, highestDangerPheromonePos);
+		}
+		return this.operationalBehaviour.wander(perception, memory);
 	}
 }

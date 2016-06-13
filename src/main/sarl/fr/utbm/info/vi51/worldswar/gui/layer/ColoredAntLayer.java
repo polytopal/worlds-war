@@ -125,7 +125,7 @@ public class ColoredAntLayer implements GuiLayer {
 			case EXPLORER:
 				s = Shape.TRIANGLE;
 				break;
-			case SOLDIER:
+			case WARRIOR:
 				s = Shape.DIAMOND;
 				break;
 			default:
@@ -139,12 +139,12 @@ public class ColoredAntLayer implements GuiLayer {
 	@Override
 	public void update(PerceptionGrid perceptionGrid) {
 		if (this.width != perceptionGrid.getWidth() || this.height != perceptionGrid.getHeight()) {
-			resizeGrid(perceptionGrid.getWidth(), perceptionGrid.getHeight());
+			this.resizeGrid(perceptionGrid.getWidth(), perceptionGrid.getHeight());
 		}
 		for (int x = 0; x < this.width; x++) {
 			for (int y = 0; y < this.height; y++) {
 				final PerceptionCell cell = perceptionGrid.getCell(x, y);
-				final Color cellColor = computeCellColor(cell);
+				final Color cellColor = this.computeCellColor(cell);
 				final Shape cellShape = computeCellShape(cell);
 				this.colorTable.get(x).set(y, cellColor);
 				this.shapeTable.get(x).set(y, cellShape);
