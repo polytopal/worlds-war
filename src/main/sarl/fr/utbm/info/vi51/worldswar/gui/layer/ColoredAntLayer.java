@@ -10,6 +10,7 @@ import java.util.Map;
 
 import fr.utbm.info.vi51.worldswar.environment.Caste;
 import fr.utbm.info.vi51.worldswar.environment.Colony;
+import fr.utbm.info.vi51.worldswar.environment.MapInformation;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 import fr.utbm.info.vi51.worldswar.perception.perceivable.PerceivableAnt;
@@ -24,6 +25,14 @@ public class ColoredAntLayer implements GuiLayer {
 
 	private static final float[] DIAMOND_SHAPE_X = { 0.5f, 1f, 0.5f, 0f };
 	private static final float[] DIAMOND_SHAPE_Y = { 0f, 0.5f, 1f, 0.5f };
+
+	private static final Color[] COLONY_COLORS = { //
+			new Color(0, 0, 204)// dark blue
+			, new Color(200, 180, 0)// orange
+			, new Color(153, 0, 76)// violet
+			, new Color(255, 26, 0)// orangered
+			, new Color(0, 102, 0)// dark green
+	};
 
 	private int width;
 	private int height;
@@ -49,6 +58,20 @@ public class ColoredAntLayer implements GuiLayer {
 	@Override
 	public boolean isEnabled() {
 		return this.enabled;
+	}
+
+	@Override
+	public void simulationStarted(MapInformation mapInfo) {
+		this.colonyMap.clear();
+		int colonyIndex = 0;
+		for (final Colony c : mapInfo.getColonies()) {
+			Color colonyColor = Color.BLACK;
+			if (colonyIndex < COLONY_COLORS.length) {
+				colonyColor = COLONY_COLORS[colonyIndex];
+			}
+			this.colonyMap.put(c, colonyColor);
+			colonyIndex++;
+		}
 	}
 
 	@Override

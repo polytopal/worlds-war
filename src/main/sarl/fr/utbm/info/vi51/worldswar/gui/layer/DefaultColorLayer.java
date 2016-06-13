@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.utbm.info.vi51.worldswar.environment.MapInformation;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionCell;
 import fr.utbm.info.vi51.worldswar.perception.PerceptionGrid;
 
@@ -48,6 +49,11 @@ public abstract class DefaultColorLayer implements GuiLayer {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void simulationStarted(MapInformation mapInfo) {
+		// Do nothing
 	}
 
 	@Override

@@ -114,6 +114,7 @@ public class Window extends JFrame implements SimulatorListener {
 		this.guiActionsManager.getPauseSimulationAction().setEnabled(true);
 		this.guiActionsManager.updateMapInfo(mapInfo);
 		this.guiActionsManager.getMapInfoAction().setEnabled(true);
+		this.centralPanel.simulationStarted(mapInfo);
 	}
 
 	@Override

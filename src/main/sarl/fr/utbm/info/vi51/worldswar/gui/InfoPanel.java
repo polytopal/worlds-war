@@ -22,19 +22,19 @@ public class InfoPanel extends JPanel {
 
 	private static final PeriodFormatter PERIOD_FORMATTER = new PeriodFormatterBuilder()//
 			.appendDays()//
-			.appendSuffix("d, ")//
+			.appendSuffix("d, ")//$NON-NLS-1$
 			.appendHours()//
-			.appendSuffix("h ")//
+			.appendSuffix("h ") //$NON-NLS-1$
 			.appendMinutes()//
-			.appendSuffix("m ")//
+			.appendSuffix("m ") //$NON-NLS-1$
 			.appendSeconds()//
-			.appendSuffix("s")//
+			.appendSuffix("s") //$NON-NLS-1$
 			.toFormatter();
 
-	private JLabel labelSimulationState;
-	private JLabel labelSimulationSpeed;
-	private JLabel labelSimulationTime;
-	private JLabel labelAgentCount;
+	private final JLabel labelSimulationState;
+	private final JLabel labelSimulationSpeed;
+	private final JLabel labelSimulationTime;
+	private final JLabel labelAgentCount;
 
 	/**
 	 * Build the InfoPanel (bottom status bar)
@@ -64,7 +64,7 @@ public class InfoPanel extends JPanel {
 	public void setSimulationSpeedLabel(float nbSPS) {
 		final Float speedMultiplier = new Float(nbSPS * (SimulationSpeed.REAL_TIME.getMilliseconds() / 1000.f));
 		this.labelSimulationSpeed
-				.setText(String.format("%s : X%.1f |", Messages.getString("InfoPanel.currentSpeed"), speedMultiplier));
+				.setText(String.format("%s : X%.1f |", Messages.getString("InfoPanel.currentSpeed"), speedMultiplier)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class InfoPanel extends JPanel {
 		}
 
 		this.labelSimulationTime.setText(String.format(" %s : %s |", //$NON-NLS-1$
-				Messages.getString("InfoPanel.simulationTime"), PERIOD_FORMATTER.print(duration.toPeriod())));
+				Messages.getString("InfoPanel.simulationTime"), PERIOD_FORMATTER.print(duration.toPeriod()))); //$NON-NLS-1$
 	}
 
 	/**

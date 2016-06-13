@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import fr.utbm.info.vi51.worldswar.environment.MapInformation;
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
 import fr.utbm.info.vi51.worldswar.gui.layer.AntLayer;
 import fr.utbm.info.vi51.worldswar.gui.layer.ColoredAntLayer;
@@ -152,6 +153,12 @@ public class CentralPanel extends JPanel {
 		};
 		window.addKeyListener(keyListener);
 
+	}
+
+	public void simulationStarted(MapInformation mapInfo) {
+		for (final GuiLayer guiLayer : this.layers) {
+			guiLayer.simulationStarted(mapInfo);
+		}
 	}
 
 	public void updateGrid(PerceptionGrid perceptionGrid) {
