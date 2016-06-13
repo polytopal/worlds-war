@@ -158,10 +158,6 @@ public class ColoredAntLayer implements GuiLayer {
 		}
 	}
 
-	/**
-	 * Methods used only when a new environment with a different size of the
-	 * older environment
-	 */
 	private void resizeGrid(int w, int h) {
 		this.width = w;
 		this.height = h;

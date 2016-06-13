@@ -70,8 +70,8 @@ public abstract class DefaultColorLayer implements GuiLayer {
 	}
 
 	/**
-	 * Methods used only when a new environment with a different size of the
-	 * older environment
+	 * Methods used when a new environment is created with a different size from
+	 * the previous
 	 */
 	private void resizeGrid(int w, int h) {
 		this.width = w;
