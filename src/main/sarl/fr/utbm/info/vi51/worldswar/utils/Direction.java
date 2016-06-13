@@ -11,21 +11,21 @@ import java.util.Random;
  */
 public enum Direction {
 
-	NORTH_WEST(-1, -1),
+	@SuppressWarnings("javadoc") NORTH_WEST(-1, -1),
 
-	NORTH(0, -1),
+	@SuppressWarnings("javadoc") NORTH(0, -1),
 
-	NORTH_EAST(1, -1),
+	@SuppressWarnings("javadoc") NORTH_EAST(1, -1),
 
-	EAST(1, 0),
+	@SuppressWarnings("javadoc") EAST(1, 0),
 
-	SOUTH_EAST(1, 1),
+	@SuppressWarnings("javadoc") SOUTH_EAST(1, 1),
 
-	SOUTH(0, 1),
+	@SuppressWarnings("javadoc") SOUTH(0, 1),
 
-	SOUTH_WEST(-1, 1),
+	@SuppressWarnings("javadoc") SOUTH_WEST(-1, 1),
 
-	WEST(-1, 0);
+	@SuppressWarnings("javadoc") WEST(-1, 0);
 
 	private final int x;
 	private final int y;
@@ -56,6 +56,10 @@ public enum Direction {
 		return new Point(this.x, this.y);
 	}
 
+	/**
+	 * @param point
+	 * @return the Direction corresponding to the Point
+	 */
 	public static Direction fromPoint(Point point) {
 		/*
 		 * Right now, succession of if (max 4). Might be optimized by forcing
@@ -86,6 +90,11 @@ public enum Direction {
 		}
 	}
 
+	/**
+	 * @param rotation
+	 * @param delta
+	 * @return the adjacent Direction
+	 */
 	public Direction adjacentDirection(RotationDirection rotation, int delta) {
 		Direction d = this;
 		for (int i = 0; i < delta; i++) {
@@ -94,6 +103,10 @@ public enum Direction {
 		return d;
 	}
 
+	/**
+	 * @param rotation
+	 * @return the adjacent Direction
+	 */
 	public Direction adjacentDirection(RotationDirection rotation) {
 		switch (rotation) {
 		case CLOCKWISE:
@@ -158,13 +171,22 @@ public enum Direction {
 		return adjacentDirections;
 	}
 
+	/**
+	 * @return a random Direction
+	 */
 	public static Direction random() {
 		return Direction.values()[new Random().nextInt(Direction.values().length)];
 	}
 
+	/**
+	 * enums the different possibilities of rotation directions
+	 */
 	public enum RotationDirection {
-		CLOCKWISE, COUNTER_CLOCKWISE;
+		@SuppressWarnings("javadoc") CLOCKWISE, @SuppressWarnings("javadoc") COUNTER_CLOCKWISE;
 
+		/**
+		 * @return opposite RotationDirection
+		 */
 		public RotationDirection getOpposite() {
 			switch (this) {
 			case CLOCKWISE:
@@ -176,6 +198,9 @@ public enum Direction {
 			}
 		}
 
+		/**
+		 * @return a random RotationDirection
+		 */
 		public static RotationDirection random() {
 			return RotationDirection.values()[new Random().nextInt(RotationDirection.values().length)];
 		}

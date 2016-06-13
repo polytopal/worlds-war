@@ -269,14 +269,11 @@ public class AntPerception {
 	}
 
 	/**
-	 * 
-	 * @return the number of enemies perceived, or maybe compute a danger ratio
-	 *         based on the number and the caste of each enemy nearby
+	 * @return a danger ratio based on the number and the caste of each enemy
+	 *         nearby
 	 */
-	public int countEnemiesInSight() {
-		// TODO si on décide de modifier la qté de phéro DANGER déposées en
-		// fonction de la qté d'ennemis perçus, pr gérer notamment la
-		// fourmilière ennemie
+	public int determineEnemiesDangerRatio() {
+		// coming soon
 		return 0;
 	}
 
