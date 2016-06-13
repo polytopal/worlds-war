@@ -32,9 +32,7 @@ public enum Caste {
 	WARRIOR {
 		@Override
 		public int getAttackDamage() {
-			// TODO remettre à +20 apres les tests
-			return super.getAttackDamage() + 9000;
-			// wtf is this ant ? its attack dmg is OVER 9000 !
+			return super.getAttackDamage() + +20;
 		}
 
 		@Override
@@ -45,6 +43,11 @@ public enum Caste {
 		@Override
 		public int getCapacity() {
 			return 1;
+		}
+
+		@Override
+		public boolean isCombattant() {
+			return true;
 		}
 	};
 
@@ -92,5 +95,12 @@ public enum Caste {
 	 */
 	public int getMeleeRange() {
 		return 1;
+	}
+
+	/**
+	 * @return the default combattant status of the ant
+	 */
+	public boolean isCombattant() {
+		return false;
 	}
 }

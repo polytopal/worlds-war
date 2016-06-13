@@ -189,32 +189,32 @@ public class AntPerception {
 		return null;
 	}
 
-	private static final int CLOSEST_ENNEMIES_LIST_SIZE = 8;
+	private static final int CLOSEST_ENEMIES_LIST_SIZE = 8;
 
-	private Point closestEnnemyPosCache = null;
-	private boolean closestEnnemyPosCalculated = false;
+	private Point closestEnemyPosCache = null;
+	private boolean closestEnemyPosCalculated = false;
 
 	/**
-	 * Serches in the perceptions the closest ennemy without any caste
+	 * Serches in the perceptions the closest enemy without any caste
 	 * distinction, only the distance counts
 	 * 
 	 * @return the Point corresponding to the position (in the local
 	 *         coordinates) of one of the priority targets found
 	 */
-	public Point getClosestEnnemyPos() {
-		if (this.closestEnnemyPosCalculated) {
-			return this.closestEnnemyPosCache;
+	public Point getClosestEnemyPos() {
+		if (this.closestEnemyPosCalculated) {
+			return this.closestEnemyPosCache;
 		}
-		this.closestEnnemyPosCalculated = true;
+		this.closestEnemyPosCalculated = true;
 
 
-		// TODO Doesn't manage the ennemy anthill yet, which would be considered
+		// TODO Doesn't manage the enemy anthill yet, which would be considered
 		// here as an unique ant
 		// -> if the hill is the closest target to the ant, it will become a
 		// priority target, and this might cause some kamikaze attacks on the
 		// hill #PearlHarbor:/
 
-		final List<Point> closestPositions = new ArrayList<>(CLOSEST_ENNEMIES_LIST_SIZE);
+		final List<Point> closestPositions = new ArrayList<>(CLOSEST_ENEMIES_LIST_SIZE);
 		int minDistance = Integer.MAX_VALUE;
 
 
@@ -245,35 +245,35 @@ public class AntPerception {
 			return null;
 		}
 		Point result = closestPositions.get(new Random().nextInt(closestPositions.size()));
-		this.closestEnnemyPosCache = result;
+		this.closestEnemyPosCache = result;
 		return result;
 	}
 
 	/**
-	 * @return {@code true} if there is an ant of an ennemy colony in the field
+	 * @return {@code true} if there is an ant of an enemy colony in the field
 	 *         of perceptions
-	 * @see AntPerception#getClosestEnnemyPos()
+	 * @see AntPerception#getClosestEnemyPos()
 	 */
-	public boolean isEnnemyInSight() {
-		return this.getClosestEnnemyPos() != null;
+	public boolean isEnemyInSight() {
+		return this.getClosestEnemyPos() != null;
 	}
 
 	/**
 	 * 
-	 * @return {code true} if there is either an ennemy in sight, or some danger
+	 * @return {code true} if there is either an enemy in sight, or some danger
 	 *         pheromones in the field of perceptions
 	 */
 	public boolean isDangerNearby(){
-		return (this.isEnnemyInSight()
+		return (this.isEnemyInSight()
 				|| this.getHighestPheromonePos(PheromoneType.DANGER, this.myBody.getColony()) != null);
 	}
 
 	/**
 	 * 
-	 * @return the number of ennemies perceived, or maybe compute a danger ratio
-	 *         based on the number and the caste of each ennemy nearby
+	 * @return the number of enemies perceived, or maybe compute a danger ratio
+	 *         based on the number and the caste of each enemy nearby
 	 */
-	public int countEnnemiesInSight() {
+	public int countEnemiesInSight() {
 		// TODO si on décide de modifier la qté de phéro DANGER déposées en
 		// fonction de la qté d'ennemis perçus, pr gérer notamment la
 		// fourmilière ennemie
@@ -333,24 +333,24 @@ public class AntPerception {
 	}
 
 	/**
-	 * Checks whether there are any ennemies in melee range or not
+	 * Checks whether there are any enemies in melee range or not
 	 * 
-	 * @return {code true} if there is at least one ennemie within the attack
+	 * @return {code true} if there is at least one enemy within the attack
 	 *         range
 	 */
-	public boolean isEnnemyInMeleeRange() {
-		if (!this.isEnnemyInSight()){
+	public boolean isEnemyInMeleeRange() {
+		if (!this.isEnemyInSight()){
 			return false;
 		}
 
 		int range = this.myBody.getCaste().getMeleeRange();
 		assert range <= this.myBody.getCaste().getPerceptionRange();
 		/*
-		 * Comparing the closest ennemy pos (fast thanks to the cache system) to
+		 * Comparing the closest enemy pos (fast thanks to the cache system) to
 		 * the attack range of the ants
 		 */
-		if (Math.abs(this.getClosestEnnemyPos().getX()) <= range
-				&& Math.abs(this.getClosestEnnemyPos().getY()) <= range) {
+		if (Math.abs(this.getClosestEnemyPos().getX()) <= range
+				&& Math.abs(this.getClosestEnemyPos().getY()) <= range) {
 			return true;
 		}
 

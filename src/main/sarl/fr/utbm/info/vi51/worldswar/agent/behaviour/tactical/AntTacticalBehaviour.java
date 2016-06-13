@@ -134,8 +134,8 @@ public class AntTacticalBehaviour {
 	}
 
 	/**
-	 * Starts a danger trail. TODO : Decide whether the quantity of pheromones
-	 * dropped should depend on the number/caste of ennemies spotted
+	 * Starts a danger trail. The quantity of pheromones dropped depends on the
+	 * number/caste of enemies spotted
 	 * 
 	 * @param perception
 	 * @param memory
@@ -165,7 +165,7 @@ public class AntTacticalBehaviour {
 
 	/**
 	 * Simple flee behaviour : the ant simply runs back home, without avoiding
-	 * the ennemies on its way
+	 * the enemies on its way
 	 * 
 	 * @param perception
 	 * @param memory
@@ -193,7 +193,7 @@ public class AntTacticalBehaviour {
 	}
 
 	/**
-	 * The ant will pursue its ennemies, using the danger trails left by the
+	 * The ant will pursue its enemies, using the danger trails left by the
 	 * other ants to find them
 	 * 
 	 * @param perception
@@ -205,20 +205,20 @@ public class AntTacticalBehaviour {
 			this.operationalBehaviour.startPheromoneTrail(memory, PheromoneType.HOME);
 		}
 
-		if (perception.isEnnemyInMeleeRange()) {
+		if (perception.isEnemyInMeleeRange()) {
 			/*
 			 * TODO : Need improvement. Stupidest behavior ever : atm, only
 			 * attacks a random target, without considering HPs or the previous
 			 * target focused.
 			 */
-			return this.operationalBehaviour.attackMeleeTarget(Direction.fromPoint(perception.getClosestEnnemyPos()));
+			return this.operationalBehaviour.attackMeleeTarget(Direction.fromPoint(perception.getClosestEnemyPos()));
 		}
-		if (perception.isEnnemyInSight()) {
+		if (perception.isEnemyInSight()) {
 			// TODO find a way to ask other warriors to follow this way (if
 			// starts a Danger Trail here, highest pheromone will return the
 			// coords of the cell where the chase began, not the actual position
 			// of the fight
-			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getClosestEnnemyPos());
+			return this.operationalBehaviour.moveToTarget(perception, memory, perception.getClosestEnemyPos());
 		}
 		final Point highestDangerPheromonePos = perception.getHighestPheromonePos(PheromoneType.DANGER);
 		if (highestDangerPheromonePos != null) {

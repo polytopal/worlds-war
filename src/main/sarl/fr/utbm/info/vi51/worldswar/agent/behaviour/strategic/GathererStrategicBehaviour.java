@@ -25,12 +25,13 @@ public class GathererStrategicBehaviour implements AntStrategicBehaviour {
 
 	@Override
 	public Influence computeInfluence(AntPerception perception, HashMap<String, Object> memory) {
-		//Survivability prevails : first the ant checks if there is an ennemy in sight
-		if(perception.isEnnemyInSight()){
-			//default choice if an ennemy is seen is to flee
+		// Survivability prevails : first the ant checks if there is an enemy in
+		// sight
+		if(perception.isEnemyInSight()){
+			// default choice if an enemy is seen is to flee
 			memory.put(ENCOUNTERED_DANGER, new Boolean(true));
 			// voir commentaire flee pour expliquer le startDangerTrail ici
-			this.tacticalBehaviour.startDangerTrail(perception, memory); 
+			this.tacticalBehaviour.startDangerTrail(perception, memory);
 			return this.tacticalBehaviour.flee(perception, memory);
 		}
 		if (memory.containsKey(ENCOUNTERED_DANGER)) {

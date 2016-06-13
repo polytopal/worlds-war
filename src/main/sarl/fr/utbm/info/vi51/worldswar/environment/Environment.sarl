@@ -193,7 +193,6 @@ agent Environment {
 		}
 		targetBody.attack(body.attackDamage)
 		if(targetBody.health <= 0) {
-			info("Agent tué. La violence, c'est stop !")
 			this.killAgent(targetBody.uuid)
 		}
 	}

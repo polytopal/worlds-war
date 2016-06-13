@@ -3,7 +3,6 @@ package fr.utbm.info.vi51.worldswar.agent.behaviour.operational;
 import static fr.utbm.info.vi51.worldswar.perception.PerceptionGrid.MY_POSITION;
 
 import java.awt.Point;
-import java.time.LocalTime;
 import java.util.HashMap;
 
 import fr.utbm.info.vi51.worldswar.environment.PheromoneType;
@@ -235,7 +234,6 @@ public class AntOperationalBehaviour {
 	 * @return a {@link MeleeAttackInfluence}
 	 */
 	public Influence attackMeleeTarget(Direction d) {
-		System.out.println(LocalTime.now() + " LOK'TAR OGAR !"); //$NON-NLS-1$
 		return new MeleeAttackInfluence(d);
 	}
 }
