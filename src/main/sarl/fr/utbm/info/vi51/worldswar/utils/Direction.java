@@ -174,28 +174,20 @@ public enum Direction {
 	}
 
 	/**
-	 * <<<<<<< HEAD
-	 * 
-	 * @return a random Direction =======
-	 * @return a random direction >>>>>>> master
+	 * @return a random direction
 	 */
 	public static Direction random() {
 		return Direction.values()[new Random().nextInt(Direction.values().length)];
 	}
 
 	/**
-	 * <<<<<<< HEAD enums the different possibilities of rotation directions
-	 * ======= Represent an angular direction : clockwise or counter clockwise
-	 * >>>>>>> master
+	 * Represents an angular direction : clockwise or counter clockwise
 	 */
 	public enum RotationDirection {
 		@SuppressWarnings("javadoc") CLOCKWISE, @SuppressWarnings("javadoc") COUNTER_CLOCKWISE;
 
 		/**
-		 * <<<<<<< HEAD
-		 * 
-		 * @return opposite RotationDirection =======
-		 * @return the opposite direction >>>>>>> master
+		 * @return the opposite direction
 		 */
 		public RotationDirection getOpposite() {
 			switch (this) {
@@ -209,10 +201,7 @@ public enum Direction {
 		}
 
 		/**
-		 * <<<<<<< HEAD
-		 * 
-		 * @return a random RotationDirection =======
-		 * @return a random rotation direction >>>>>>> master
+		 * @return a random rotation direction
 		 */
 		public static RotationDirection random() {
 			return RotationDirection.values()[new Random().nextInt(RotationDirection.values().length)];

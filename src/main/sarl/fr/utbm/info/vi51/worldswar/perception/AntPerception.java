@@ -256,16 +256,8 @@ public class AntPerception {
 		}
 		this.closestEnemyPosCalculated = true;
 
-
-		// TODO Doesn't manage the enemy anthill yet, which would be considered
-		// here as an unique ant
-		// -> if the hill is the closest target to the ant, it will become a
-		// priority target, and this might cause some kamikaze attacks on the
-		// hill #PearlHarbor:/
-
 		final List<Point> closestPositions = new ArrayList<>(CLOSEST_ENEMIES_LIST_SIZE);
 		int minDistance = Integer.MAX_VALUE;
-
 
 		int distance;
 		// searching in the perception grid in local coordinates
