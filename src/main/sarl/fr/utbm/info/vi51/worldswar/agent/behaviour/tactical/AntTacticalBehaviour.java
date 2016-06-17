@@ -126,7 +126,7 @@ public class AntTacticalBehaviour {
 	 * @param memory
 	 */
 	private void startFoodTrail(AntPerception perception, HashMap<String, Object> memory) {
-		int foodInSight = perception.countFoodInSight() - perception.getMyBody().getCapacity();
+		final int foodInSight = perception.countFoodInSight() - perception.getMyBody().getCapacity();
 		float trailCoeff = foodInSight / MAX_FOOD_TRAIL_QTY;
 		trailCoeff = Math.min(trailCoeff, 1);
 		trailCoeff = Math.max(trailCoeff, 0);
@@ -187,7 +187,7 @@ public class AntTacticalBehaviour {
 		}
 
 		if (perception.isEnemyInMeleeRange()) {
-			Direction direction = Direction.fromPoint(perception.getClosestEnemyPos());
+			final Direction direction = Direction.fromPoint(perception.getClosestEnemyPos());
 			if (null != direction) {
 				return this.operationalBehaviour.attackMeleeTarget(direction);
 			}

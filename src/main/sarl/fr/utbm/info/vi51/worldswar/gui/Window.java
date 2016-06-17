@@ -68,9 +68,8 @@ public class Window extends JFrame implements SimulatorListener {
 		this.infoPanel = new InfoPanel();
 		this.getContentPane().add(this.infoPanel, BorderLayout.SOUTH);
 
-		this.setLocationRelativeTo(null);
-
 		this.pack();
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		System.out.println("GUI created"); //$NON-NLS-1$
 	}

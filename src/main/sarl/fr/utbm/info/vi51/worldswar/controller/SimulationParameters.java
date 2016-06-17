@@ -15,14 +15,14 @@ import fr.utbm.info.vi51.worldswar.environment.Colony;
 public class SimulationParameters {
 
 	/** Default width of the map **/
-	public static final int DEFAULT_WIDTH = 300;
+	public static final int DEFAULT_WIDTH = 250;
 	/** Minimum width of the map **/
 	public static final int MIN_WIDTH = 30;
 	/** Maximum width of the map **/
 	public static final int MAX_WIDTH = 1000;
 
 	/** Default height of the map **/
-	public static final int DEFAULT_HEIGHT = 300;
+	public static final int DEFAULT_HEIGHT = 250;
 	/** Minimum height of the map **/
 	public static final int MIN_HEIGHT = 30;
 	/** Maximum height of the map **/
@@ -42,14 +42,14 @@ public class SimulationParameters {
 	/** Minimum proportion of food on the map (in percents) must be > 0 **/
 	public static final int MIN_FOOD_PROPORTION = 10;
 	/** Maximum proportion of food on the map (in percents) must be <= 100 **/
-	public static final int MAX_FOOD_PROPORTION = 70;
+	public static final int MAX_FOOD_PROPORTION = 100;
 
 	/** Default proportion of rocks on the map (in percents) **/
 	public static final int DEFAULT_ROCK_PROPORTION = 40;
 	/** Minimum proportion of rocks on the map (in percents) must be >= 0 **/
 	public static final int MIN_ROCK_PROPORTION = 0;
 	/** Maximum proportion of rocks on the map (in percents) must be <= 100 **/
-	public static final int MAX_ROCK_PROPORTION = 50;
+	public static final int MAX_ROCK_PROPORTION = 60;
 
 	// -----
 

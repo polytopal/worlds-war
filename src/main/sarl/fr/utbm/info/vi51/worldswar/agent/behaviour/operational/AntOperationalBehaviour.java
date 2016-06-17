@@ -173,7 +173,7 @@ public class AntOperationalBehaviour {
 	 * @param type
 	 */
 	public void startPheromoneTrail(HashMap<String, Object> memory, PheromoneType type) {
-		this.startPheromoneTrail(memory, type, 0.35f);
+		this.startPheromoneTrail(memory, type, 1.0f);
 	}
 
 	/**

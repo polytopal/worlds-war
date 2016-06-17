@@ -17,7 +17,7 @@ public class AntHill extends StaticObject {
 	/** Number of steps between the spawn of two ants in the anthill */
 	public static final int SPAWN_COOLDOWN = 10;
 	/** Food consumed by the spawn of a new ant */
-	public static final int SPAWN_COST = 5;
+	public static final int SPAWN_COST = 8;
 	/** Food available in the ant hill at the beginning of the simulation **/
 	private static final int INITIAL_FOOD_STOCK = 500;
 
@@ -55,16 +55,14 @@ public class AntHill extends StaticObject {
 	@SuppressWarnings("static-method")
 	public Caste casteToSpawn() {
 		final int rand = new Random().nextInt(TOTAL_FREQUENCIES);
-		assert rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY +
-		WARRIOR_FREQUENCY;
+		assert rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY + WARRIOR_FREQUENCY;
 		if (rand < GATHERER_FREQUENCY) {
 			return Caste.GATHERER;
 		}
 		if (rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY) {
 			return Caste.EXPLORER;
 		}
-		if (rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY +
-				WARRIOR_FREQUENCY) {
+		if (rand < GATHERER_FREQUENCY + EXPLORER_FREQUENCY + WARRIOR_FREQUENCY) {
 			return Caste.WARRIOR;
 		}
 		throw new RuntimeException("Random number for caste choice was out of bound. rand = " + rand);

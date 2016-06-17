@@ -78,7 +78,7 @@ public class PerceptionGrid {
 		// circle with Manhattan distance
 		for (int x = localCellGrid.getXMin(); x <= localCellGrid.getXMax(); x++) {
 			for (int y = localCellGrid.getYMin(); y <= localCellGrid.getYMax(); y++) {
-				if (Math.abs(x + y) > range) {
+				if (Math.abs(x) + Math.abs(y) > range) {
 					localCellGrid.set(x, y, null);
 				}
 			}
