@@ -64,14 +64,21 @@ public class EnvironmentUtils {
 	 */
 	public static Grid<Float> generatePerlinNoiseGrid(int width, int height, int octaveCount, float frequency,
 			int seed) {
-		final Perlin perlinNoise = new Perlin();
-		perlinNoise.setOctaveCount(octaveCount);
-		perlinNoise.setFrequency(frequency);
-		perlinNoise.setSeed(seed);
+		final Perlin PerlinNoise = new Perlin();
+		PerlinNoise.setOctaveCount(octaveCount);
+		final Perlin PerlinNoise2 = new Perlin();
+		PerlinNoise2.setOctaveCount(octaveCount);
+		PerlinNoise2.setFrequency(0.03f);
+		PerlinNoise2.setSeed(seed);
+		PerlinNoise2.setLacunarity(2.2f);
 		final Grid<Float> grid = new Grid<>(0, width - 1, 0, height - 1);
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				final float value = (float) perlinNoise.getValue(x, y, 0);
+//				System.out.println(ridgedPerlinNoise2.getValue(x+333, y+1337, 0));
+				PerlinNoise.setFrequency((PerlinNoise2.getValue(x+333, y+1337, 0)+1.f)*frequency*0.3f);
+				PerlinNoise.setSeed(seed);
+				PerlinNoise.setLacunarity(0.3f+0.7f*(PerlinNoise2.getValue(x+333, y+1337, 0)+1.f));
+				final float value = (float) PerlinNoise.getValue(x, y, 0);
 				grid.set(x, y, new Float(value));
 			}
 		}
