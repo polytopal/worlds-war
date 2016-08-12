@@ -97,7 +97,7 @@ public class EnvironmentUtils {
 		ridgedPerlinNoise.setOctaveCount(octaveCount);
 		final RidgedMulti ridgedPerlinNoise2 = new RidgedMulti();
 		ridgedPerlinNoise2.setOctaveCount(octaveCount);
-		ridgedPerlinNoise2.setFrequency(0.12f);
+		ridgedPerlinNoise2.setFrequency(0.03f);
 		ridgedPerlinNoise2.setSeed(seed);
 		ridgedPerlinNoise2.setLacunarity(2.2f);
 		final Grid<Float> grid = new Grid<>(0, width - 1, 0, height - 1);
