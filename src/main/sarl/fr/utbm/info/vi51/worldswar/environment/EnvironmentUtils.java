@@ -95,12 +95,18 @@ public class EnvironmentUtils {
 			int seed) {
 		final RidgedMulti ridgedPerlinNoise = new RidgedMulti();
 		ridgedPerlinNoise.setOctaveCount(octaveCount);
-		ridgedPerlinNoise.setFrequency(frequency);
-		ridgedPerlinNoise.setSeed(seed);
-		ridgedPerlinNoise.setLacunarity(2.2);
+		final RidgedMulti ridgedPerlinNoise2 = new RidgedMulti();
+		ridgedPerlinNoise2.setOctaveCount(octaveCount);
+		ridgedPerlinNoise2.setFrequency(0.12f);
+		ridgedPerlinNoise2.setSeed(seed);
+		ridgedPerlinNoise2.setLacunarity(2.2f);
 		final Grid<Float> grid = new Grid<>(0, width - 1, 0, height - 1);
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
+//				System.out.println(ridgedPerlinNoise2.getValue(x+333, y+1337, 0));
+				ridgedPerlinNoise.setFrequency((ridgedPerlinNoise2.getValue(x+333, y+1337, 0)+1.f)*frequency*0.1f);
+				ridgedPerlinNoise.setSeed(seed);
+				ridgedPerlinNoise.setLacunarity(0.3f+0.7f*(ridgedPerlinNoise2.getValue(x+333, y+1337, 0)+1.f));
 				final float value = (float) ridgedPerlinNoise.getValue(x, y, 0);
 				grid.set(x, y, new Float(value));
 			}
